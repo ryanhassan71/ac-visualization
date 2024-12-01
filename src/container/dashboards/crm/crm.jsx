@@ -569,42 +569,6 @@ const Crm = () => {
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">Power Consumption</div>
-                  <div className="hs-dropdown ti-dropdown">
-                    <Link
-                      aria-label="anchor"
-                      to="#"
-                      className="flex items-center justify-center w-[1.75rem] h-[1.75rem] ! !text-[0.8rem] !py-1 !px-2 rounded-sm bg-light border-light shadow-none !font-medium"
-                      aria-expanded="false"
-                    >
-                      <i className="fe fe-more-vertical text-[0.8rem]"></i>
-                    </Link>
-                    <ul className="hs-dropdown-menu ti-dropdown-menu hidden">
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Week
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Month
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Year
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
                 </div>
                 <div className="box-body overflow-hidden">
                   <div className="leads-source-chart flex items-center justify-center">
@@ -719,7 +683,7 @@ const Crm = () => {
                           </span>
                           <div>
                             <span
-                              className="text-[1rem] font-semibold"
+                              className="text-[0.75rem] font-semibold"
                               style={{
                                 color: [
                                   "#845ADF",

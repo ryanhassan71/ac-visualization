@@ -6,6 +6,7 @@ import Crm from './container/dashboards/crm/crm.jsx'
 import './index.scss'
 import ScrollToTop from './components/ui/scrolltotop.jsx'
 import AcChart from './container/ac-chart/AcChart.jsx'
+import Power from './container/dashboards/crm/Power.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.Fragment>
@@ -20,6 +21,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path={`${import.meta.env.BASE_URL}dashboards/main`} element={<App />}>
             <Route index element={<Crm />} />
             <Route path="ac/:acId" element={<AcChart />} />
+          </Route>
+
+          {/** Power */}
+          <Route path={`${import.meta.env.BASE_URL}dashboards/power`} element={<App />}>
+            <Route index element={<Power />} />
           </Route>
         </Routes>
       </React.Suspense>
