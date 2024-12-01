@@ -23,22 +23,8 @@ const Crm = () => {
   const [loading, setLoading] = useState(true);
   const [energyLoading, setEnergyLoading] = useState(true);
 
-  const userdata = [];
+  
 
-  const myfunction = (idx) => {
-    let Data;
-    for (Data of Dealsstatistics) {
-      if (Data.name[0] == " ") {
-        Data.name = Data.name.trim();
-      }
-      if (Data.name.toLowerCase().includes(idx.toLowerCase())) {
-        if (Data.name.toLowerCase().startsWith(idx.toLowerCase())) {
-          userdata.push(Data);
-        }
-      }
-    }
-    setData(userdata);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +45,6 @@ const Crm = () => {
     const fetchEnergyData = async () => {
       const data = await fetchEnergyGraphData();
       setEnergyData(data);
-      console.log(data.data[0]["energy_data"]);
       setEnergyLoading(false);
     };
     fetchEnergyData();

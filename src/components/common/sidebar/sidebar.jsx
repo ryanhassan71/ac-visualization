@@ -12,10 +12,12 @@ import logo5 from "../../../assets/images/brand-logos/desktop-white.png";
 import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from 'simplebar-react';
 import Menuloop from '../../ui/menuloop';
+import { fetchTemperatureData } from '../../../acApi';
 
 
 const Sidebar = ({ local_varaiable, ThemeChanger }) => {
   const [menuitems, setMenuitems] = useState(MENUITEMS);
+  
 
   function closeMenuFn() {
     const closeMenuRecursively = (items) => {
@@ -41,6 +43,62 @@ const Sidebar = ({ local_varaiable, ThemeChanger }) => {
 		}
     mainContent.addEventListener('click', menuClose);
     window.addEventListener('resize', menuResizeFn);
+  }, []);
+
+  useEffect(() => {
+    const loadMenuItems = async () => {
+      try {
+        const acSensors = await fetchTemperatureData();
+        const acChildren = acSensors.map(sensor => ({
+          path: `${import.meta.env.BASE_URL}dashboards/main/ac/${sensor.id}`,
+          title: sensor.name,
+          type: "link",
+          active: false,
+          selected: false,
+          dirchange: false,
+        }));
+
+        console.log(acChildren)
+
+        // Construct MENUITEMS dynamically
+        // const MENUITEMS = [
+        //   {
+        //     menutitle: 'MAIN',
+        //   },
+        //   {
+        //     icon: (<i className="side-menu__icon bx bx-home"></i>),
+        //     type: 'sub',
+        //     Name: '',
+        //     active: false,
+        //     selected: false,
+        //     dirchange: false,
+        //     title: 'Dashboards',
+        //     badge: '',
+        //     badgetxt: '12',
+        //     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+        //     children: [
+        //       { path: `${import.meta.env.BASE_URL}dashboards/main`, type: 'link', active: false, selected: false, dirchange: false, title: 'Main' },
+        //       {
+        //         title: "ACs",
+        //         type: "sub",
+        //         selected: false,
+        //         dirchange: false,
+        //         active: false,
+        //         children: acChildren,
+        //       },
+        //       { path: `${import.meta.env.BASE_URL}dashboards/power`, type: 'link', active: false, selected: false, dirchange: false, title: 'Power' },
+        //     ]
+        //   }
+        // ];
+
+        // Update state with dynamic MENUITEMS
+        setMenuitems(MENUITEMS);
+      } catch (error) {
+        console.error('Error loading AC sensor data for the sidebar:', error);
+      }
+    };
+
+    loadMenuItems();
   }, []);
 
   // const location = useLocation();

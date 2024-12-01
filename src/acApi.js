@@ -2,6 +2,11 @@
 import axios from 'axios';
 import { BASE_URL } from './config';
 
+// Store Constants
+
+const STORE_ID = 10
+const ENERGY_DEVICE_ID = 2
+
 let token = null; // Global variable to store the token
 
 // Function to login and get the token
@@ -54,9 +59,9 @@ apiClient.interceptors.request.use(
 );
 
 // Function to fetch AC sensor data
-export const fetchTemperatureData = async (storeId = 10) => {
+export const fetchTemperatureData = async () => {
   try {
-    const response = await apiClient.get(`/temperature/sensor-overview/?store_id=${storeId}`);
+    const response = await apiClient.get(`/temperature/sensor-overview/?store_id=${STORE_ID}`);
     if (response.data && response.data.success) {
       return response.data.ac_sensors;
     } else {
@@ -88,9 +93,9 @@ export const fetchTemperatureGraphData = async (acId, type = 'daily') => {
 export const TEMPERATURE_GRAPH_DATA_TIMER = 15 * 60 * 1000;
 
 // Function to fetch energy graph data
-export const fetchEnergyGraphData = async (type = 'weekly', acId = 2) => {
+export const fetchEnergyGraphData = async (type = 'weekly') => {
   try {
-    const response = await apiClient.get(`/energy/energy-graph-data/${acId}?type=${type}`);
+    const response = await apiClient.get(`/energy/energy-graph-data/${ENERGY_DEVICE_ID}?type=${type}`);
     if (response.data && response.data.success) {
       return response.data;
     } else {
