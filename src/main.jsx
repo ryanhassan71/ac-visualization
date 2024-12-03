@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <ScrollToTop />
         <Routes>
           {/* Redirect base URL to dashboards main */}
-          <Route path={`${import.meta.env.BASE_URL}`} element={<Navigate to={`${import.meta.env.BASE_URL}dashboards/main/:storeId/:powerId`} replace />} />
+          <Route path={`${import.meta.env.BASE_URL}`} element={<Navigate to={`${import.meta.env.BASE_URL}dashboards/main`} replace />} />
           
           {/* App layout as parent */}
           <Route path={`${import.meta.env.BASE_URL}dashboards/main`} element={<App />}>
