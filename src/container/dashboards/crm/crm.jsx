@@ -658,7 +658,7 @@ const Crm = () => {
 
                     return (
                       <div key={index} className="col !p-0">
-                        <div className="p-[0.95rem] text-center border-e border-dashed dark:border-defaultborder/10">
+                        <div className="p-[0.95rem] text-center ">
                           <span
                             className="text-[#8c9097] dark:text-white/50 text-[0.75rem] mb-1 crm-lead-legend inline-block"
                             style={{
