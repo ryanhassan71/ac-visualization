@@ -69,6 +69,11 @@ const Crm = () => {
       year: "numeric",
     }).format(date);
   });
+
+  const totalPowerConsumption = energyData.data[0].energy_data.reduce(
+    (acc, value) => acc + parseFloat(value),
+    0
+  );
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
@@ -139,13 +144,17 @@ const Crm = () => {
                               </div>
                               <div className="flex items-center justify-between mt-1">
                                 <div>
-                                  <Link
-                                    className="text-warning text-[0.813rem]"
-                                    to="#"
-                                  >
-                                    View {sensor.name} controls
-                                    <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                                  </Link>
+                                <button
+                  className="text-warning text-[0.813rem]"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering the outer link
+                    e.preventDefault(); // Prevent default action of link
+                    window.open(`/dashboards/main/ac-control/${sensor.id}`, '_blank');
+                  }}
+                >
+                  View {sensor.name} controls
+                  <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
+                </button>
                                 </div>
                                 <div className="text-end flex items-center">
                                   <div className="text-center">
@@ -637,7 +646,7 @@ const Crm = () => {
                     <div className="lead-source-value ">
                       <span className="block text-[0.875rem] ">Total</span>
                       <span className="block text-[1.5625rem] font-bold">
-                        {energyData.data[0].total_power_consumption} kW/h
+                        {totalPowerConsumption} kW/h
                       </span>
                     </div>
                   </div>
