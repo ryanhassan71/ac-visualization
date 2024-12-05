@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { controlAcSettings } from "../../acApi";
 import "./AcControl.css";
 
 function AcControl() {
+  const { acId } = useParams();
   const [temperature, setTemperature] = useState(23);
   const [power, setPower] = useState("OFF");
   const [mode, setMode] = useState("Cool");
@@ -36,15 +40,36 @@ function AcControl() {
     setSpeed(nextSpeed);
   };
 
-  const handleApplyClick = () => {
-    // Show the popup message
-    setPopupMessage("Done!");
+  const handleApplyClick = async () => {
+    try {
+      // Prepare the request payload
+      const payload = {
+        sensor_id: parseInt(acId),
+        off_on: power.toLowerCase(),
+        temperature: `${temperature}`,
+        ac_mode: mode.toLowerCase(),
+        fan_speed: speed.toLowerCase(),
+      };
+
+      // Call the API using the function from acApi.js
+      const response = await controlAcSettings(payload);
+
+      if (response.success) {
+        setPopupMessage("AC Command Sent Successfully!");
+      } else {
+        setPopupMessage("Failed to Send Command.");
+      }
+    } catch (error) {
+      console.error("Error applying AC settings:", error);
+      setPopupMessage("Error occurred while applying settings.");
+    }
+
     setShowPopup(true);
 
-    // Hide the popup after 1 second
+    // Hide the popup after 2 seconds
     setTimeout(() => {
       setShowPopup(false);
-    }, 2000); // 1 second delay
+    }, 2000);
   };
 
   const handleApplyAllClick = () => {

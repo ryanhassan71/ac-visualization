@@ -108,5 +108,27 @@ export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {
   }
 };
 
+// Function to control AC settings
+export const controlAcSettings = async ({ sensor_id, off_on, temperature, ac_mode, fan_speed }) => {
+  try {
+    const response = await apiClient.post(`/temperature/ac/control/`, {
+      sensor_id,
+      off_on,
+      temperature,
+      ac_mode,
+      fan_speed,
+    });
+
+    if (response.data && response.data.success) {
+      return response.data;
+    } else {
+      console.error('Unexpected data format or API error:', response.data);
+      throw new Error('Failed to control AC settings');
+    }
+  } catch (error) {
+    console.error('Error controlling AC settings:', error);
+    throw error;
+  }
+};
 // Exporting the client as well if needed for other API calls
 export default apiClient;

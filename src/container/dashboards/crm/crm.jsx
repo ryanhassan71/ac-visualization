@@ -49,7 +49,7 @@ const Crm = () => {
     fetchEnergyData();
   }, []);
 
-  if (loading || energyLoading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center w-full h-screen">
         <div className="ti-spinner" role="status">
