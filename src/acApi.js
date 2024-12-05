@@ -60,6 +60,7 @@ apiClient.interceptors.request.use(
 
 // Function to fetch AC sensor data
 export const fetchTemperatureData = async (storeId) => {
+  
   try {
     const response = await apiClient.get(`/temperature/sensor-overview/?store_id=${storeId}`);
     if (response.data && response.data.success) {

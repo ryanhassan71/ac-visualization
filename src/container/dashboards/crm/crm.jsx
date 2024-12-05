@@ -1,5 +1,9 @@
-import { Fragment, useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useCrm } from './CrmContext';
+import { fetchTemperatureData, fetchEnergyGraphData } from '../../../acApi';
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
 import {
   Conversionratio,
   Dealsstatistics,
@@ -11,19 +15,13 @@ import {
   Totalrevenue,
   AcIcon,
 } from "./crmdata";
-import face10 from "../../../assets/images/faces/10.jpg";
-import face12 from "../../../assets/images/faces/12.jpg";
-import { fetchTemperatureData, fetchEnergyGraphData } from "../../../acApi";
-import ReactApexChart from "react-apexcharts";
+import ReactApexChart from "react-apexcharts"
 
 const Crm = () => {
-  // for User search function
   const { storeId, powerId } = useParams();
-  const [Data, setData] = useState(Dealsstatistics);
-  const [acSensors, setAcSensors] = useState([]);
-  const [energyData, setEnergyData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [energyLoading, setEnergyLoading] = useState(true);
+  const { acSensors, setAcSensors, energyData, setEnergyData } = useCrm();
+  const [loading, setLoading] = useState(acSensors.length === 0);
+  const [energyLoading, setEnergyLoading] = useState(energyData === null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +47,7 @@ const Crm = () => {
     fetchEnergyData();
   }, []);
 
-  if (loading) {
+  if (loading || energyLoading) {
     return (
       <div className="flex justify-center items-center w-full h-screen">
         <div className="ti-spinner" role="status">
