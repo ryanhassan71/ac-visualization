@@ -656,7 +656,7 @@ const Crm = () => {
                     <div className="lead-source-value ">
                       <span className="block text-[0.875rem] ">Total</span>
                       <span className="block text-[1.5625rem] font-bold">
-                        {totalPowerConsumption} kW/h
+                        {Math.round(totalPowerConsumption)} kW/h
                       </span>
                     </div>
                   </div>
@@ -700,8 +700,10 @@ const Crm = () => {
                                 ][index],
                               }}
                             >
-                              {parseFloat(
-                                energyData.data[0].energy_data[index]
+                              {Math.round(
+                                parseFloat(
+                                  energyData.data[0].energy_data[index]
+                                )
                               )}
                             </span>
                           </div>
