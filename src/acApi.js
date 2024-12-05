@@ -59,7 +59,7 @@ apiClient.interceptors.request.use(
 );
 
 // Function to fetch AC sensor data
-export const fetchTemperatureData = async (storeId = STORE_ID) => {
+export const fetchTemperatureData = async (storeId) => {
   try {
     const response = await apiClient.get(`/temperature/sensor-overview/?store_id=${storeId}`);
     if (response.data && response.data.success) {
@@ -93,7 +93,7 @@ export const fetchTemperatureGraphData = async (acId, type = 'daily') => {
 export const TEMPERATURE_GRAPH_DATA_TIMER = 15 * 60 * 1000;
 
 // Function to fetch energy graph data
-export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId = ENERGY_DEVICE_ID) => {
+export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {
   try {
     const response = await apiClient.get(`/energy/energy-graph-data/${energyDeviceId}?type=${type}`);
     if (response.data && response.data.success) {

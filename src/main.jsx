@@ -16,23 +16,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <ScrollToTop />
         <Routes>
           {/* Redirect base URL to dashboards main */}
-          <Route path={`${import.meta.env.BASE_URL}`} element={<Navigate to={`${import.meta.env.BASE_URL}dashboards/main`} replace />} />
+          <Route path={`${import.meta.env.BASE_URL}`} element={<Navigate to={`${import.meta.env.BASE_URL}10/2/main`} replace />} />
           
           {/* App layout as parent */}
-          <Route path={`${import.meta.env.BASE_URL}dashboards/main`} element={<App />}>
-            <Route index element={<Crm />} />
-            <Route path="ac/:acId" element={<AcChart />} />
+          <Route path={`${import.meta.env.BASE_URL}/:storeId/:powerId`} element={<App />}>
+            <Route path="main" element={<Crm />} />
+            <Route path="power" element={<Power />} />
+            <Route path="ac/temp-graph/:acId" element={<AcChart />} />
           </Route>
 
-          <Route path={`${import.meta.env.BASE_URL}dashboards/main`} >
-            <Route path="ac-control/:acId" element={<AcControl />} />
-          </Route>
+          <Route path={`${import.meta.env.BASE_URL}ac-control/:acId`} element={<AcControl />} />
 
-          {/** Power */}
-          <Route path={`${import.meta.env.BASE_URL}dashboards/power`} element={<App />}>
-            <Route index element={<Power />} />
-          </Route>
-      
+
+
         </Routes>
       </React.Suspense>
     </BrowserRouter>

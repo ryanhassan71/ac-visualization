@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Conversionratio,
   Dealsstatistics,
@@ -9,6 +9,7 @@ import {
   Totalcustomers,
   Totaldeals,
   Totalrevenue,
+  AcIcon,
 } from "./crmdata";
 import face10 from "../../../assets/images/faces/10.jpg";
 import face12 from "../../../assets/images/faces/12.jpg";
@@ -17,18 +18,16 @@ import ReactApexChart from "react-apexcharts";
 
 const Crm = () => {
   // for User search function
+  const { storeId, powerId } = useParams();
   const [Data, setData] = useState(Dealsstatistics);
   const [acSensors, setAcSensors] = useState([]);
   const [energyData, setEnergyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [energyLoading, setEnergyLoading] = useState(true);
 
-  
-
-
   useEffect(() => {
     const fetchData = async () => {
-      const acSensorsData = await fetchTemperatureData(); // Fetch the AC data
+      const acSensorsData = await fetchTemperatureData(storeId); // Fetch the AC data
       setAcSensors(acSensorsData);
       setLoading(false);
     };
@@ -43,7 +42,7 @@ const Crm = () => {
   useEffect(() => {
     // Fetch energy data when the component loads
     const fetchEnergyData = async () => {
-      const data = await fetchEnergyGraphData();
+      const data = await fetchEnergyGraphData("weekly", powerId);
       setEnergyData(data);
       setEnergyLoading(false);
     };
@@ -110,13 +109,21 @@ const Crm = () => {
                     className="xxl:col-span-4 xl:col-span-6 col-span-12"
                     key={index}
                   >
-                    <Link to={`/dashboards/main/ac/${sensor.id}`}>
+                    <Link
+                      to={`/${storeId}/${powerId}/ac/temp-graph/${sensor.id}`}
+                    >
                       <div className="box overflow-hidden">
                         <div className="box-body">
                           <div className="flex items-top justify-between">
                             <div>
-                              <span className="!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-warning">
-                                <i className="ti ti-briefcase text-[1rem] text-white"></i>
+                              <span
+                                className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
+                                  sensor.sensors[0].status
+                                    ? "bg-success"
+                                    : "bg-danger"
+                                }`}
+                              >
+                                <AcIcon />
                               </span>
                             </div>
                             <div className="flex-grow ms-4">
@@ -144,17 +151,20 @@ const Crm = () => {
                               </div>
                               <div className="flex items-center justify-between mt-1">
                                 <div>
-                                <button
-                  className="text-warning text-[0.813rem]"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering the outer link
-                    e.preventDefault(); // Prevent default action of link
-                    window.open(`/dashboards/main/ac-control/${sensor.id}`, '_blank');
-                  }}
-                >
-                  View {sensor.name} controls
-                  <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                </button>
+                                  <button
+                                    className="text-warning text-[0.813rem]"
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent triggering the outer link
+                                      e.preventDefault(); // Prevent default action of link
+                                      window.open(
+                                        `/ac-control/${sensor.id}`,
+                                        "_blank"
+                                      );
+                                    }}
+                                  >
+                                    View {sensor.name} controls
+                                    <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
+                                  </button>
                                 </div>
                                 <div className="text-end flex items-center">
                                   <div className="text-center">
