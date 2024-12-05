@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path="ac/temp-graph/:acId" element={<AcChart />} />
             </Route>
 
-            <Route path={`${import.meta.env.BASE_URL}ac-control/:acId`} element={<AcControl />} />
+            <Route path={`${import.meta.env.BASE_URL}ac-control/:storeId/:acId`} element={<AcControl />} />
           </Routes>
         </CrmProvider>
       </React.Suspense>

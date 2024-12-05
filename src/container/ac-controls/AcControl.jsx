@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { controlAcSettings } from "../../acApi";
+import { controlAcSettings, fetchTemperatureData } from "../../acApi";
 import "./AcControl.css";
 
 function AcControl() {
-  const { acId } = useParams();
-  const [temperature, setTemperature] = useState(23);
-  const [power, setPower] = useState("OFF");
-  const [mode, setMode] = useState("Cool");
-  const [speed, setSpeed] = useState("Auto");
+  const { acId, storeId } = useParams();
+  const [temperature, setTemperature] = useState();
+  const [power, setPower] = useState();
+  const [mode, setMode] = useState();
+  const [speed, setSpeed] = useState();
   const [buttonText, setButtonText] = useState("Apply ");
   const [buttonColor, setButtonColor] = useState("#007bff");
   const [applyAllText, setApplyAllText] = useState("Apply for all");
@@ -19,6 +19,31 @@ function AcControl() {
   const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
   const [showConfirmationPopup, setShowConfirmationPopup] = useState(false); // State for confirmation popup visibility
   const [confirmationResponse, setConfirmationResponse] = useState(null); // State for user's confirmation response
+  const [loading, setLoading] = useState(true); // State to manage loading
+
+  useEffect(() => {
+    // Fetch AC data when the component loads
+    const fetchAcData = async () => {
+      try {
+        const acSensors = await fetchTemperatureData(storeId);
+        const currentAc = acSensors.find(sensor => sensor.id === parseInt(acId));
+
+        if (currentAc && currentAc.sensors.length > 0) {
+          const sensorData = currentAc.sensors[0];
+          setTemperature(sensorData.ac_remote_temp ? parseInt(sensorData.ac_remote_temp) : 23);
+          setPower(sensorData.ac_remote_state?.toLowerCase() === "on" ? "ON" : "OFF");
+          setMode(sensorData.ac_remote_mode || "Cool");
+          setSpeed(sensorData.ac_remote_fan_speed || "Auto");
+        }
+      } catch (error) {
+        console.error("Error fetching AC data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAcData();
+  }, [storeId, acId]);
 
   const handleTemperatureChange = (type) => {
     setTemperature((prev) => {
@@ -123,6 +148,16 @@ function AcControl() {
         return "⚡";
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center w-full h-screen" style={{ backgroundColor: "#141336" }}>
+        <div className="ti-spinner text-white" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app">

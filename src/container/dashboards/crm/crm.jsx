@@ -76,7 +76,7 @@ const Crm = () => {
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
         <div>
           <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0 ">
-            Welcome back, Json Taylor !
+            Welcome back, Khawja Belal !
           </p>
           <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
             Track your sales activity, leads and deals here.
@@ -155,7 +155,7 @@ const Crm = () => {
                                       e.stopPropagation(); // Prevent triggering the outer link
                                       e.preventDefault(); // Prevent default action of link
                                       window.open(
-                                        `/ac-control/${sensor.id}`,
+                                        `/ac-control/${storeId}/${sensor.id}`,
                                         "_blank"
                                       );
                                     }}
@@ -685,7 +685,7 @@ const Crm = () => {
                           </span>
                           <div>
                             <span
-                              className="text-[0.75rem] font-semibold"
+                              className="text-[1rem] font-semibold"
                               style={{
                                 color: [
                                   "#845ADF",
