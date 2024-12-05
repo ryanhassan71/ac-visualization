@@ -4,8 +4,6 @@ import { BASE_URL } from './config';
 
 // Store Constants
 
-const STORE_ID = 10
-const ENERGY_DEVICE_ID = 2
 
 let token = null; // Global variable to store the token
 

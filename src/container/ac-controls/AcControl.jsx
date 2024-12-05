@@ -20,18 +20,31 @@ function AcControl() {
   const [showConfirmationPopup, setShowConfirmationPopup] = useState(false); // State for confirmation popup visibility
   const [confirmationResponse, setConfirmationResponse] = useState(null); // State for user's confirmation response
   const [loading, setLoading] = useState(true); // State to manage loading
+  const [storeName, setStoreName] = useState(""); // State for store name
+  const [acName, setAcName] = useState(""); // State for AC name
 
   useEffect(() => {
     // Fetch AC data when the component loads
     const fetchAcData = async () => {
       try {
         const acSensors = await fetchTemperatureData(storeId);
-        const currentAc = acSensors.find(sensor => sensor.id === parseInt(acId));
+        const currentAc = acSensors.find(
+          (sensor) => sensor.id === parseInt(acId)
+        );
+
+        if (currentAc) {
+          setStoreName(currentAc.store_name || "Store");
+          setAcName(currentAc.name || "AC");
+        }
 
         if (currentAc && currentAc.sensors.length > 0) {
           const sensorData = currentAc.sensors[0];
-          setTemperature(sensorData.ac_remote_temp ? parseInt(sensorData.ac_remote_temp) : 23);
-          setPower(sensorData.ac_remote_state?.toLowerCase() === "on" ? "ON" : "OFF");
+          setTemperature(
+            sensorData.ac_remote_temp ? parseInt(sensorData.ac_remote_temp) : 23
+          );
+          setPower(
+            sensorData.ac_remote_state?.toLowerCase() === "on" ? "ON" : "OFF"
+          );
           setMode(sensorData.ac_remote_mode || "Cool");
           setSpeed(sensorData.ac_remote_fan_speed || "Auto");
         }
@@ -151,7 +164,10 @@ function AcControl() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center w-full h-screen" style={{ backgroundColor: "#141336" }}>
+      <div
+        className="flex justify-center items-center w-full h-screen"
+        style={{ backgroundColor: "#141336" }}
+      >
         <div className="ti-spinner text-white" role="status">
           <span className="sr-only">Loading...</span>
         </div>
@@ -160,116 +176,120 @@ function AcControl() {
   }
 
   return (
-    <div className="app">
-      {/* Popup for "Apply for this" button */}
-      {showPopup && (
-        <div className="popup">
-          {popupMessage}
-        </div>
-      )}
+    <>
+      <div className="header">
+        <h1>Hosna Center</h1>
+        <h2>{acName}</h2>
+      </div>
+      <div className="app">
+        {/* Store and AC Name */}
 
-      {/* Confirmation Popup for "Apply for all" button */}
-      {showConfirmationPopup && (
-        <div className="confirmation-popup">
-          <p>Are you sure you want to apply this setting for all AC's?</p>
-          <div className="confirmation-buttons">
-            <button
-              className="confirmation-btn yes"
-              onClick={() => handleConfirmationResponse("Save changes")}
-            >
-              Save changes
-            </button>
-            <button
-              className="confirmation-btn no"
-              onClick={() => handleConfirmationResponse("Cancel")}
-            >
-              Cancel
-            </button>
+        {/* Popup for "Apply for this" button */}
+        {showPopup && <div className="popup">{popupMessage}</div>}
+
+        {/* Confirmation Popup for "Apply for all" button */}
+        {showConfirmationPopup && (
+          <div className="confirmation-popup">
+            <p>Are you sure you want to apply this setting for all AC's?</p>
+            <div className="confirmation-buttons">
+              <button
+                className="confirmation-btn yes"
+                onClick={() => handleConfirmationResponse("Save changes")}
+              >
+                Save changes
+              </button>
+              <button
+                className="confirmation-btn no"
+                onClick={() => handleConfirmationResponse("Cancel")}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className={`ac-control ${power === "ON" ? "on" : "off"}`}>
-        <div className="ac-display">
-          <div className="ac-icon"></div>
-        </div>
-
-        <div className="temp-control">
-          <button
-            className="temp-btn"
-            onClick={() => handleTemperatureChange("decrease")}
-          >
-            -
-          </button>
-          <span className="temperature">{temperature}°C</span>
-          <button
-            className="temp-btn"
-            onClick={() => handleTemperatureChange("increase")}
-          >
-            +
-          </button>
-        </div>
-        <p className="set-temp-label">Set Temperature</p>
-
-        <div className="info-row">
-          <div className="info">
-            <button className="mode-btn" onClick={handleModeChange}>
-              {getModeEmoji()} {mode}
-            </button>
-          </div>
-          <div className="info">
-            <button className="speed-btn" onClick={handleSpeedChange}>
-              {getSpeedEmoji()} {speed}
-            </button>
-          </div>
-        </div>
-
-        <div className="power-control">
-          <label className={power === "ON" ? "green" : ""}>
-            <input
-              type="radio"
-              name="power"
-              value="ON"
-              checked={power === "ON"}
-              onChange={(e) => setPower(e.target.value)}
-            />
-            ON
-          </label>
-          <label className={power === "OFF" ? "red" : ""}>
-            <input
-              type="radio"
-              name="power"
-              value="OFF"
-              checked={power === "OFF"}
-              onChange={(e) => setPower(e.target.value)}
-            />
-            OFF
-          </label>
-        </div>
-
-        <div className="button-row">
-          <div className="apply-btn-container">
-            <button
-              className="apply-btn"
-              style={{ backgroundColor: buttonColor }}
-              onClick={handleApplyClick}
-            >
-              {buttonText}
-            </button>
+        <div className={`ac-control ${power === "ON" ? "on" : "off"}`}>
+          <div className="ac-display">
+            <div className="ac-icon"></div>
           </div>
 
-          <div className="apply-all-btn-container">
+          <div className="temp-control">
             <button
-              className="apply-btn"
-              style={{ backgroundColor: applyAllColor }}
-              onClick={handleApplyAllClick}
+              className="temp-btn"
+              onClick={() => handleTemperatureChange("decrease")}
             >
-              {applyAllText}
+              -
             </button>
+            <span className="temperature">{temperature}°C</span>
+            <button
+              className="temp-btn"
+              onClick={() => handleTemperatureChange("increase")}
+            >
+              +
+            </button>
+          </div>
+          <p className="set-temp-label">Set Temperature</p>
+
+          <div className="info-row">
+            <div className="info">
+              <button className="mode-btn" onClick={handleModeChange}>
+                {getModeEmoji()} {mode}
+              </button>
+            </div>
+            <div className="info">
+              <button className="speed-btn" onClick={handleSpeedChange}>
+                {getSpeedEmoji()} {speed}
+              </button>
+            </div>
+          </div>
+
+          <div className="power-control">
+            <label className={power === "ON" ? "green" : ""}>
+              <input
+                type="radio"
+                name="power"
+                value="ON"
+                checked={power === "ON"}
+                onChange={(e) => setPower(e.target.value)}
+              />
+              ON
+            </label>
+            <label className={power === "OFF" ? "red" : ""}>
+              <input
+                type="radio"
+                name="power"
+                value="OFF"
+                checked={power === "OFF"}
+                onChange={(e) => setPower(e.target.value)}
+              />
+              OFF
+            </label>
+          </div>
+
+          <div className="button-row">
+            <div className="apply-btn-container">
+              <button
+                className="apply-btn"
+                style={{ backgroundColor: buttonColor }}
+                onClick={handleApplyClick}
+              >
+                {buttonText}
+              </button>
+            </div>
+
+            <div className="apply-all-btn-container">
+              <button
+                className="apply-btn"
+                style={{ backgroundColor: applyAllColor }}
+                onClick={handleApplyAllClick}
+              >
+                {applyAllText}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

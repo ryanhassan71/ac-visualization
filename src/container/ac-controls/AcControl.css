@@ -289,3 +289,13 @@
   background-color: #218838;
   transform: scale(1.05); /* Slight zoom effect */
 }
+
+
+.header {
+  background-color: #141336;
+  color : white;
+  text-align: center;
+  
+  margin-bottom: -70px;
+  
+}
