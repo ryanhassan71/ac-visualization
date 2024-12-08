@@ -75,26 +75,42 @@ export class Totalcustomers extends Component {
   render() {
     const { acSensorData } = this.props;
     return (
-      <div style={{ width: 100, height: 60, paddingLeft: 30 }}>
+      <div style={{ width: 100, height: 60, }}>
         {acSensorData && (
-          <p
-            className="text-[#8c9097] dark:text-white/50  text-[0.6875rem] text-right m-0"
-            style={{ textAlign: "right", marginBottom: 0 }}
-          >
+    <p
+    className="text-[#8c9097] dark:text-white/50 text-[0.6875rem] text-right m-0"
+    style={{
+      textAlign: "right",
+      marginBottom: 0,
+      whiteSpace: "nowrap", // Prevent wrapping
+      textOverflow: "ellipsis", // Add ellipsis for overflow
+      
+    }}
+  >
             {acSensorData.place || "N/A"}
           </p>
         )}
-        <img
-          src={regularAcIcon}
-          alt="AC Icon"
-          style={{
-            width: "200%",
-            height: "100%",
-            marginTop: "-5px",
-            display: "block",
-            marginLeft: "10px",
-          }}
-        />
+
+        <div           style={{
+     
+      display: "flex", // Set display to flex
+      justifyContent: "center", // Horizontally center the text
+      alignItems: "center", // Vertically center the text
+      marginTop: "10px",
+      height: "30px", // Set a specific height for the box
+      width: "100%", // Ensure the box spans the full width
+          }}>
+    <span
+      style={{
+        fontSize: "1.25rem", // Increased text size
+        fontWeight: "bold", // Make the text bold
+        color: "green", // Set text color to green
+        paddingLeft : '20px'
+      }}
+    >
+      25 °C
+    </span>
+        </div>
       </div>
     );
   }

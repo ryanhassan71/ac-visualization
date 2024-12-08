@@ -21,7 +21,11 @@ theme: {
     xl: "1200px",
     xxl: "1400px",
     xxxl: "1800px",
+    above : "1300px",
+    high : "1700px"
   },
+  // Other configurations remain unchanged
+
   borderRadius: {
     none: "0",
     sm: "0.25rem",

@@ -101,10 +101,10 @@ const Crm = () => {
         <div className="xxl:col-span-9 xl:col-span-12  col-span-12 ">
           <div className="grid grid-cols-12 gap-x-6 ">
             <div className="xxl:col-span-12  xl:col-span-12  col-span-12 ">
-              <div className="grid grid-cols-12 gap-x-6 ">
+              <div className="grid grid-cols-12 gap-x-6">
                 {acSensors.map((sensor, index) => (
                   <div
-                    className="xxl:col-span-4 xl:col-span-6 col-span-12"
+                    className="high:col-span-4 above:col-span-6  col-span-12"
                     key={index}
                   >
                     <Link
@@ -160,7 +160,7 @@ const Crm = () => {
                                       );
                                     }}
                                   >
-                                    View {sensor.name} controls
+                                    {sensor.name} Remote
                                     <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
                                   </button>
                                 </div>
@@ -174,8 +174,10 @@ const Crm = () => {
                                           "inherit",
                                       }}
                                     >
-                                      {sensor?.sensors[0]?.ambient_temp ||
-                                        "N/A"}
+{sensor?.sensors[0]?.ambient_temp
+  ? `${Math.round(parseFloat(sensor?.sensors[0]?.ambient_temp.replace("°C", "")))}°C`
+  : "N/A"}
+
                                     </p>
                                     <p
                                       className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]"
@@ -197,8 +199,9 @@ const Crm = () => {
                                           "inherit",
                                       }}
                                     >
-                                      {sensor?.sensors[0]?.airflow_temp ||
-                                        "N/A"}
+    {sensor?.sensors[0]?.airflow_temp !== undefined
+      ? Math.round(sensor?.sensors[0]?.airflow_temp)
+      : "N/A"} °C
                                     </p>
                                     <p
                                       className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]"
@@ -220,295 +223,13 @@ const Crm = () => {
                     </Link>
                   </div>
                 ))}
-                {/** AC */}
-                <div className="xxl:col-span-4 xl:col-span-6 col-span-12 ">
-                  <div className="box overflow-hidden">
-                    <div className="box-body">
-                      <div className="flex items-top justify-between">
-                        <div>
-                          <span className="!text-[0.8rem]  !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-primary">
-                            <i className="ti ti-users text-[1rem] text-white"></i>
-                          </span>
-                        </div>
-                        <div className="flex-grow ms-4">
-                          <div className="flex items-center justify-between flex-wrap">
-                            <div>
-                              <p className="text-[#8c9097] dark:text-white/50 text-[0.813rem] mb-0">
-                                AC
-                              </p>
-                              <h4 className="font-semibold  text-[1.5rem] !mb-2 ">
-                                1,02,890
-                              </h4>
-                            </div>
-                            <div id="crm-total-customers">
-                              <Totalcustomers />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between !mt-1">
-                            <div>
-                              <Link
-                                className="text-primary text-[0.813rem]"
-                                to="#"
-                              >
-                                View All
-                                <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                              </Link>
-                            </div>
-                            <div className="text-end">
-                              <p className="mb-0 text-success text-[0.813rem] font-semibold">
-                                +40%
-                              </p>
-                              <p className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]">
-                                this month
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/** AC */}
-                <div className="xxl:col-span-4 xl:col-span-6 col-span-12 ">
-                  <div className="box overflow-hidden">
-                    <div className="box-body">
-                      <div className="flex items-top justify-between">
-                        <div>
-                          <span className="!text-[0.8rem]  !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-secondary">
-                            <i className="ti ti-wallet text-[1rem] text-white"></i>
-                          </span>
-                        </div>
-                        <div className="flex-grow ms-4">
-                          <div className="flex items-center justify-between flex-wrap">
-                            <div>
-                              <p className="text-[#8c9097] dark:text-white/50 text-[0.813rem] mb-0">
-                                AC
-                              </p>
-                              <h4 className="font-semibold text-[1.5rem] !mb-2 ">
-                                $56,562
-                              </h4>
-                            </div>
-                            <div id="crm-total-revenue">
-                              <Totalcustomers />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-1">
-                            <div>
-                              <Link
-                                className="text-secondary text-[0.813rem]"
-                                to="#"
-                              >
-                                View All
-                                <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                              </Link>
-                            </div>
-                            <div className="text-end">
-                              <p className="mb-0 text-success text-[0.813rem] font-semibold">
-                                +25%
-                              </p>
-                              <p className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]">
-                                this month
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/** AC */}
-                <div className="xxl:col-span-4 xl:col-span-6 col-span-12">
-                  <div className="box overflow-hidden">
-                    <div className="box-body">
-                      <div className="flex items-top justify-between">
-                        <div>
-                          <span className="!text-[0.8rem]  !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-success">
-                            <i className="ti ti-wave-square text-[1rem] text-white"></i>
-                          </span>
-                        </div>
-                        <div className="flex-grow ms-4">
-                          <div className="flex items-center justify-between flex-wrap">
-                            <div>
-                              <p className="text-[#8c9097] dark:text-white/50 text-[0.813rem] mb-0">
-                                AC
-                              </p>
-                              <h4 className="font-semibold text-[1.5rem] !mb-2 ">
-                                12.08%
-                              </h4>
-                            </div>
-                            <div id="crm-conversion-ratio">
-                              <Totalcustomers />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-1">
-                            <div>
-                              <Link
-                                className="text-success text-[0.813rem]"
-                                to="#"
-                              >
-                                View All
-                                <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                              </Link>
-                            </div>
-                            <div className="text-end">
-                              <p className="mb-0 text-danger text-[0.813rem] font-semibold">
-                                -12%
-                              </p>
-                              <p className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]">
-                                this month
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                {/* AC-K */}
-                <div className="xxl:col-span-4 xl:col-span-6 col-span-12">
-                  <div className="box overflow-hidden">
-                    <div className="box-body">
-                      <div className="flex items-top justify-between">
-                        <div>
-                          <span className="!text-[0.8rem]  !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-warning">
-                            <i className="ti ti-briefcase text-[1rem] text-white"></i>
-                          </span>
-                        </div>
-                        <div className="flex-grow ms-4">
-                          <div className="flex items-center justify-between flex-wrap">
-                            <div>
-                              <p className="text-[#8c9097] dark:text-white/50 text-[0.813rem] mb-0">
-                                AC-K
-                              </p>
-                              <h4 className="font-semibold text-[1.5rem] !mb-2 ">
-                                2,543
-                              </h4>
-                            </div>
-                            <div id="crm-total-deals">
-                              <Totalrevenue />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-1">
-                            <div>
-                              <Link
-                                className="text-warning text-[0.813rem]"
-                                to="#"
-                              >
-                                View AC-K controls
-                                <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                              </Link>
-                            </div>
-                            <div className="text-end">
-                              <p className="mb-0 text-success text-[0.813rem] font-semibold">
-                                +19%
-                              </p>
-                              <p className="text-[#8c9097] dark:text-white/50  opacity-[0.7] text-[0.6875rem]">
-                                this month
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* AC-L */}
-                <div className="xxl:col-span-4 xl:col-span-6 col-span-12">
-                  <div className="box overflow-hidden">
-                    <div className="box-body">
-                      <div className="flex items-top justify-between">
-                        <div>
-                          <span className="!text-[0.8rem]  !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-warning">
-                            <i className="ti ti-briefcase text-[1rem] text-white"></i>
-                          </span>
-                        </div>
-                        <div className="flex-grow ms-4">
-                          <div className="flex items-center justify-between flex-wrap">
-                            <div>
-                              <p className="text-[#8c9097] dark:text-white/50 text-[0.813rem] mb-0">
-                                AC-L
-                              </p>
-                              <h4 className="font-semibold text-[1.5rem] !mb-2 ">
-                                2,543
-                              </h4>
-                            </div>
-                            <div id="crm-total-deals">
-                              <Totalrevenue />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-1">
-                            <div>
-                              <Link
-                                className="text-warning text-[0.813rem]"
-                                to="#"
-                              >
-                                View AC-L controls
-                                <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                              </Link>
-                            </div>
-                            <div className="text-end">
-                              <p className="mb-0 text-success text-[0.813rem] font-semibold">
-                                +19%
-                              </p>
-                              <p className="text-[#8c9097] dark:text-white/50  opacity-[0.7] text-[0.6875rem]">
-                                this month
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* AC-M */}
-                <div className="xxl:col-span-4 xl:col-span-6 col-span-12">
-                  <div className="box overflow-hidden">
-                    <div className="box-body">
-                      <div className="flex items-top justify-between">
-                        <div>
-                          <span className="!text-[0.8rem]  !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center bg-warning">
-                            <i className="ti ti-briefcase text-[1rem] text-white"></i>
-                          </span>
-                        </div>
-                        <div className="flex-grow ms-4">
-                          <div className="flex items-center justify-between flex-wrap">
-                            <div>
-                              <p className="text-[#8c9097] dark:text-white/50 text-[0.813rem] mb-0">
-                                AC-M
-                              </p>
-                              <h4 className="font-semibold text-[1.5rem] !mb-2 ">
-                                2,543
-                              </h4>
-                            </div>
-                            <div id="crm-total-deals">
-                              <Totalrevenue />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-1">
-                            <div>
-                              <Link
-                                className="text-warning text-[0.813rem]"
-                                to="#"
-                              >
-                                View AC-M controls
-                                <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
-                              </Link>
-                            </div>
-                            <div className="text-end">
-                              <p className="mb-0 text-success text-[0.813rem] font-semibold">
-                                +19%
-                              </p>
-                              <p className="text-[#8c9097] dark:text-white/50  opacity-[0.7] text-[0.6875rem]">
-                                this month
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
+
+
+
+
+
                 {/* End of ac list  */}
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
