@@ -79,7 +79,7 @@ const Crm = () => {
             Welcome back, Khawja Belal !
           </p>
           <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
-            Track your sales activity, leads and deals here.
+            Track your ACs and Power Consumption across Shawapno Outlets.
           </p>
         </div>
         <div className="btn-list md:mt-0 mt-2">
@@ -234,7 +234,7 @@ const Crm = () => {
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
                     <div className="box-header !gap-0 !m-0 justify-between">
-                      <div className="box-title">Revenue Analytics</div>
+                      <div className="box-title">Power Analytics</div>
                       <div className="hs-dropdown ti-dropdown">
                         <Link
                           to="#"
@@ -436,7 +436,7 @@ const Crm = () => {
             <div className="xxl:col-span-12 xl:col-span-6  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
-                  <div className="box-title">Deals Status</div>
+                  <div className="box-title">Power Consumption Summary</div>
                   <div className="hs-dropdown ti-dropdown">
                     <Link
                       to="#"
@@ -479,10 +479,10 @@ const Crm = () => {
                 </div>
                 <div className="box-body">
                   <div className="flex items-center mb-[0.8rem]">
-                    <h4 className="font-bold mb-0 text-[1.5rem] ">4,289</h4>
+                    <h4 className="font-bold mb-0 text-[1.5rem] ">3592 kW/h</h4>
                     <div className="ms-2">
                       <span className="py-[0.18rem] px-[0.45rem] rounded-sm text-success !font-medium !text-[0.75em] bg-success/10">
-                        1.02
+                        250
                         <i className="ri-arrow-up-s-fill align-mmiddle ms-1"></i>
                       </span>
                       <span className="text-[#8c9097] dark:text-white/50 text-[0.813rem] ms-1">
@@ -524,33 +524,33 @@ const Crm = () => {
                   <ul className="list-none mb-0 pt-2 crm-deals-status">
                     <li className="primary">
                       <div className="flex items-center text-[0.813rem]  justify-between">
-                        <div>Successful Deals</div>
+                        <div>Today</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          987 deals
+                          384 kW/h
                         </div>
                       </div>
                     </li>
                     <li className="info">
                       <div className="flex items-center text-[0.813rem]  justify-between">
-                        <div>Pending Deals</div>
+                        <div>This Week</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          1,073 deals
+                          3592 kW/h
                         </div>
                       </div>
                     </li>
                     <li className="warning">
                       <div className="flex items-center text-[0.813rem]  justify-between">
-                        <div>Rejected Deals</div>
+                        <div>This Month</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          1,674 deals
+                        14368 kW/h
                         </div>
                       </div>
                     </li>
                     <li className="success">
                       <div className="flex items-center text-[0.813rem]  justify-between">
-                        <div>Upcoming Deals</div>
+                        <div>This Year</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          921 deals
+                        186784 kW/h
                         </div>
                       </div>
                     </li>

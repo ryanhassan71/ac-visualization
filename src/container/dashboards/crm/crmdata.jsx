@@ -353,7 +353,7 @@ export class Revenueanalytics extends Component {
       series: [
         {
           type: "line",
-          name: "Profit",
+          name: "2024",
           data: [
             {
               x: "Jan",
@@ -407,7 +407,7 @@ export class Revenueanalytics extends Component {
         },
         {
           type: "line",
-          name: "Revenue",
+          name: "2023",
           data: [
             {
               x: "Jan",
@@ -459,60 +459,7 @@ export class Revenueanalytics extends Component {
             },
           ],
         },
-        {
-          type: "area",
-          name: "Sales",
-          data: [
-            {
-              x: "Jan",
-              y: 200,
-            },
-            {
-              x: "Feb",
-              y: 530,
-            },
-            {
-              x: "Mar",
-              y: 110,
-            },
-            {
-              x: "Apr",
-              y: 130,
-            },
-            {
-              x: "May",
-              y: 480,
-            },
-            {
-              x: "Jun",
-              y: 520,
-            },
-            {
-              x: "Jul",
-              y: 780,
-            },
-            {
-              x: "Aug",
-              y: 435,
-            },
-            {
-              x: "Sep",
-              y: 475,
-            },
-            {
-              x: "Oct",
-              y: 738,
-            },
-            {
-              x: "Nov",
-              y: 454,
-            },
-            {
-              x: "Dec",
-              y: 480,
-            },
-          ],
-        },
+
       ],
       options: {
         chart: {
@@ -563,7 +510,7 @@ export class Revenueanalytics extends Component {
         yaxis: {
           labels: {
             formatter: function (value) {
-              return "$" + value;
+              return  value + " kWh" ;
             },
           },
         },
@@ -571,12 +518,12 @@ export class Revenueanalytics extends Component {
           y: [
             {
               formatter: function (e) {
-                return void 0 !== e ? "$" + e.toFixed(0) : e;
+                return void 0 !== e ?  e.toFixed(0) + " kWh" : e;
               },
             },
             {
               formatter: function (e) {
-                return void 0 !== e ? "$" + e.toFixed(0) : e;
+                return void 0 !== e ?  e.toFixed(0) + " kWh" : e;
               },
             },
             {
@@ -588,11 +535,11 @@ export class Revenueanalytics extends Component {
         },
         legend: {
           show: true,
-          customLegendItems: ["Profit", "Revenue", "Sales"],
+          customLegendItems: ["2024", "2023",],
           inverseOrder: true,
         },
         title: {
-          text: "Revenue Analytics with sales & profit (USD)",
+          text: "Power Analytics yearly comparison",
           align: "left",
           style: {
             fontSize: ".8125rem",

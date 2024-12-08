@@ -364,97 +364,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                 </button>
               </div>
 
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2  header-country hs-dropdown ti-dropdown  hidden sm:block [--placement:bottom-left]">
-                <button id="dropdown-flag" type="button"
-                  className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none">
-                  <img src={us} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
-                </button>
 
-                <div className="hs-dropdown-menu ti-dropdown-menu min-w-[10rem] hidden !-mt-3" aria-labelledby="dropdown-flag">
-                  <div className="ti-dropdown-divider divide-y divide-gray-200 dark:divide-white/10">
-                    <div className="py-2 first:pt-0 last:pb-0">
-                      <div className="ti-dropdown-item !p-[0.65rem] ">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse w-full">
-                          <div className="h-[1.375rem] flex items-center w-[1.375rem] rounded-full">
-                            <img src={us} alt="flag-img"
-                              className="h-[1rem] w-[1rem] rounded-full" />
-                          </div>
-                          <div>
-                            <p className="!text-[0.8125rem] font-medium">
-                              English
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ti-dropdown-item !p-[0.65rem]">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse w-full">
-                          <div className="h-[1.375rem] w-[1.375rem] flex items-center rounded-full">
-                            <img src={spain} alt="flag-img"
-                              className="h-[1rem] w-[1rem] rounded-full" />
-                          </div>
-                          <div>
-                            <p className="!text-[0.8125rem] font-medium">
-                              Spanish
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ti-dropdown-item !p-[0.65rem]">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse w-full">
-                          <div className="h-[1.375rem] w-[1.375rem] flex items-center rounded-full">
-                            <img src={french} alt="flag-img"
-                              className="h-[1rem] w-[1rem] rounded-full" />
-                          </div>
-                          <div>
-                            <p className="!text-[0.8125rem] font-medium">
-                              French
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ti-dropdown-item !p-[0.65rem]">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse w-full">
-                          <div className="h-[1.375rem] w-[1.375rem] flex items-center rounded-full">
-                            <img src={germany} alt="flag-img"
-                              className="h-[1rem] w-[1rem] rounded-full" />
-                          </div>
-                          <div>
-                            <p className="!text-[0.8125rem] font-medium">
-                              German
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ti-dropdown-item !p-[0.65rem]">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse w-full">
-                          <div className="h-[1.375rem] w-[1.375rem] flex items-center rounded-full">
-                            <img src={italy} alt="flag-img"
-                              className="h-[1rem] w-[1rem] rounded-full" />
-                          </div>
-                          <div>
-                            <p className="!text-[0.8125rem] font-medium">
-                              Italian
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ti-dropdown-item !p-[0.65rem]">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse w-full">
-                          <div className="h-[1.375rem] w-[1.375rem] flex items-center  rounded-sm">
-                            <img src={russia} alt="flag-img"
-                              className="h-[1rem] w-[1rem] rounded-full" />
-                          </div>
-                          <div>
-                            <p className="!text-[0.8125rem] font-medium">
-                              Russian
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2" onClick={() => ToggleDark()}>
                 <Link aria-label="anchor"
                   className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
@@ -649,7 +559,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                 </button>
                 <div className="md:block hidden dropdown-profile cursor-pointer">
                   <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">Khawja Belal</p>
-                  <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">Web Designer</span>
+                  <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] "></span>
                 </div>
                 <div
                   className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
