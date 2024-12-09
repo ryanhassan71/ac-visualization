@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useCrm } from './CrmContext';
-import { fetchTemperatureData, fetchEnergyGraphData } from '../../../acApi';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useCrm } from "./CrmContext";
+import { fetchTemperatureData, fetchEnergyGraphData } from "../../../acApi";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -15,13 +15,21 @@ import {
   Totalrevenue,
   AcIcon,
 } from "./crmdata";
-import ReactApexChart from "react-apexcharts"
+import ReactApexChart from "react-apexcharts";
+import ReactModal from "react-modal";
+import AcControl from "../../ac-controls/AcControl";
+import "./Crm.css";
 
 const Crm = () => {
   const { storeId, powerId } = useParams();
   const { acSensors, setAcSensors, energyData, setEnergyData } = useCrm();
   const [loading, setLoading] = useState(acSensors.length === 0);
   const [energyLoading, setEnergyLoading] = useState(energyData === null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAcId, setSelectedAcId] = useState(null);
+  const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +79,17 @@ const Crm = () => {
     (acc, value) => acc + parseFloat(value),
     0
   );
+
+  const openModal = (acId, acName) => {
+    setSelectedAcId(acId);
+    setIsModalOpen(true);
+    setSelectedAcName(acName); 
+  };
+
+  const closeModal = () => {
+    setSelectedAcId(null);
+    setIsModalOpen(false);
+  };
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
@@ -154,10 +173,8 @@ const Crm = () => {
                                     onClick={(e) => {
                                       e.stopPropagation(); // Prevent triggering the outer link
                                       e.preventDefault(); // Prevent default action of link
-                                      window.open(
-                                        `/ac-control/${storeId}/${sensor.id}`,
-                                        "_blank"
-                                      );
+
+                                      openModal(sensor.id, sensor.name);
                                     }}
                                   >
                                     {sensor.name} Remote
@@ -174,10 +191,16 @@ const Crm = () => {
                                           "inherit",
                                       }}
                                     >
-{sensor?.sensors[0]?.ambient_temp
-  ? `${Math.round(parseFloat(sensor?.sensors[0]?.ambient_temp.replace("°C", "")))}°C`
-  : "N/A"}
-
+                                      {sensor?.sensors[0]?.ambient_temp
+                                        ? `${Math.round(
+                                            parseFloat(
+                                              sensor?.sensors[0]?.ambient_temp.replace(
+                                                "°C",
+                                                ""
+                                              )
+                                            )
+                                          )}°C`
+                                        : "N/A"}
                                     </p>
                                     <p
                                       className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]"
@@ -199,9 +222,13 @@ const Crm = () => {
                                           "inherit",
                                       }}
                                     >
-    {sensor?.sensors[0]?.airflow_temp !== undefined
-      ? Math.round(sensor?.sensors[0]?.airflow_temp)
-      : "N/A"} °C
+                                      {sensor?.sensors[0]?.airflow_temp !==
+                                      undefined
+                                        ? Math.round(
+                                            sensor?.sensors[0]?.airflow_temp
+                                          )
+                                        : "N/A"}{" "}
+                                      °C
                                     </p>
                                     <p
                                       className="text-[#8c9097] dark:text-white/50 opacity-[0.7] text-[0.6875rem]"
@@ -223,12 +250,6 @@ const Crm = () => {
                     </Link>
                   </div>
                 ))}
-
-
-
-
-
-
 
                 {/* End of ac list  */}
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
@@ -542,7 +563,7 @@ const Crm = () => {
                       <div className="flex items-center text-[0.813rem]  justify-between">
                         <div>This Month</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                        14368 kW/h
+                          14368 kW/h
                         </div>
                       </div>
                     </li>
@@ -550,7 +571,7 @@ const Crm = () => {
                       <div className="flex items-center text-[0.813rem]  justify-between">
                         <div>This Year</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                        186784 kW/h
+                          186784 kW/h
                         </div>
                       </div>
                     </li>
@@ -562,6 +583,24 @@ const Crm = () => {
         </div>
       </div>
       <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
+      {/* Modal for AcControl */}
+      <ReactModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="AC Controls"
+        className="modal-content"
+        overlayClassName="modal-overlay"
+      >
+              <div className="modal-header">
+          <h4>{selectedAcName }</h4>
+          <button onClick={closeModal} className="close-button">
+            &times;
+          </button>
+        </div>
+        <div className="modal-body">
+          {selectedAcId && <AcControl acId={selectedAcId} storeId={storeId} />}
+        </div>
+      </ReactModal>
     </Fragment>
   );
 };
