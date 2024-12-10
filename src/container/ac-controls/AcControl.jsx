@@ -133,13 +133,13 @@ function AcControl({ acId, storeId }) {
 
   const getModeEmoji = () => {
     switch (mode) {
-      case "Cool":
+      case "cool":
         return "❄️";
-      case "Hot":
+      case "heat":
         return "🔥";
-      case "Fan":
+      case "fan":
         return "💨";
-      case "Auto":
+      case "auto":
         return "🔄";
       default:
         return "❄️";
@@ -148,16 +148,16 @@ function AcControl({ acId, storeId }) {
 
   const getSpeedEmoji = () => {
     switch (speed) {
-      case "High":
+      case "max":
         return "⚡";
-      case "Low":
+      case "min":
         return "💨";
-      case "Mid":
+      case "med":
         return "🌬️";
-      case "Auto":
+      case "auto":
         return "🔄";
       default:
-        return "⚡";
+        return "🔄";
     }
   };
 

@@ -29,8 +29,6 @@ const Crm = () => {
   const [selectedAcId, setSelectedAcId] = useState(null);
   const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
 
-  
-
   useEffect(() => {
     const fetchData = async () => {
       const acSensorsData = await fetchTemperatureData(storeId); // Fetch the AC data
@@ -83,7 +81,7 @@ const Crm = () => {
   const openModal = (acId, acName) => {
     setSelectedAcId(acId);
     setIsModalOpen(true);
-    setSelectedAcName(acName); 
+    setSelectedAcName(acName);
   };
 
   const closeModal = () => {
@@ -169,7 +167,8 @@ const Crm = () => {
                               <div className="flex items-center justify-between mt-1">
                                 <div>
                                   <button
-                                    className="text-warning text-[0.813rem]"
+                                    className="text-[0.813rem] font-bold"
+                                    style={{ color: 'blue', fontWeight: 'bold' }} 
                                     onClick={(e) => {
                                       e.stopPropagation(); // Prevent triggering the outer link
                                       e.preventDefault(); // Prevent default action of link
@@ -591,8 +590,8 @@ const Crm = () => {
         className="modal-content"
         overlayClassName="modal-overlay"
       >
-              <div className="modal-header">
-          <h4>{selectedAcName }</h4>
+        <div className="modal-header">
+          <h4>{selectedAcName}</h4>
           <button onClick={closeModal} className="close-button">
             &times;
           </button>
