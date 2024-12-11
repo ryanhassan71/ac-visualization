@@ -91,26 +91,37 @@ export class Totalcustomers extends Component {
           </p>
         )}
 
-        <div           style={{
-     
-      display: "flex", // Set display to flex
-      justifyContent: "center", // Horizontally center the text
-      alignItems: "center", // Vertically center the text
-      marginTop: "10px",
-      height: "30px", // Set a specific height for the box
-      width: "100%", // Ensure the box spans the full width
-          }}>
-    <span
-      style={{
-        fontSize: "1.25rem", // Increased text size
-        fontWeight: "bold", // Make the text bold
-        color: "green", // Set text color to green
-        paddingLeft : '20px'
-      }}
-    >
-      25 °C
-    </span>
-        </div>
+<div
+  style={{
+    display: "flex", // Flex container for horizontal layout
+    justifyContent: "center", // Center content horizontally
+    alignItems: "center", // Center content vertically
+    marginTop: "10px",
+    height: "30px", // Set a specific height for the box
+    width: "100%", // Ensure the box spans the full width
+  }}
+>
+  <span
+    style={{
+      fontSize: "1", // Text size
+      fontWeight: "bold", // Bold text
+      color: "green", // Text color
+      marginRight: "10px", // Add spacing between the two spans
+    }}
+  >
+    40 kWh
+  </span>
+  <span
+    style={{
+      fontSize: "1", // Text size
+      fontWeight: "bold", // Bold text
+      color: "green", // Text color
+    }}
+  >
+    25 °C
+  </span>
+</div>
+
       </div>
     );
   }

@@ -22,7 +22,9 @@ import "./Crm.css";
 
 const Crm = () => {
   const { storeId, powerId } = useParams();
-  const { acSensors, setAcSensors, energyData, setEnergyData } = useCrm();
+  const { getStoreData, setStoreData } = useCrm();
+
+  const { acSensors = [], energyData = null } = getStoreData(storeId);
   const [loading, setLoading] = useState(acSensors.length === 0);
   const [energyLoading, setEnergyLoading] = useState(energyData === null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,40 +33,32 @@ const Crm = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const acSensorsData = await fetchTemperatureData(storeId); // Fetch the AC data
-      setAcSensors(acSensorsData);
+      const acSensorsData = await fetchTemperatureData(storeId);
+      setStoreData(storeId, "acSensors", acSensorsData);
       setLoading(false);
     };
 
     // Fetch data every 5 seconds
-    const interval = setInterval(fetchData, 5000);
+    const interval = setInterval(fetchData, 3000);
 
     // Cleanup the interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [storeId]);
 
   useEffect(() => {
     // Fetch energy data when the component loads
     const fetchEnergyData = async () => {
-      const data = await fetchEnergyGraphData("weekly", powerId);
-      setEnergyData(data);
+      setEnergyLoading(true);
+      const energyGraphData = await fetchEnergyGraphData("weekly", powerId);
+      setStoreData(storeId, "energyData", energyGraphData);
       setEnergyLoading(false);
     };
-    fetchEnergyData();
-  }, []);
 
-  if (loading || energyLoading) {
-    return (
-      <div className="flex justify-center items-center w-full h-screen">
-        <div className="ti-spinner" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div>
-    );
-  }
+    fetchEnergyData();
+  }, [powerId]);
 
   // Format dates from API response
-  const formattedDates = energyData.data[0].time.map((dateString) => {
+  const formattedDates = energyData?.data[0].time.map((dateString) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-GB", {
       day: "2-digit",
@@ -73,7 +67,7 @@ const Crm = () => {
     }).format(date);
   });
 
-  const totalPowerConsumption = energyData.data[0].energy_data.reduce(
+  const totalPowerConsumption = energyData?.data[0].energy_data.reduce(
     (acc, value) => acc + parseFloat(value),
     0
   );
@@ -168,7 +162,10 @@ const Crm = () => {
                                 <div>
                                   <button
                                     className="text-[0.813rem] font-bold"
-                                    style={{ color: 'blue', fontWeight: 'bold' }} 
+                                    style={{
+                                      color: "blue",
+                                      fontWeight: "bold",
+                                    }}
                                     onClick={(e) => {
                                       e.stopPropagation(); // Prevent triggering the outer link
                                       e.preventDefault(); // Prevent default action of link
@@ -316,92 +313,96 @@ const Crm = () => {
                 <div className="box-body overflow-hidden">
                   <div className="leads-source-chart flex items-center justify-center">
                     <div>
-                      <ReactApexChart
-                        options={{
-                          labels: formattedDates, // Use formatted dates for labels
-                          chart: {
-                            height: 260,
-                            type: "donut",
-                            events: {
-                              mounted: (chart) => {
-                                chart.windowResizeHandler();
+                      {energyData && (
+                        <ReactApexChart
+                          options={{
+                            labels: formattedDates, // Use formatted dates for labels
+                            chart: {
+                              height: 260,
+                              type: "donut",
+                              events: {
+                                mounted: (chart) => {
+                                  chart.windowResizeHandler();
+                                },
                               },
                             },
-                          },
-                          dataLabels: {
-                            enabled: false,
-                          },
-                          legend: {
-                            show: false,
-                          },
-                          stroke: {
-                            show: true,
-                            curve: "smooth",
-                            lineCap: "round",
-                            colors: ["#fff"],
-                            width: 0,
-                            dashArray: 0,
-                          },
-                          plotOptions: {
-                            pie: {
-                              expandOnClick: false,
-                              donut: {
-                                size: "82%",
-                                labels: {
-                                  show: false,
-                                  name: {
-                                    show: true,
-                                    fontSize: "20px",
-                                    color: "#495057",
-                                    offsetY: -4,
-                                  },
-                                  value: {
-                                    show: true,
-                                    fontSize: "18px",
-                                    color: undefined,
-                                    offsetY: 8,
-                                    formatter: function (val) {
-                                      return val + "%";
+                            dataLabels: {
+                              enabled: false,
+                            },
+                            legend: {
+                              show: false,
+                            },
+                            stroke: {
+                              show: true,
+                              curve: "smooth",
+                              lineCap: "round",
+                              colors: ["#fff"],
+                              width: 0,
+                              dashArray: 0,
+                            },
+                            plotOptions: {
+                              pie: {
+                                expandOnClick: false,
+                                donut: {
+                                  size: "82%",
+                                  labels: {
+                                    show: false,
+                                    name: {
+                                      show: true,
+                                      fontSize: "20px",
+                                      color: "#495057",
+                                      offsetY: -4,
+                                    },
+                                    value: {
+                                      show: true,
+                                      fontSize: "18px",
+                                      color: undefined,
+                                      offsetY: 8,
+                                      formatter: function (val) {
+                                        return val + "%";
+                                      },
                                     },
                                   },
                                 },
                               },
                             },
-                          },
-                          colors: [
-                            "#845ADF", // Color for first value
-                            "#23B7E5", // Color for second value
-                            "#F5B849", // Color for third value
-                            "#26BF94", // Color for fourth value
-                            "#FF6F61", // Color for fifth value
-                            "#FFA07A", // Color for sixth value
-                            "#B22222", // Color for seventh value
-                          ],
-                          tooltip: {
-                            y: {
-                              formatter: function (val) {
-                                return val + " kW/h";
+                            colors: [
+                              "#845ADF", // Color for first value
+                              "#23B7E5", // Color for second value
+                              "#F5B849", // Color for third value
+                              "#26BF94", // Color for fourth value
+                              "#FF6F61", // Color for fifth value
+                              "#FFA07A", // Color for sixth value
+                              "#B22222", // Color for seventh value
+                            ],
+                            tooltip: {
+                              y: {
+                                formatter: function (val) {
+                                  return val + " kW/h";
+                                },
                               },
                             },
-                          },
-                        }}
-                        series={energyData.data[0].energy_data.map((idx) =>
-                          parseFloat(idx)
-                        )} // Use energy data as the series data
-                        type="donut"
-                        height={260}
-                      />
+                          }}
+                          series={energyData?.data[0].energy_data.map((idx) =>
+                            parseFloat(idx)
+                          )} // Use energy data as the series data
+                          type="donut"
+                          height={260}
+                        />
+                      )}
                     </div>
-                    <div className="lead-source-value ">
-                      <span className="block text-[0.875rem] ">Total</span>
-                      <span className="block text-[1.5625rem] font-bold">
-                        {Math.round(totalPowerConsumption)} kW/h
-                      </span>
-                    </div>
+                    {energyData && (
+                      <div className="lead-source-value ">
+                        <span className="block text-[0.875rem] ">Total</span>
+                        <span className="block text-[1.5625rem] font-bold">
+                          {Math.round(totalPowerConsumption)} kW/h
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-7 border-t border-dashed dark:border-defaultborder/10">
-                  {formattedDates.map((date, index) => {
+                  {formattedDates?.map((date, index) => {
                     // Remove year from the formatted date
                     const dateWithoutYear = date.replace(/\s\d{4}$/, ""); // Removes the year (e.g., "28 Feb 2024" -> "28 Feb")
 
