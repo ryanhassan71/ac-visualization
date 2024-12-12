@@ -118,7 +118,7 @@ export class Totalcustomers extends Component {
       color: "green", // Text color
     }}
   >
-    25 °C
+    {acSensorData.ac_remote_temp ? acSensorData.ac_remote_temp : "25"} °C
   </span>
 </div>
 
