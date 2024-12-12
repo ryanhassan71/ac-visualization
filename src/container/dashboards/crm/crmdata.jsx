@@ -550,7 +550,7 @@ export class Revenueanalytics extends Component {
           inverseOrder: true,
         },
         title: {
-          text: "Power Analytics yearly comparison",
+          text: "Yearly comparison",
           align: "left",
           style: {
             fontSize: ".8125rem",

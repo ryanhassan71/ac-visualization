@@ -24,7 +24,11 @@ const Crm = () => {
   const { storeId, powerId } = useParams();
   const { getStoreData, setStoreData } = useCrm();
 
-  const { acSensors = [], energyData = null } = getStoreData(storeId);
+  const {
+    acSensors = [],
+    energyData = null,
+    monthlyData = null,
+  } = getStoreData(storeId);
   const [loading, setLoading] = useState(acSensors.length === 0);
   const [energyLoading, setEnergyLoading] = useState(energyData === null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,6 +61,17 @@ const Crm = () => {
     fetchEnergyData();
   }, [powerId]);
 
+  useEffect(() => {
+    console.log("monthly data fetched with powerId", powerId);
+    // Fetch monthly energy data
+    const fetchMonthlyData = async () => {
+      const monthlyEnergyData = await fetchEnergyGraphData("monthly", powerId);
+      setStoreData(storeId, "monthlyData", monthlyEnergyData);
+    };
+
+    fetchMonthlyData();
+  }, [powerId]);
+
   // Format dates from API response
   const formattedDates = energyData?.data[0].time.map((dateString) => {
     const date = new Date(dateString);
@@ -82,6 +97,29 @@ const Crm = () => {
     setSelectedAcId(null);
     setIsModalOpen(false);
   };
+
+  // Calculate total monthly power consumption
+  const totalMonthlyConsumption = monthlyData
+    ? Math.round(
+        monthlyData.data[0].energy_data.reduce(
+          (acc, value) => acc + parseFloat(value),
+          0
+        )
+      )
+    : 0;
+
+// Calculate total consumption for the latest 7 days
+const latest7DaysConsumption = monthlyData?.data[0]?.energy_data.slice(-7).reduce(
+  (acc, value) => acc + parseFloat(value),
+  0
+);
+
+// Calculate the percentage of the month's total consumption
+const latest7DaysPercentage =
+  totalMonthlyConsumption > 0
+    ? Math.round((latest7DaysConsumption / totalMonthlyConsumption) * 100)
+    : 100; // Default to 100% if it's the beginning of the month
+
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
@@ -458,120 +496,57 @@ const Crm = () => {
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">Power Consumption Summary</div>
-                  <div className="hs-dropdown ti-dropdown">
-                    <Link
-                      to="#"
-                      className="text-[0.75rem] px-2 font-normal text-[#8c9097] dark:text-white/50"
-                      aria-expanded="false"
-                    >
-                      View All
-                      <i className="ri-arrow-down-s-line align-middle ms-1 inline-block"></i>
-                    </Link>
-                    <ul
-                      className="hs-dropdown-menu ti-dropdown-menu hidden"
-                      role="menu"
-                    >
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Today
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          This Week
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Last Week
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
+
                 </div>
                 <div className="box-body">
                   <div className="flex items-center mb-[0.8rem]">
-                    <h4 className="font-bold mb-0 text-[1.5rem] ">3592 kW/h</h4>
+                    <h4 className="font-bold mb-0 text-[1.5rem] ">         {latest7DaysConsumption !== undefined
+      ? `${Math.round(latest7DaysPercentage)}%`
+      : "0 %"}</h4>
                     <div className="ms-2">
                       <span className="py-[0.18rem] px-[0.45rem] rounded-sm text-success !font-medium !text-[0.75em] bg-success/10">
-                        250
+                        10 %
                         <i className="ri-arrow-up-s-fill align-mmiddle ms-1"></i>
                       </span>
-                      <span className="text-[#8c9097] dark:text-white/50 text-[0.813rem] ms-1">
-                        compared to last week
+                      <span className="text-[#8c9097] dark:text-white/50 text-[0.69rem] ml-2">
+                       of the month's total 
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex w-full h-[0.3125rem] mb-6 rounded-full overflow-hidden">
-                    <div
-                      className="flex flex-col justify-center rounded-s-[0.625rem] overflow-hidden bg-primary w-[21%]"
-                      style={{ width: "21%" }}
-                      aria-valuenow={21}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    ></div>
-                    <div
-                      className="flex flex-col justify-center rounded-none overflow-hidden bg-info w-[26%]"
-                      style={{ width: "26%" }}
-                      aria-valuenow={26}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    ></div>
-                    <div
-                      className="flex flex-col justify-center rounded-none overflow-hidden bg-warning w-[35%]"
-                      style={{ width: "35%" }}
-                      aria-valuenow={35}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    ></div>
-                    <div
-                      className="flex flex-col justify-center rounded-e-[0.625rem] overflow-hidden bg-success w-[18%]"
-                      style={{ width: "18%" }}
-                      aria-valuenow={18}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    ></div>
-                  </div>
+
                   <ul className="list-none mb-0 pt-2 crm-deals-status">
                     <li className="primary">
-                      <div className="flex items-center text-[0.813rem]  justify-between">
+                      <div className="flex items-center text-[0.813rem] justify-between">
                         <div>Today</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          384 kW/h
+                          {energyData?.data[0]?.energy_data?.length > 0
+                            ? `${Math.round(
+                                parseFloat(
+                                  energyData.data[0].energy_data.slice(-1)[0]
+                                )
+                              )} kW/h`
+                            : "0 kW/h"}
                         </div>
                       </div>
                     </li>
                     <li className="info">
-                      <div className="flex items-center text-[0.813rem]  justify-between">
-                        <div>This Week</div>
+                      <div className="flex items-center text-[0.813rem] justify-between">
+                        <div>Last 7 days</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          3592 kW/h
+                          {totalPowerConsumption !== undefined
+                            ? `${Math.round(totalPowerConsumption)} kW/h`
+                            : "0 kW/h"}
                         </div>
                       </div>
                     </li>
                     <li className="warning">
-                      <div className="flex items-center text-[0.813rem]  justify-between">
+                      <div className="flex items-center text-[0.813rem] justify-between">
                         <div>This Month</div>
                         <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          14368 kW/h
-                        </div>
-                      </div>
-                    </li>
-                    <li className="success">
-                      <div className="flex items-center text-[0.813rem]  justify-between">
-                        <div>This Year</div>
-                        <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          186784 kW/h
+                          {totalMonthlyConsumption !== undefined
+                            ? `${Math.round(totalMonthlyConsumption)} kW/h`
+                            : "0 kW/h"}
                         </div>
                       </div>
                     </li>
