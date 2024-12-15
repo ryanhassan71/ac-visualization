@@ -346,7 +346,7 @@ const Crm = () => {
             <div className="xxl:col-span-12 xl:col-span-12  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
-                  <div className="box-title">Power Consumption</div>
+                  <div className="box-title">Current Week Power Consumption</div>
                 </div>
                 <div className="box-body overflow-hidden">
                   <div className="leads-source-chart flex items-center justify-center">

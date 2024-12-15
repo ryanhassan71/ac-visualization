@@ -46,8 +46,16 @@ const MonthlyPowerChart = ({ monthlyData }) => {
     plugins: {
       legend: {
         labels: {
-          boxWidth: 0, // Remove the colored box
+          boxWidth: 0,
           color: "#8c9097",
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw;
+            return ` ${Math.round(value)} kW/h`; // Round the value and append units
+          },
         },
       },
     },
@@ -58,6 +66,7 @@ const MonthlyPowerChart = ({ monthlyData }) => {
     },
   };
   
+  
 
   const chartData = {
     labels: labels,
@@ -65,18 +74,8 @@ const MonthlyPowerChart = ({ monthlyData }) => {
       {
         label: "Weekly Power Consumption (kW/h)",
         data: data,
-        backgroundColor: [
-          "rgba(132, 90, 223, 0.7)",
-          "rgba(35, 183, 229, 0.7)",
-          "rgba(245, 184, 73, 0.7)",
-          "rgba(230, 83, 60, 0.7)",
-        ],
-        borderColor: [
-          "rgb(132, 90, 223)",
-          "rgb(35, 183, 229)",
-          "rgb(245, 184, 73)",
-          "rgb(230, 83, 60)",
-        ],
+        backgroundColor: "rgba(91, 44, 111, 0.7)", // Dark Purple with opacity
+        borderColor: "rgb(91, 44, 111)", // Solid Dark Purple
         borderWidth: 1,
       },
     ],
