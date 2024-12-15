@@ -1,79 +1,105 @@
-import React from 'react'
-import  {  Fragment } from 'react';
-import { Chartjsbar } from './chartjsdata';
+import React, { Fragment } from "react";
+import { Chartjsbar } from "./chartjsdata";
 
-const Option2 = {
+const MonthlyPowerChart = ({ monthlyData }) => {
+  // Function to process monthly data and split into weeks
+  const processMonthlyData = (energyData, timeData) => {
+    const weeks = [[], [], [], []]; // Initialize 4 weeks
+    const weekLabels = ["Week 1", "Week 2", "Week 3", "Week 4"];
+    let totalWeeks = 0;
 
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: true,
+    // Divide energy data into weeks based on the time range
+    timeData.forEach((date, index) => {
+      const day = new Date(date).getDate();
+
+      if (day >= 1 && day <= 7) weeks[0].push(parseFloat(energyData[index]));
+      else if (day >= 8 && day <= 14) weeks[1].push(parseFloat(energyData[index]));
+      else if (day >= 15 && day <= 21) weeks[2].push(parseFloat(energyData[index]));
+      else weeks[3].push(parseFloat(energyData[index]));
+    });
+
+    // Calculate the total weeks passed based on data availability
+    totalWeeks = weeks.filter((week) => week.length > 0).length;
+
+    // Sum up weekly data for display
+    const weeklySums = weeks.map((week) =>
+      week.length > 0 ? week.reduce((acc, val) => acc + val, 0) : 0
+    );
+
+    // Return only the relevant weeks and labels
+    return {
+      labels: weekLabels.slice(0, totalWeeks),
+      data: weeklySums.slice(0, totalWeeks),
+    };
+  };
+
+  // Extract energy data and time from monthlyData
+  const energyData = monthlyData?.energy_data || [];
+  const timeData = monthlyData?.time || [];
+
+  const { labels, data } = processMonthlyData(energyData, timeData);
+
+  // Chart configuration
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          boxWidth: 0, // Remove the colored box
+          color: "#8c9097",
+        },
+      },
     },
-  },
-  scales: {
-    y: {
-      beginAtZero: true
-    }
-  }
-};
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+  
 
-const Data2 = {
-  type: 'bar',
-  labels: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-  ],
-  datasets: [{
-    label: 'My First Dataset',
-    data: [65, 59, 80, 81, 56, 55, 40],
-    backgroundColor: [
-      'rgba(132, 90, 223, 0.2)',
-      'rgba(35, 183, 229, 0.2)',
-      'rgba(245, 184, 73, 0.2)',
-      'rgba(73, 182, 245, 0.2)',
-      'rgba(230, 83, 60, 0.2)',
-      'rgba(38, 191, 148, 0.2)',
-      'rgba(35, 35, 35, 0.2)'
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Weekly Power Consumption (kW/h)",
+        data: data,
+        backgroundColor: [
+          "rgba(132, 90, 223, 0.7)",
+          "rgba(35, 183, 229, 0.7)",
+          "rgba(245, 184, 73, 0.7)",
+          "rgba(230, 83, 60, 0.7)",
+        ],
+        borderColor: [
+          "rgb(132, 90, 223)",
+          "rgb(35, 183, 229)",
+          "rgb(245, 184, 73)",
+          "rgb(230, 83, 60)",
+        ],
+        borderWidth: 1,
+      },
     ],
-    borderColor: [
-      'rgb(132, 90, 223)',
-      'rgb(35, 183, 229)',
-      'rgb(245, 184, 73)',
-      'rgb(73, 182, 245)',
-      'rgb(230, 83, 60)',
-      'rgb(38, 191, 148)',
-      'rgb(35, 35, 35)'
-    ],
-    borderWidth: 1
-  }]
-};
-function MonthlyPowerChart() {
+  };
+
   return (
     <Fragment>
-    
-         <div className="grid grid-cols-12 gap-x-6">
-             <div className="xl:col-span-12 col-span-12">
-                 <div className="box custom-box">
-                     <div className="box-body">
-                      <Chartjsbar option={Option2} data={Data2}/>
-                     </div>
-                 </div>
-             </div>
+      <div className="grid grid-cols-12  mt-0 pt-0">
+        <div className="xl:col-span-12 col-span-12">
+          <div className="box custom-box">
 
+            <div className="box-body">
+              {data.length > 0 ? (
+                <Chartjsbar option={options} data={chartData} />
+              ) : (
+                <p>No data available for this month</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
-
-
-
-
-         </div>
-</Fragment>
-  )
-}
-
-export default MonthlyPowerChart
+export default MonthlyPowerChart;
