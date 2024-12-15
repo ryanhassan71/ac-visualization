@@ -73,10 +73,11 @@ export class Totalcustomers extends Component {
   }
 
   render() {
-    const { acSensorData } = this.props;
+    const { acSensorData, time } = this.props;
     return (
-      <div style={{ width: 100, height: 60, }}>
+      <div style={{}  }>
         {acSensorData && (
+          <>
     <p
     className="text-[#8c9097] dark:text-white/50 text-[0.6875rem] text-right m-0"
     style={{
@@ -88,17 +89,35 @@ export class Totalcustomers extends Component {
     }}
   >
             {acSensorData.place || "N/A"}
+            
           </p>
+          <p
+    className="text-[#8c9097] dark:text-white/50 text-[0.6875rem] text-right m-0 "
+    style={{
+      textAlign: "right",
+      marginBottom: 0,
+      whiteSpace: "nowrap", // Prevent wrapping
+      textOverflow: "ellipsis", // Add ellipsis for overflow
+      
+    }}
+  >
+            {time || "N/A"}
+            
+          </p>
+          </>
+          
+
+
         )}
 
 <div
   style={{
     display: "flex", // Flex container for horizontal layout
-    justifyContent: "center", // Center content horizontally
-    alignItems: "center", // Center content vertically
+    justifyContent: "right", // Center content horizontally
+    // Center content vertically
     marginTop: "10px",
     height: "30px", // Set a specific height for the box
-    width: "100%", // Ensure the box spans the full width
+     // Ensure the box spans the full width
   }}
 >
   <span

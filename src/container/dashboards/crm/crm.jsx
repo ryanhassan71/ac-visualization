@@ -191,6 +191,7 @@ const latest7DaysPercentage =
                                 <div id={`crm-total-deals-${index}`}>
                                   <Totalcustomers
                                     acSensorData={sensor?.sensors[0] || {}}
+                                    time={sensor?.temperature_time}
                                   />
                                 </div>
                               </div>
