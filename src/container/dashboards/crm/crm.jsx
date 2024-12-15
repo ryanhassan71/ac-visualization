@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCrm } from "./CrmContext";
-import { fetchTemperatureData, fetchEnergyGraphData, TEMPERATURE_DATA_INTERVAL } from "../../../acApi";
+import {
+  fetchTemperatureData,
+  fetchEnergyGraphData,
+  TEMPERATURE_DATA_INTERVAL,
+} from "../../../acApi";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -19,6 +23,7 @@ import ReactApexChart from "react-apexcharts";
 import ReactModal from "react-modal";
 import AcControl from "../../ac-controls/AcControl";
 import "./Crm.css";
+import MonthlyPowerChart from "../../../components/ui/MonthlyPowerChart";
 
 const Crm = () => {
   const { storeId, powerId } = useParams();
@@ -38,10 +43,9 @@ const Crm = () => {
     const fetchData = async () => {
       const acSensorsData = await fetchTemperatureData(storeId);
       setStoreData(storeId, "acSensors", acSensorsData);
-      
     };
 
-    fetchData()
+    fetchData();
     const interval = setInterval(fetchData, TEMPERATURE_DATA_INTERVAL);
 
     // Cleanup the interval on component unmount
@@ -53,14 +57,12 @@ const Crm = () => {
     const fetchEnergyData = async () => {
       const energyGraphData = await fetchEnergyGraphData("weekly", powerId);
       setStoreData(storeId, "energyData", energyGraphData);
-      
     };
 
     fetchEnergyData();
   }, [powerId]);
 
   useEffect(() => {
-    
     // Fetch monthly energy data
     const fetchMonthlyData = async () => {
       const monthlyEnergyData = await fetchEnergyGraphData("monthly", powerId);
@@ -106,17 +108,16 @@ const Crm = () => {
       )
     : 0;
 
-// Calculate total consumption for the latest 7 days
-const latest7DaysConsumption = monthlyData?.data[0]?.energy_data.slice(-7).reduce(
-  (acc, value) => acc + parseFloat(value),
-  0
-);
+  // Calculate total consumption for the latest 7 days
+  const latest7DaysConsumption = monthlyData?.data[0]?.energy_data
+    .slice(-7)
+    .reduce((acc, value) => acc + parseFloat(value), 0);
 
-// Calculate the percentage of the month's total consumption
-const latest7DaysPercentage =
-  totalMonthlyConsumption > 0
-    ? Math.round((latest7DaysConsumption / totalMonthlyConsumption) * 100)
-    : 100; // Default to 100% if it's the beginning of the month
+  // Calculate the percentage of the month's total consumption
+  const latest7DaysPercentage =
+    totalMonthlyConsumption > 0
+      ? Math.round((latest7DaysConsumption / totalMonthlyConsumption) * 100)
+      : 100; // Default to 100% if it's the beginning of the month
 
   return (
     <Fragment>
@@ -178,7 +179,7 @@ const latest7DaysPercentage =
                                     {sensor.name}
                                   </p>
                                   <h4
-                                    className="font-semibold text-[1.5rem] !mb-2"
+                                    className="font-semibold text-[1.25rem] !mb-2"
                                     style={{
                                       color:
                                         sensor?.sensors[0]?.state_color ||
@@ -284,7 +285,7 @@ const latest7DaysPercentage =
                   </div>
                 ))}
 
-                {/* End of ac list  */}
+                
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
                     <div className="box-header !gap-0 !m-0 justify-between">
@@ -491,28 +492,31 @@ const latest7DaysPercentage =
                 </div>
               </div>
             </div>
-            <div className="xxl:col-span-12 xl:col-span-6  col-span-12">
+            <div className="xxl:col-span-12 xl:col-span-12  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">Power Consumption Summary</div>
-
                 </div>
                 <div className="box-body">
+                  <MonthlyPowerChart />
+
                   <div className="flex items-center mb-[0.8rem]">
-                    <h4 className="font-bold mb-0 text-[1.5rem] ">         {latest7DaysConsumption !== undefined
-      ? `${Math.round(latest7DaysPercentage)}%`
-      : "0 %"}</h4>
+                    <h4 className="font-bold mb-0 text-[1.5rem] ">
+                      {" "}
+                      {latest7DaysConsumption !== undefined
+                        ? `${Math.round(latest7DaysPercentage)}%`
+                        : "0 %"}
+                    </h4>
                     <div className="ms-2">
                       <span className="py-[0.18rem] px-[0.45rem] rounded-sm text-success !font-medium !text-[0.75em] bg-success/10">
                         10 %
                         <i className="ri-arrow-up-s-fill align-mmiddle ms-1"></i>
                       </span>
                       <span className="text-[#8c9097] dark:text-white/50 text-[0.69rem] ml-2">
-                       of the month's total 
+                        of the month's total
                       </span>
                     </div>
                   </div>
-
 
                   <ul className="list-none mb-0 pt-2 crm-deals-status">
                     <li className="primary">
