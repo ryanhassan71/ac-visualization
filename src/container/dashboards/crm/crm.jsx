@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCrm } from "./CrmContext";
-import { fetchTemperatureData, fetchEnergyGraphData } from "../../../acApi";
+import { fetchTemperatureData, fetchEnergyGraphData, TEMPERATURE_DATA_INTERVAL } from "../../../acApi";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -29,8 +29,7 @@ const Crm = () => {
     energyData = null,
     monthlyData = null,
   } = getStoreData(storeId);
-  const [loading, setLoading] = useState(acSensors.length === 0);
-  const [energyLoading, setEnergyLoading] = useState(energyData === null);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAcId, setSelectedAcId] = useState(null);
   const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
@@ -39,11 +38,11 @@ const Crm = () => {
     const fetchData = async () => {
       const acSensorsData = await fetchTemperatureData(storeId);
       setStoreData(storeId, "acSensors", acSensorsData);
-      setLoading(false);
+      
     };
 
-    // Fetch data every 5 seconds
-    const interval = setInterval(fetchData, 3000);
+    fetchData()
+    const interval = setInterval(fetchData, TEMPERATURE_DATA_INTERVAL);
 
     // Cleanup the interval on component unmount
     return () => clearInterval(interval);
@@ -52,17 +51,16 @@ const Crm = () => {
   useEffect(() => {
     // Fetch energy data when the component loads
     const fetchEnergyData = async () => {
-      setEnergyLoading(true);
       const energyGraphData = await fetchEnergyGraphData("weekly", powerId);
       setStoreData(storeId, "energyData", energyGraphData);
-      setEnergyLoading(false);
+      
     };
 
     fetchEnergyData();
   }, [powerId]);
 
   useEffect(() => {
-    console.log("monthly data fetched with powerId", powerId);
+    
     // Fetch monthly energy data
     const fetchMonthlyData = async () => {
       const monthlyEnergyData = await fetchEnergyGraphData("monthly", powerId);

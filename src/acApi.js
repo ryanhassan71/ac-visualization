@@ -3,7 +3,19 @@ import axios from 'axios';
 import { BASE_URL } from './config';
 
 // Store Constants
+export const convertToMilliseconds = (value, unit) => {
+  const unitToMilliseconds = {
+    seconds: 1000,
+    minutes: 60 * 1000,
+    hours: 60 * 60 * 1000,
+  };
 
+  if (!unitToMilliseconds[unit]) {
+    throw new Error(`Invalid unit provided: ${unit}. Valid units are 'seconds', 'minutes', 'hours'.`);
+  }
+
+  return value * unitToMilliseconds[unit];
+};
 
 let token = null; // Global variable to store the token
 
@@ -59,6 +71,7 @@ apiClient.interceptors.request.use(
 // Function to fetch AC sensor data
 export const fetchTemperatureData = async (storeId) => {
   
+  
   try {
     const response = await apiClient.get(`/temperature/sensor-overview/?store_id=${storeId}`);
     if (response.data && response.data.success) {
@@ -72,6 +85,9 @@ export const fetchTemperatureData = async (storeId) => {
     return [];
   }
 };
+
+export const TEMPERATURE_DATA_INTERVAL = convertToMilliseconds(10, 'seconds')
+
 
 // Function to fetch AC graph data (temperature over time)
 export const fetchTemperatureGraphData = async (acId, type = 'daily') => {
@@ -89,7 +105,7 @@ export const fetchTemperatureGraphData = async (acId, type = 'daily') => {
   }
 };
 
-export const TEMPERATURE_GRAPH_DATA_TIMER = 15 * 60 * 1000;
+export const TEMPERATURE_GRAPH_DATA_TIMER = convertToMilliseconds(15, 'minutes')
 
 // Function to fetch energy graph data
 export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {

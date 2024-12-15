@@ -9,6 +9,9 @@ import AcChart from './container/ac-chart/AcChart.jsx';
 import AcControl from './container/ac-controls/AcControl.jsx';
 import Power from './container/dashboards/crm/Power.jsx';
 import { CrmProvider } from './container/dashboards/crm/CrmContext'; // Import CrmProvider
+import ReactModal from 'react-modal';
+
+ReactModal.setAppElement('#root');
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.Fragment>
