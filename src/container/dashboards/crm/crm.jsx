@@ -285,7 +285,6 @@ const Crm = () => {
                   </div>
                 ))}
 
-                
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
                     <div className="box-header !gap-0 !m-0 justify-between">
@@ -346,12 +345,14 @@ const Crm = () => {
             <div className="xxl:col-span-12 xl:col-span-12  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
-                  <div className="box-title">Current Week Power Consumption</div>
+                  <div className="box-title">
+                    Current Week Power Consumption
+                  </div>
                 </div>
                 <div className="box-body overflow-hidden">
                   <div className="leads-source-chart flex items-center justify-center">
                     <div>
-                      {energyData && (
+                      {energyData ? (
                         <ReactApexChart
                           options={{
                             labels: formattedDates, // Use formatted dates for labels
@@ -427,6 +428,12 @@ const Crm = () => {
                           type="donut"
                           height={260}
                         />
+                      ) : (
+                        <div className="text-center py-6">
+                          <h4 className="text-lg font-semibold text-gray-500">
+                            Under Construction
+                          </h4>
+                        </div>
                       )}
                     </div>
                     {energyData && (
@@ -498,10 +505,17 @@ const Crm = () => {
                   <div className="box-title">Power Consumption Summary</div>
                 </div>
                 <div className="box-body !p-0 border-none">
-                <MonthlyPowerChart monthlyData={monthlyData?.data[0]} />
+                {monthlyData?.data?.length > 0 ? (
+        <MonthlyPowerChart monthlyData={monthlyData?.data[0]} />
+      ) : (
+        <div className="text-center py-6">
+          <h4 className="text-lg font-semibold text-gray-500">
+            Under Construction
+          </h4>
+        </div>
+      )}
 
-
-                  <div className="flex items-center mb-[0.8rem] p-2">
+{monthlyData && energyData &&                  <div className="flex items-center mb-[0.8rem] p-2">
                     <h4 className="font-bold mb-0 text-[1.5rem] ">
                       {" "}
                       {latest7DaysConsumption !== undefined
@@ -517,9 +531,9 @@ const Crm = () => {
                         of the month's total
                       </span>
                     </div>
-                  </div>
+                  </div>}
 
-                  <ul className="list-none mb-0 pt-2 crm-deals-status p-2">
+{monthlyData && energyData &&                  <ul className="list-none mb-0 pt-2 crm-deals-status p-2">
                     <li className="primary">
                       <div className="flex items-center text-[0.813rem] justify-between">
                         <div>Today</div>
@@ -554,7 +568,7 @@ const Crm = () => {
                         </div>
                       </div>
                     </li>
-                  </ul>
+                  </ul>}
                 </div>
               </div>
             </div>
