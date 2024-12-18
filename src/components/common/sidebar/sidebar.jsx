@@ -606,21 +606,19 @@ const handleClick = (event) => {
       <aside className="app-sidebar" id="sidebar" onMouseEnter={() => Onhover()}
         onMouseLeave={() => Outhover()}>
 
-        <div className="main-sidebar-header">
-          <a href={`${import.meta.env.BASE_URL}10/2/main/`} className="header-logo">
-            <img src={logo1} alt="logo" className="desktop-logo" />
-            <img src={logo2} alt="logo" className="toggle-logo" />
-            <img src={logo3} alt="logo" className="desktop-dark" />
-            <img src={logo4} alt="logo" className="toggle-dark" />
-            <img src={logo5} alt="logo" className="desktop-white" />
-            <img src={logo6} alt="logo" className="toggle-white" />
-          </a>
-        </div>
+<div className=" flex items-center justify-center">
+  <a href={`${import.meta.env.BASE_URL}10/2/main/`} className="w-1/3 h-1/3 flex items-center justify-center mt-2">
+    <img src={logo1} alt="logo" className="w-full h-full object-contain" />
+  </a>
+</div>
+
+
 
 
 
         
-        <SimpleBar className="main-sidebar" id="sidebar-scroll">
+<SimpleBar className="main-sidebar" id="sidebar-scroll" style={{ marginTop: '0' }}>
+
 
           <nav className="main-menu-container nav nav-pills flex-column sub-open">
             <div className="slide-left" id="slide-left" onClick={() => { slideLeft(); }}><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24"
