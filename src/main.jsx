@@ -8,6 +8,7 @@ import ScrollToTop from './components/ui/scrolltotop.jsx';
 import AcChart from './container/ac-chart/AcChart.jsx';
 import AcControl from './container/ac-controls/AcControl.jsx';
 import Power from './container/dashboards/crm/Power.jsx';
+import Notifications from './container/notifications/Notifications.jsx'
 import { CrmProvider } from './container/dashboards/crm/CrmContext'; // Import CrmProvider
 import ReactModal from 'react-modal';
 
@@ -30,7 +31,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path="ac/temp-graph/:acId" element={<AcChart />} />
             </Route>
 
-            <Route path={`${import.meta.env.BASE_URL}ac-control/:storeId/:acId`} element={<AcControl />} />
+            <Route path={`${import.meta.env.BASE_URL}`} element={<App />}>
+             <Route path="notifications" element={<Notifications />} />
+            </Route>
+
+           
           </Routes>
         </CrmProvider>
       </React.Suspense>

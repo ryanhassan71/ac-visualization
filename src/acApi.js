@@ -125,6 +125,7 @@ export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {
 
 // Function to control AC settings
 export const controlAcSettings = async ({ sensor_id, off_on, temperature, ac_mode, fan_speed }) => {
+  
   try {
     const response = await apiClient.post(`/temperature/ac/control/`, {
       sensor_id,
@@ -145,5 +146,25 @@ export const controlAcSettings = async ({ sensor_id, off_on, temperature, ac_mod
     throw error;
   }
 };
+
+
+export const fetchRecentAcAlerts = async () => {
+  
+  
+  try {
+    const response = await apiClient.get(`/temperature/alerts/recent/ac/`);
+    if (response.data && response.data.success) {
+      return response.data.data; // Return the list of alerts
+    } else {
+      
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching recent AC alerts:', error);
+    return [];
+  }
+};
+
+export const AC_NOTIF_INTERVAL = convertToMilliseconds('60', 'seconds')
 // Exporting the client as well if needed for other API calls
 export default apiClient;
