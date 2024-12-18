@@ -616,6 +616,10 @@ const handleClick = (event) => {
             <img src={logo6} alt="logo" className="toggle-white" />
           </a>
         </div>
+
+
+
+        
         <SimpleBar className="main-sidebar" id="sidebar-scroll">
 
           <nav className="main-menu-container nav nav-pills flex-column sub-open">

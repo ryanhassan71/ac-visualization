@@ -96,10 +96,13 @@ const Notifications = () => {
                           </p>
                         </div>
                         <div className="ms-auto">
-                          <span className="ltr:float-right rtl:float-left badge bg-light text-[#8c9097] dark:text-white/50 whitespace-nowrap">
-                            {formatCreatedAt(notif.created_at)}
-                          </span>
-                        </div>
+  <span className="ltr:float-right rtl:float-left badge bg-light text-[#8c9097] dark:text-white/50 whitespace-nowrap !text-xl">
+    {formatCreatedAt(notif.created_at)}
+  </span>
+</div>
+
+
+
                       </div>
                     </div>
                   </div>
