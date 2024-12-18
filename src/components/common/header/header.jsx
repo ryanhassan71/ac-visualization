@@ -71,9 +71,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleToggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+
   const cartProduct = [
     {
       id: 1,
@@ -125,12 +123,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
   const [cartItems, setCartItems] = useState([...cartProduct]);
   const [cartItemCount, setCartItemCount] = useState(cartProduct.length);
 
-  const handleRemove = (e, itemId) => {
-    e.stopPropagation(); // Prevents the event from reaching the button click event
-    const updatedCart = cartItems.filter((item) => item.id !== itemId);
-    setCartItems(updatedCart);
-    setCartItemCount(updatedCart.length);
-  };
+
   const initialNotifications = [
     {
       id: 1,
@@ -186,12 +179,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
 
   const [notifications, setNotifications] = useState([...initialNotifications]);
 
-  const handleNotificationClose = (e, index) => {
-    e.stopPropagation(); // Prevents the event from reaching the button click event
-    const updatedNotifications = [...notifications];
-    updatedNotifications.splice(index, 1);
-    setNotifications(updatedNotifications);
-  };
+
 
   function menuClose() {
     const theme = store.getState();

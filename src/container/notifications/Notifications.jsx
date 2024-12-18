@@ -1,10 +1,4 @@
 import  { Fragment, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import face2 from "../../assets/images/faces/2.jpg";
-import face4 from "../../assets/images/faces/4.jpg";
-import face5 from "../../assets/images/faces/5.jpg";
-import face11 from "../../assets/images/faces/11.jpg";
-import face15 from "../../assets/images/faces/15.jpg";
 import Pageheader from "../../components/common/pageheader/pageheader.jsx"
 import { AC_NOTIF_INTERVAL, fetchRecentAcAlerts } from '../../acApi.js';
 
