@@ -505,70 +505,56 @@ const Crm = () => {
                   <div className="box-title">Power Consumption Summary</div>
                 </div>
                 <div className="box-body !p-0 border-none">
-                {monthlyData?.data?.length > 0 ? (
-        <MonthlyPowerChart monthlyData={monthlyData?.data[0]} />
-      ) : (
-        <div className="text-center py-6">
-          <h4 className="text-lg font-semibold text-gray-500">
-            Under Construction
-          </h4>
-        </div>
-      )}
-
-{monthlyData && energyData &&                  <div className="flex items-center mb-[0.8rem] p-2">
-                    <h4 className="font-bold mb-0 text-[1.5rem] ">
-                      {" "}
-                      {latest7DaysConsumption !== undefined
-                        ? `${Math.round(latest7DaysPercentage)}%`
-                        : "0 %"}
-                    </h4>
-                    <div className="ms-2">
-                      <span className="py-[0.18rem] px-[0.45rem] rounded-sm text-success !font-medium !text-[0.75em] bg-success/10">
-                        10 %
-                        <i className="ri-arrow-up-s-fill align-mmiddle ms-1"></i>
-                      </span>
-                      <span className="text-[#8c9097] dark:text-white/50 text-[0.69rem] ml-2">
-                        of the month's total
-                      </span>
+                  {monthlyData?.data?.length > 0 ? (
+                    <MonthlyPowerChart monthlyData={monthlyData?.data[0]} />
+                  ) : (
+                    <div className="text-center py-6">
+                      <h4 className="text-lg font-semibold text-gray-500">
+                        Under Construction
+                      </h4>
                     </div>
-                  </div>}
+                  )}
 
-{monthlyData && energyData &&                  <ul className="list-none mb-0 pt-2 crm-deals-status p-2">
-                    <li className="primary">
-                      <div className="flex items-center text-[0.813rem] justify-between">
-                        <div>Today</div>
-                        <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          {energyData?.data[0]?.energy_data?.length > 0
-                            ? `${Math.round(
-                                parseFloat(
-                                  energyData.data[0].energy_data.slice(-1)[0]
-                                )
-                              )} kW/h`
-                            : "0 kW/h"}
+
+
+                  {monthlyData && energyData && (
+                    <ul className="list-none mb-0 pt-2 crm-deals-status p-2">
+                      <li className="primary">
+                        <div className="flex items-center text-[0.813rem] justify-between">
+                          <div>Today</div>
+                          <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
+                            {energyData?.data[0]?.energy_data?.length > 0
+                              ? `${Math.round(
+                                  parseFloat(
+                                    energyData.data[0].energy_data.slice(-1)[0]
+                                  )
+                                )} kW/h`
+                              : "0 kW/h"}
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="info">
-                      <div className="flex items-center text-[0.813rem] justify-between">
-                        <div>Last 7 days</div>
-                        <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          {totalPowerConsumption !== undefined
-                            ? `${Math.round(totalPowerConsumption)} kW/h`
-                            : "0 kW/h"}
+                      </li>
+                      <li className="info">
+                        <div className="flex items-center text-[0.813rem] justify-between">
+                          <div>Last 7 days</div>
+                          <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
+                            {totalPowerConsumption !== undefined
+                              ? `${Math.round(totalPowerConsumption)} kW/h`
+                              : "0 kW/h"}
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="warning">
-                      <div className="flex items-center text-[0.813rem] justify-between">
-                        <div>This Month</div>
-                        <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
-                          {totalMonthlyConsumption !== undefined
-                            ? `${Math.round(totalMonthlyConsumption)} kW/h`
-                            : "0 kW/h"}
+                      </li>
+                      <li className="warning">
+                        <div className="flex items-center text-[0.813rem] justify-between">
+                          <div>This Month</div>
+                          <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
+                            {totalMonthlyConsumption !== undefined
+                              ? `${Math.round(totalMonthlyConsumption)} kW/h`
+                              : "0 kW/h"}
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  </ul>}
+                      </li>
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>
