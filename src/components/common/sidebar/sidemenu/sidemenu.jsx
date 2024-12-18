@@ -34,9 +34,9 @@ export const MENUITEMS = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}11/11/main`, type: 'link', active: false, selected: false, dirchange: false, title: 'Main' },
+      { path: `${import.meta.env.BASE_URL}11/3/main`, type: 'link', active: false, selected: false, dirchange: false, title: 'Main' },
 
-      { path: `${import.meta.env.BASE_URL}11/11/power`, type: 'link', active: false, selected: false, dirchange: false, title: 'Power' },
+      { path: `${import.meta.env.BASE_URL}11/3/power`, type: 'link', active: false, selected: false, dirchange: false, title: 'Power' },
     ]
   },
 
