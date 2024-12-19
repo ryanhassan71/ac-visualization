@@ -21,7 +21,7 @@ import {
 } from "./crmdata";
 import ReactApexChart from "react-apexcharts";
 import ReactModal from "react-modal";
-import AcControl from "../../../components/ui/AcControl";
+import AcRemote from "../../../components/ui/AcRemote";
 import "./Crm.css";
 import MonthlyPowerChart from "../../../components/ui/MonthlyPowerChart";
 
@@ -119,6 +119,17 @@ const Crm = () => {
       ? Math.round((latest7DaysConsumption / totalMonthlyConsumption) * 100)
       : 100; // Default to 100% if it's the beginning of the month
 
+  const totalOff = acSensors.filter((sensor) =>
+    sensor?.sensors[0]?.ac_state?.toLowerCase().includes("off")
+  ).length;
+  const totalOn = acSensors.length - totalOff;
+
+  const totalOnline = acSensors.filter(
+    (sensor) => sensor?.sensors[0]?.status === true
+  ).length;
+  const totalOffline = acSensors.filter(
+    (sensor) => sensor?.sensors[0]?.status === false
+  ).length;
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
@@ -130,6 +141,7 @@ const Crm = () => {
             Track your ACs and Power Consumption across Shawapno Outlets.
           </p>
         </div>
+
         <div className="btn-list md:mt-0 mt-2">
           <button
             type="button"
@@ -143,6 +155,82 @@ const Crm = () => {
           >
             <i className="ri-upload-cloud-line  inline-block"></i>Export
           </button>
+        </div>
+      </div>
+      <div className="grid grid-cols-12 gap-12">
+        <div className="md:col-span-9 col-span-12">
+          <div className="box custom-box">
+            <div className="box-body !p-0">
+              <div className="grid grid-cols-12 gap-x-12">
+                <div className="md:col-span-3 col-span-12 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start p-6">
+                    <div className="me-4 leading-none">
+                      <span className="avatar avatar-md !rounded-full !bg-success shadow-sm">
+                        {/* Replace this with your AC icon */}
+                        <AcIcon />
+                      </span>
+                    </div>
+                    <div className="flex-grow">
+                      <h5 className="font-semibold ">{totalOn}</h5>
+                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
+                        Total ACs ON
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="md:col-span-3 col-span-12 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start p-6">
+                    <div className="me-3 leading-none">
+                    <span className="avatar avatar-md !rounded-full bg-gray-500 shadow-sm">
+  {/* Replace this with your AC icon */}
+  <AcIcon />
+</span>
+
+                    </div>
+                    <div className="flex-grow">
+                      <h5 className="font-semibold ">{totalOff}</h5>
+                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
+                        Total ACs OFF
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="md:col-span-3 col-span-12 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start p-6">
+                    <div className="me-3 leading-none">
+                      <span className="avatar avatar-md !rounded-full bg-success shadow-sm">
+                        {/* Replace this with your Wi-Fi signal icon */}
+                        <i className="ti ti-wifi text-[1.125rem]"></i>
+                      </span>
+                    </div>
+                    <div className="flex-grow">
+                      <h5 className="font-semibold ">{totalOnline}</h5>
+                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
+                        Total ACs Online
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="md:col-span-3 col-span-12 ">
+                  <div className="flex flex-wrap items-start p-6">
+                    <div className="me-3 leading-none">
+                    <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
+        {/* Replace this with your "Wi-Fi off" icon */}
+        <i className="ti ti-wifi-off text-[1.125rem]"></i>
+      </span>
+                    </div>
+                    <div className="flex-grow">
+                      <h5 className="font-semibold ">{totalOffline}</h5>
+                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
+                        Total ACs Offline
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-x-6 ">
@@ -515,8 +603,6 @@ const Crm = () => {
                     </div>
                   )}
 
-
-
                   {monthlyData && energyData && (
                     <ul className="list-none mb-0 pt-2 crm-deals-status p-2">
                       <li className="primary">
@@ -577,7 +663,7 @@ const Crm = () => {
           </button>
         </div>
         <div className="modal-body">
-          {selectedAcId && <AcControl acId={selectedAcId} storeId={storeId} />}
+          {selectedAcId && <AcRemote acId={selectedAcId} storeId={storeId} />}
         </div>
       </ReactModal>
     </Fragment>

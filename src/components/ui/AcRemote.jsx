@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { controlAcSettings, fetchTemperatureData } from "../../acApi";
-import "./AcControl.css";
+import "./AcRemote.css";
 
-function AcControl({ acId, storeId }) {
+function AcRemote({ acId, storeId }) {
   const [temperature, setTemperature] = useState();
   const [power, setPower] = useState();
   const [mode, setMode] = useState();
@@ -278,4 +278,4 @@ function AcControl({ acId, storeId }) {
   );
 }
 
-export default AcControl;
+export default AcRemote;
