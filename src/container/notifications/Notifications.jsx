@@ -83,8 +83,8 @@ const Notifications = () => {
                     <div className="flex-grow">
                       <div className="sm:flex items-center">
                         <div className="sm:mt-0 mt-2">
-                          <p className="mb-0 md:text-[.875rem] text-[.5rem] font-semibold">
-                            {notif.branch_address}
+                          <p className="mb-0 md:text-[.875rem] text-[.7rem] font-semibold">
+                          {formatCreatedAt(notif.created_at)} 
                           </p>
                           <p className="mt-2 text-[#8c9097] dark:text-white/50 text-[1rem]">
                             <span className={getNotificationClass(notif.notification_color)}>
@@ -96,8 +96,8 @@ const Notifications = () => {
                           </p>
                         </div>
                         <div className="ms-auto">
-  <span className="ltr:float-right rtl:float-left badge bg-light text-[#8c9097] dark:text-white/50 whitespace-nowrap !text-xl">
-    {formatCreatedAt(notif.created_at)}
+  <span className="ltr:float-right rtl:float-left badge bg-light text-[#8c9097] dark:text-white/50 whitespace-nowrap !text-[.875rem]">
+  {notif.store} {notif.outlet_code}
   </span>
 </div>
 
