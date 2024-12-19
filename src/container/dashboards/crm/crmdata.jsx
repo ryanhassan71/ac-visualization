@@ -128,7 +128,8 @@ export class Totalcustomers extends Component {
       marginRight: "10px", // Add spacing between the two spans
     }}
   >
-    40 kWh
+    {Math.round(acSensorData.power)} kWh
+
   </span>
   <span
     style={{

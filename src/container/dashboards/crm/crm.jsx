@@ -21,7 +21,7 @@ import {
 } from "./crmdata";
 import ReactApexChart from "react-apexcharts";
 import ReactModal from "react-modal";
-import AcControl from "../../ac-controls/AcControl";
+import AcControl from "../../../components/ui/AcControl";
 import "./Crm.css";
 import MonthlyPowerChart from "../../../components/ui/MonthlyPowerChart";
 
