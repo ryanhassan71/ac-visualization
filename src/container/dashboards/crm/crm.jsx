@@ -158,7 +158,7 @@ const Crm = () => {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-12 ">
-        <div className="md:col-span-9 col-span-12 bg-red">
+        <div className="md:col-span-9 col-span-12">
           <div className="box custom-box">
             <div className="box-body !p-0">
               <div className="grid grid-cols-12 gap-x-0">
