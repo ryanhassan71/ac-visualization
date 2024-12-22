@@ -158,20 +158,22 @@ const Crm = () => {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-12 ">
-        <div className="md:col-span-9 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body !p-0">
+        <div className="md:col-span-9 col-span-10">
+          <div className="box">
+            <div className="box-body !p-0 !m-0">
               <div className="grid grid-cols-12 gap-x-0">
-                <div className="md:col-span-3 col-span-12 border-e border-dashed dark:border-defaultborder/10">
+                {/* Total ACs ON */}
+                <div className="col-span-6 lg:col-span-3 border-e border-dashed dark:border-defaultborder/10">
                   <div className="flex flex-wrap items-start p-6">
                     <div className="me-4 leading-none">
                       <span className="avatar avatar-md !rounded-full !bg-success shadow-sm">
-                        {/* Replace this with your AC icon */}
                         <AcIcon />
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold ">{totalOn}</h5>
+                      <h5 className="font-semibold text-lg md:text-base">
+                        {totalOn}
+                      </h5>
                       <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
                         Total ACs ON
                       </p>
@@ -179,49 +181,56 @@ const Crm = () => {
                   </div>
                 </div>
 
-                <div className="md:col-span-3 col-span-12 border-e border-dashed dark:border-defaultborder/10">
+                {/* Total ACs OFF */}
+                <div className="col-span-6 lg:col-span-3 border-e border-dashed dark:border-defaultborder/10">
                   <div className="flex flex-wrap items-start p-6">
                     <div className="me-3 leading-none">
-                    <span className="avatar avatar-md !rounded-full bg-gray-500 shadow-sm">
-  {/* Replace this with your AC icon */}
-  <AcIcon />
-</span>
-
+                      <span className="avatar avatar-md !rounded-full bg-gray-500 shadow-sm">
+                        <AcIcon />
+                      </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold ">{totalOff}</h5>
+                      <h5 className="font-semibold text-lg md:text-base">
+                        {totalOff}
+                      </h5>
                       <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
                         Total ACs OFF
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="md:col-span-3 col-span-12 border-e border-dashed dark:border-defaultborder/10">
+
+                {/* Total ACs Online */}
+                <div className="col-span-6 lg:col-span-3 border-e border-dashed dark:border-defaultborder/10">
                   <div className="flex flex-wrap items-start p-6">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-success shadow-sm">
-                        {/* Replace this with your Wi-Fi signal icon */}
                         <i className="ti ti-wifi text-[1.125rem]"></i>
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold ">{totalOnline}</h5>
+                      <h5 className="font-semibold text-lg md:text-base">
+                        {totalOnline}
+                      </h5>
                       <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
                         Total ACs Online
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="md:col-span-3 col-span-12 ">
+
+                {/* Total ACs Offline */}
+                <div className="col-span-6 lg:col-span-3">
                   <div className="flex flex-wrap items-start p-6">
                     <div className="me-3 leading-none">
-                    <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
-        {/* Replace this with your "Wi-Fi off" icon */}
-        <i className="ti ti-wifi-off text-[1.125rem]"></i>
-      </span>
+                      <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
+                        <i className="ti ti-wifi-off text-[1.125rem]"></i>
+                      </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold ">{totalOffline}</h5>
+                      <h5 className="font-semibold text-lg md:text-base">
+                        {totalOffline}
+                      </h5>
                       <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
                         Total ACs Offline
                       </p>
