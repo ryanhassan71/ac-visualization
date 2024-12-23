@@ -7,7 +7,7 @@ import './index.scss';
 import ScrollToTop from './components/ui/scrolltotop.jsx';
 import AcChart from './container/ac-chart/AcChart.jsx';
 import AcRemote from './components/ui/AcRemote.jsx';
-import Power from './container/dashboards/crm/Power.jsx';
+import Power from './container/dashboards/power/Power.jsx';
 import Notifications from './container/notifications/Notifications.jsx'
 import { CrmProvider } from './container/dashboards/crm/CrmContext'; // Import CrmProvider
 import ReactModal from 'react-modal';

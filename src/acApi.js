@@ -123,6 +123,7 @@ export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {
   }
 };
 
+export const DAILY_POWER_DATA_INTERVAL = convertToMilliseconds(1, 'hours')
 // Function to control AC settings
 export const controlAcSettings = async ({ sensor_id, off_on, temperature, ac_mode, fan_speed }) => {
   
