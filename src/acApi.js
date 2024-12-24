@@ -109,6 +109,7 @@ export const TEMPERATURE_GRAPH_DATA_TIMER = convertToMilliseconds(15, 'minutes')
 
 // Function to fetch energy graph data
 export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {
+  
   try {
     const response = await apiClient.get(`/energy/energy-graph-data/${energyDeviceId}?type=${type}`);
     if (response.data && response.data.success) {
@@ -165,6 +166,23 @@ export const fetchRecentAcAlerts = async () => {
     return [];
   }
 };
+
+// Function to fetch the store list
+export const fetchStoreList = async () => {
+  try {
+    const response = await apiClient.get(`/branch/store-list-energy/`);
+    if (response.data && response.data.success) {
+      return response.data.data; // Return the list of stores
+    } else {
+      console.error('Unexpected data format or API error:', response.data);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching store list:', error);
+    return [];
+  }
+};
+
 
 export const AC_NOTIF_INTERVAL = convertToMilliseconds('60', 'seconds')
 // Exporting the client as well if needed for other API calls
