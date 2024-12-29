@@ -39,13 +39,12 @@ const Crm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAcId, setSelectedAcId] = useState(null);
   const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
-  const [storeInfo, setStoreInfo] = useState(null)
+  const [storeInfo, setStoreInfo] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const acSensorsData = await fetchTemperatureData(storeId);
       setStoreData(storeId, "acSensors", acSensorsData);
-      
     };
 
     const fetchDataForStoreList = async () => {
@@ -55,15 +54,14 @@ const Crm = () => {
         const matchedStore = storeList.find(
           (store) => store.energy_meter_id === parseInt(powerId)
         );
-        setStoreInfo(matchedStore); 
-
+        setStoreInfo(matchedStore);
       } catch (error) {
         console.error("Error fetching store name", error);
       }
     };
 
     fetchData();
-    fetchDataForStoreList()
+    fetchDataForStoreList();
     const interval = setInterval(fetchData, TEMPERATURE_DATA_INTERVAL);
 
     // Cleanup the interval on component unmount
@@ -153,14 +151,15 @@ const Crm = () => {
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
         <div>
           <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0 ">
-          AC Controls and Monitoring Dashboard - {storeInfo?.store_name} ({storeInfo?.outlet_code})
+            AC Controls and Monitoring Dashboard - {storeInfo?.store_name} (
+            {storeInfo?.outlet_code})
           </p>
           {/* <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
             Track your ACs and Power Consumption across Shawapno Outlets.
           </p> */}
         </div>
 
-        <div className="btn-list md:mt-0 mt-2">
+        {/* <div className="btn-list md:mt-0 mt-2">
           <button
             type="button"
             className="ti-btn bg-primary text-white btn-wave !font-medium !me-[0.375rem] !ms-0 !text-[0.85rem] !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0"
@@ -173,11 +172,20 @@ const Crm = () => {
           >
             <i className="ri-upload-cloud-line  inline-block"></i>Export
           </button>
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-12 gap-12 ">
         <div className="md:col-span-9 col-span-10">
-          <div className="box">
+<div
+  className="box"
+  style={{
+    background:
+      "linear-gradient(135deg, #85FFBD 0%, #FFFB7D 100%)", // Light mode gradient
+    color: "white", // Text color for readability in light mode
+    darkBackground:
+      "linear-gradient(135deg, #1A535C 0%, #4ECDC4 100%)", // Dark mode gradient
+  }}
+>
             <div className="box-body !p-0 !m-0">
               <div className="grid grid-cols-12 gap-x-0">
                 {/* Total ACs ON */}
@@ -189,10 +197,10 @@ const Crm = () => {
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold text-lg md:text-base">
+                      <h5 className="font-semibold text-lg md:text-base dark:text-black">
                         {totalOn}
                       </h5>
-                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
+                      <p className="text-[#8c9097]  mb-0 text-[0.75rem]">
                         Total ACs ON
                       </p>
                     </div>
@@ -208,10 +216,10 @@ const Crm = () => {
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold text-lg md:text-base">
+                      <h5 className="font-semibold text-lg md:text-base dark:text-black">
                         {totalOff}
                       </h5>
-                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
+                      <p className="text-[#8c9097]  mb-0 text-[0.75rem]">
                         Total ACs OFF
                       </p>
                     </div>
@@ -227,11 +235,11 @@ const Crm = () => {
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold text-lg md:text-base">
+                      <h5 className="font-semibold text-lg md:text-base dark:text-black">
                         {totalOnline}
                       </h5>
-                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
-                        Total ACs Online
+                      <p className="text-[#8c9097]  mb-0 text-[0.75rem] ">
+                        Total Device Online
                       </p>
                     </div>
                   </div>
@@ -246,16 +254,27 @@ const Crm = () => {
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h5 className="font-semibold text-lg md:text-base">
+                      <h5 className="font-semibold text-lg md:text-base dark:text-black">
                         {totalOffline}
                       </h5>
-                      <p className="text-[#8c9097] dark:text-white/50 mb-0 text-[0.75rem]">
-                        Total ACs Offline
+                      <p className="text-[#8c9097]  mb-0 text-[0.75rem]">
+                        Total Device Offline
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="md:col-span-3 col-span-10">
+          <div className="box">
+
+            <div className="box-body flex flex-col items-center justify-center p-6">
+             
+              <p className="text-center text-[0.75rem] text-gray-500 dark:text-gray-400 mt-1">
+                Weather data will be available soon. Stay tuned for updates!
+              </p>
             </div>
           </div>
         </div>
@@ -359,7 +378,7 @@ const Crm = () => {
                                           "inherit",
                                       }}
                                     >
-                                      Ambient
+                                      Room
                                     </p>
                                   </div>
                                   <div className="text-center ms-4">
