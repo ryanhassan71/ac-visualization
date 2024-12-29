@@ -5,6 +5,7 @@ import {
   fetchTemperatureData,
   fetchEnergyGraphData,
   TEMPERATURE_DATA_INTERVAL,
+  fetchStoreList,
 } from "../../../acApi";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
@@ -38,14 +39,31 @@ const Crm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAcId, setSelectedAcId] = useState(null);
   const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
+  const [storeInfo, setStoreInfo] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       const acSensorsData = await fetchTemperatureData(storeId);
       setStoreData(storeId, "acSensors", acSensorsData);
+      
+    };
+
+    const fetchDataForStoreList = async () => {
+      try {
+        // Fetch store list and find the store info for the given powerId
+        const storeList = await fetchStoreList();
+        const matchedStore = storeList.find(
+          (store) => store.energy_meter_id === parseInt(powerId)
+        );
+        setStoreInfo(matchedStore); 
+
+      } catch (error) {
+        console.error("Error fetching store name", error);
+      }
     };
 
     fetchData();
+    fetchDataForStoreList()
     const interval = setInterval(fetchData, TEMPERATURE_DATA_INTERVAL);
 
     // Cleanup the interval on component unmount
@@ -135,11 +153,11 @@ const Crm = () => {
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
         <div>
           <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0 ">
-            Welcome back, Khawja Belal !
+          AC Controls and Monitoring Dashboard - {storeInfo?.store_name} ({storeInfo?.outlet_code})
           </p>
-          <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
+          {/* <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
             Track your ACs and Power Consumption across Shawapno Outlets.
-          </p>
+          </p> */}
         </div>
 
         <div className="btn-list md:mt-0 mt-2">
