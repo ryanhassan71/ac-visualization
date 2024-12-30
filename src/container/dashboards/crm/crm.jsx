@@ -148,49 +148,63 @@ const Crm = () => {
   ).length;
   return (
     <Fragment>
-      <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
+      <div className="md:flex items-center justify-between  page-header-breadcrumb">
+        {/* Outlet Name on the Left */}
         <div>
-          <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0 ">
+          <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0">
             AC Controls and Monitoring Dashboard - {storeInfo?.store_name} (
             {storeInfo?.outlet_code})
           </p>
-          {/* <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
-            Track your ACs and Power Consumption across Shawapno Outlets.
-          </p> */}
         </div>
 
-        {/* <div className="btn-list md:mt-0 mt-2">
-          <button
-            type="button"
-            className="ti-btn bg-primary text-white btn-wave !font-medium !me-[0.375rem] !ms-0 !text-[0.85rem] !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0"
-          >
-            <i className="ri-filter-3-fill  inline-block"></i>Filters
-          </button>
-          <button
-            type="button"
-            className="ti-btn ti-btn-outline-secondary btn-wave !font-medium  !me-[0.375rem]  !ms-0 !text-[0.85rem] !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0"
-          >
-            <i className="ri-upload-cloud-line  inline-block"></i>Export
-          </button>
-        </div> */}
+        {/* Weather Data Box on the Right */}
+        <div className="box w-full md:w-auto">
+          <div className="box-body flex flex-col items-center justify-center p-6 ">
+            <p className="text-center text-[0.75rem] text-gray-500 dark:text-gray-400 ">
+              Weather data will be available soon. Stay tuned for updates!
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="grid grid-cols-12 gap-12 ">
-        <div className="md:col-span-9 col-span-10">
-<div
-  className="box"
-  style={{
-    background:
-      "linear-gradient(135deg, #85FFBD 0%, #FFFB7D 100%)", // Light mode gradient
-    color: "white", // Text color for readability in light mode
-    darkBackground:
-      "linear-gradient(135deg, #1A535C 0%, #4ECDC4 100%)", // Dark mode gradient
-  }}
->
+
+      <div className="grid grid-cols-12 gap-0">
+        <div className="col-span-12">
+          <div
+            className="box"
+            style={{
+              background: "linear-gradient(135deg, #85FFBD 0%, #FFFB7D 100%)", // Light mode gradient
+              color: "white", // Text color for readability in light mode
+              darkBackground:
+                "linear-gradient(135deg, #1A535C 0%, #4ECDC4 100%)", // Dark mode gradient
+            }}
+          >
             <div className="box-body !p-0 !m-0">
-              <div className="grid grid-cols-12 gap-x-0">
+              <div className="grid grid-cols-10 gap-x-0 ">
+                {/* Total Devices */}
+                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-1">
+                    <div className="me-4 leading-none">
+                      <span
+                        className="avatar avatar-md !rounded-full shadow-sm"
+                        style={{ backgroundColor: "#001f3f" }} // Dark navy blue
+                      >
+                        <AcIcon />
+                      </span>
+                    </div>
+                    <div className="flex-grow">
+                      <h5 className="font-semibold text-lg md:text-base dark:text-black">
+                        {acSensors.length}
+                      </h5>
+                      <p className="text-[#8c9097] mb-0 text-[0.75rem]">
+                        Total Installed Devices
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Total ACs ON */}
-                <div className="col-span-6 lg:col-span-3 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start p-6">
+                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-1">
                     <div className="me-4 leading-none">
                       <span className="avatar avatar-md !rounded-full !bg-success shadow-sm">
                         <AcIcon />
@@ -208,8 +222,8 @@ const Crm = () => {
                 </div>
 
                 {/* Total ACs OFF */}
-                <div className="col-span-6 lg:col-span-3 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start p-6">
+                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-1">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-gray-500 shadow-sm">
                         <AcIcon />
@@ -227,8 +241,8 @@ const Crm = () => {
                 </div>
 
                 {/* Total ACs Online */}
-                <div className="col-span-6 lg:col-span-3 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start p-6">
+                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-1">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-success shadow-sm">
                         <i className="ti ti-wifi text-[1.125rem]"></i>
@@ -239,15 +253,15 @@ const Crm = () => {
                         {totalOnline}
                       </h5>
                       <p className="text-[#8c9097]  mb-0 text-[0.75rem] ">
-                        Total Device Online
+                        Total Devices Online
                       </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Total ACs Offline */}
-                <div className="col-span-6 lg:col-span-3">
-                  <div className="flex flex-wrap items-start p-6">
+                <div className="col-span-5 lg:col-span-2">
+                  <div className="flex flex-wrap items-start py-4 px-1">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
                         <i className="ti ti-wifi-off text-[1.125rem]"></i>
@@ -258,23 +272,12 @@ const Crm = () => {
                         {totalOffline}
                       </h5>
                       <p className="text-[#8c9097]  mb-0 text-[0.75rem]">
-                        Total Device Offline
+                        Total Devices Offline
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="md:col-span-3 col-span-10">
-          <div className="box">
-
-            <div className="box-body flex flex-col items-center justify-center p-6">
-             
-              <p className="text-center text-[0.75rem] text-gray-500 dark:text-gray-400 mt-1">
-                Weather data will be available soon. Stay tuned for updates!
-              </p>
             </div>
           </div>
         </div>
