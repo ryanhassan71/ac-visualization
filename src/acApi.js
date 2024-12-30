@@ -124,6 +124,26 @@ export const fetchEnergyGraphData = async (type = 'weekly', energyDeviceId) => {
   }
 };
 
+// Function to fetch monthly energy data
+export const fetchMonthlyEnergyData = async (energyDeviceId, month, year) => {
+  try {
+    const response = await apiClient.get(`/energy/energy-graph-data/${energyDeviceId}`, {
+      params: { type: 'monthly', month, year },
+    });
+
+    if (response.data && response.data.success) {
+      return response.data; // Return the data
+    } else {
+      console.error('Unexpected data format or API error:', response.data);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching monthly energy data:', error);
+    return null;
+  }
+};
+
+
 export const DAILY_POWER_DATA_INTERVAL = convertToMilliseconds(1, 'hours')
 // Function to control AC settings
 export const controlAcSettings = async ({ sensor_id, off_on, temperature, ac_mode, fan_speed }) => {

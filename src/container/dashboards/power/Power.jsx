@@ -10,15 +10,16 @@ import {
   fetchEnergyGraphData,
   DAILY_POWER_DATA_INTERVAL,
   fetchStoreList,
+  fetchMonthlyEnergyData,
 } from "../../../acApi";
-import * as XLSX from 'xlsx-js-style';
-
+import * as XLSX from "xlsx-js-style";
 
 function Power() {
   const [startDate, setStartDate] = useState(new Date());
   const [title, setTitle] = useState("");
   const [weeklyPowerData, setWeeklyPowerData] = useState(null);
   const [dailyPowerData, setDailyPowerData] = useState(null);
+  const [monthlyPowerData, setMonthlyPowerData] = useState(null);
   const [storeInfo, setStoreInfo] = useState(null);
   const { powerId } = useParams();
 
@@ -53,20 +54,52 @@ function Power() {
     const interval = setInterval(() => {
       fetchEnergyGraphData("daily", powerId)
         .then((response) => setDailyPowerData(response))
-        .catch((error) => console.error("Error fetching daily power data:", error));
+        .catch((error) =>
+          console.error("Error fetching daily power data:", error)
+        );
     }, DAILY_POWER_DATA_INTERVAL); // 1 hour in milliseconds
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, [powerId]);
 
-  const handleDateChange = (date) => {
+  useEffect(() => {
+    // Fetch monthly power data based on the selected month and year
+    const fetchData = async () => {
+      const monthlyResponse = await fetchMonthlyEnergyData(
+        powerId,
+        startDate.getMonth() + 1, // Months are 0-indexed
+        startDate.getFullYear()
+      );
+
+      setMonthlyPowerData(monthlyResponse);
+    };
+
+    fetchData();
+  }, [powerId]);
+
+  const handleDateChange = async (date) => {
     setStartDate(date);
 
-    // Update the title when a new date is selected
-    const monthName = date.toLocaleString("default", { month: "long" });
+    const month = date.getMonth() + 1; // Months are 0-indexed
     const year = date.getFullYear();
+
+    // Update the title
+    const monthName = date.toLocaleString("default", { month: "long" });
     setTitle(`${monthName} ${year} Power Consumption Data`);
+
+    // Fetch monthly data
+    try {
+      const monthlyResponse = await fetchMonthlyEnergyData(
+        powerId,
+        month,
+        year
+      );
+
+      setMonthlyPowerData(monthlyResponse);
+    } catch (error) {
+      console.error("Error fetching monthly power data:", error);
+    }
   };
 
   const exportToExcel = (energyValues, time, fileName) => {
@@ -74,26 +107,44 @@ function Power() {
       alert("No data to export!");
       return;
     }
-  
+
     // Get current date in dd-mm-yyyy format
     const currentDate = new Date();
-    const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}-${String(
-      currentDate.getMonth() + 1
-    ).padStart(2, '0')}-${currentDate.getFullYear()}`;
-  
+    const formattedDate = `${String(currentDate.getDate()).padStart(
+      2,
+      "0"
+    )}-${String(currentDate.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${currentDate.getFullYear()}`;
+
     // Define headers
     const headers = [
-      { v: storeInfo.store_name, t: "s", s: { font: { bold: true, color: { rgb: "000000" } } } },
-      { v: storeInfo.outlet_code, t: "s", s: { font: { bold: true, color: { rgb: "000000" } } } },
+      {
+        v: storeInfo.store_name,
+        t: "s",
+        s: { font: { bold: true, color: { rgb: "000000" } } },
+      },
+      {
+        v: storeInfo.outlet_code,
+        t: "s",
+        s: { font: { bold: true, color: { rgb: "000000" } } },
+      },
     ];
 
-  
     const headers2 = [
-      { v: "Date/Time", t: "s", s: { font: { bold: true, color: { rgb: "000000" } } } },
-      { v: "Power Consumption (kWh)", t: "s", s: { font: { bold: true, color: { rgb: "000000" } } } },
+      {
+        v: "Date/Time",
+        t: "s",
+        s: { font: { bold: true, color: { rgb: "000000" } } },
+      },
+      {
+        v: "Power Consumption (kWh)",
+        t: "s",
+        s: { font: { bold: true, color: { rgb: "000000" } } },
+      },
     ];
 
-  
     // Format time based on whether it's a weekly or daily dataset
     const formattedTime = time.map((t) => {
       // If the time is in "YYYY-MM-DD" format, convert it to "DD-MM-YYYY"
@@ -104,7 +155,7 @@ function Power() {
       // Otherwise, keep the time as is (e.g., "12 AM", "1 PM")
       return t;
     });
-  
+
     // Add data rows
     const excelRows = energyValues.map((energyData, index) => {
       return [
@@ -112,89 +163,118 @@ function Power() {
         { v: energyData, t: "s" }, // Energy value
       ];
     });
-  
+
     // Combine headers and data
     const excelData = [headers, headers2, ...excelRows];
-  
+
     // Create worksheet and workbook
     const worksheet = XLSX.utils.json_to_sheet(excelData, {
       skipHeader: true, // This will skip headers in the sheet
     });
 
-  // Define column widths
-  worksheet["!cols"] = [
-    { wch: 20 }, // Width for the first column (Outlet Name)
-    { wch: 15 }, // Width for the second column (Outlet Code)
-    { wch: 25 }, // Width for Date/Time
-    { wch: 20 }, // Width for Power Consumption
-  ]
+    // Define column widths
+    worksheet["!cols"] = [
+      { wch: 20 }, // Width for the first column (Outlet Name)
+      { wch: 15 }, // Width for the second column (Outlet Code)
+      { wch: 25 }, // Width for Date/Time
+      { wch: 20 }, // Width for Power Consumption
+    ];
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-  
+
     // Write file with date in name
     XLSX.writeFile(
       workbook,
       `${storeInfo.store_name}_${storeInfo.outlet_code}_${fileName}_${formattedDate}.xlsx`
     );
   };
-  
-  
-  
 
   return (
     <Fragment>
       <Pageheader
-        currentpage={storeInfo ? `${storeInfo.store_name} (${storeInfo.outlet_code})` : "Power"}
+        currentpage={
+          storeInfo
+            ? `${storeInfo.store_name} (${storeInfo.outlet_code})`
+            : "Power"
+        }
         activepage="Apex Charts"
         mainpage="Apex Column Charts"
       />
 
       <div className="grid grid-cols-12 gap-x-6">
-        <div className="col-span-12">
-          <div className="box custom-box">
-            <div className="box-header flex justify-between items-center">
-              <div className="box-title">{title}</div>
-              <div className="form-group">
-                <div className="input-group !flex-nowrap">
-                  <div className="input-group-text text-[#8c9097] dark:text-white/50">
-                    <i className="ri-calendar-line"></i>
-                  </div>
-                  <DatePicker
-                    placeholderText="Choose month and year"
-                    className="ti-form-input focus:z-10"
-                    showIcon
-                    selected={startDate}
-                    onChange={handleDateChange} // Use the handler
-                    dateFormat="MM/yyyy" // Display format
-                    showMonthYearPicker // Only month and year selection
-                    popperClassName="high-z-index-datepicker" // Apply custom class for z-index
-                  />
-                </div>
-              </div>
+      <div className="col-span-12">
+  <div className="box custom-box">
+    {/* Responsive flexbox container */}
+    <div className="box-header flex flex-wrap md:flex-nowrap items-center">
+      {/* Title (Left for larger screens, first row for mobile) */}
+      <div className="flex-1 text-left mb-2 md:mb-0 hidden md:block">
+  <div className="box-title">{title}</div>
+</div>
+
+
+      {/* Date picker (Center for larger screens, second row for mobile) */}
+      <div className="flex-1 text-center mb-2 md:mb-0 md:!ml-36">
+        <div className="form-group">
+          <div className="input-group !flex-nowrap justify-center">
+            <div className="input-group-text text-[#8c9097] dark:text-white/50">
+              <i className="ri-calendar-line"></i>
             </div>
-            <div className="box-body">
-              <div id="column-negative">
-                <Negativecolumn />
-              </div>
-            </div>
+            <DatePicker
+              placeholderText="Choose month and year"
+              className="ti-form-input focus:z-10"
+              showIcon
+              selected={startDate}
+              onChange={handleDateChange} // Use the handler
+              dateFormat="MM/yyyy" // Display format
+              showMonthYearPicker // Only month and year selection
+              popperClassName="high-z-index-datepicker" // Apply custom class for z-index
+            />
           </div>
         </div>
+      </div>
+
+      {/* Export button (Right for larger screens, third row for mobile) */}
+      <div className="flex-1 text-right">
+        <button
+          type="button"
+          className="ti-btn ti-btn-outline-secondary btn-wave !font-medium !ms-0  !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0 !text-[.6rem]"
+          onClick={() =>
+            exportToExcel(
+              monthlyPowerData?.data[0]?.energy_data,
+              monthlyPowerData?.data[0]?.time,
+              "MonthlyPowerData"
+            )
+          }
+        >
+          <i className="ri-upload-cloud-line inline-block"></i>Export
+        </button>
+      </div>
+    </div>
+
+    <div className="box-body">
+      <div id="column-negative">
+        <Negativecolumn data={monthlyPowerData?.data[0]} />
+      </div>
+    </div>
+  </div>
+</div>
+
 
         {/* Add two charts side by side */}
         <div className="col-span-12 xl:col-span-4">
           <div className="box custom-box">
             <div className="box-header flex justify-between items-center">
-            <div className="box-title   !text-[.8rem]">
-
+              <div className="box-title   !text-[.8rem]">
                 Last 7 days Power Consumption Data
               </div>
               <button
                 type="button"
                 className="ti-btn ti-btn-outline-secondary btn-wave !font-medium    !ms-0  !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0 !text-[.6rem] "
                 onClick={() =>
-                  exportToExcel(weeklyPowerData?.data[0]?.energy_data, weeklyPowerData?.data[0]?.time,
-                    'WeeklyPowerData'
-                  
+                  exportToExcel(
+                    weeklyPowerData?.data[0]?.energy_data,
+                    weeklyPowerData?.data[0]?.time,
+                    "WeeklyPowerData"
                   )
                 }
               >
@@ -212,17 +292,18 @@ function Power() {
 
         <div className="col-span-12 xl:col-span-8">
           <div className="box custom-box">
-          <div className="box-header flex justify-between items-center">
-            <div className="box-title   !text-[.8rem]">
-
+            <div className="box-header flex justify-between items-center">
+              <div className="box-title   !text-[.8rem]">
                 Power Consumption Today
               </div>
               <button
                 type="button"
                 className="ti-btn ti-btn-outline-secondary btn-wave !font-medium    !ms-0  !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0 !text-[.6rem] "
                 onClick={() =>
-                  exportToExcel(dailyPowerData?.data[0]?.energy_data, dailyPowerData?.data[0]?.time, 'DailyPowerData'
-                  
+                  exportToExcel(
+                    dailyPowerData?.data[0]?.energy_data,
+                    dailyPowerData?.data[0]?.time,
+                    "DailyPowerData"
                   )
                 }
               >
