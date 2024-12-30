@@ -169,6 +169,30 @@ export const controlAcSettings = async ({ sensor_id, off_on, temperature, ac_mod
   }
 };
 
+// Function to control all ACs in the store
+export const controlAllAcsInStore = async ({ store_id, off_on, temperature, ac_mode, fan_speed }) => {
+  try {
+    const response = await apiClient.post(`/temperature/ac/control/all/`, {
+      store_id,
+      off_on,
+      temperature,
+      ac_mode,
+      fan_speed,
+    });
+
+    if (response.data && response.data.success) {
+      return response.data; // Successfully controlled all ACs
+    } else {
+      console.error('Unexpected data format or API error:', response.data);
+      throw new Error('Failed to control all ACs');
+    }
+  } catch (error) {
+    console.error('Error controlling all ACs:', error);
+    throw error;
+  }
+};
+
+
 
 export const fetchRecentAcAlerts = async () => {
   

@@ -712,7 +712,13 @@ const Crm = () => {
           </button>
         </div>
         <div className="modal-body">
-          {selectedAcId && <AcRemote acId={selectedAcId} storeId={storeId} />}
+          {selectedAcId && (
+            <AcRemote
+              acId={selectedAcId}
+              storeId={storeId}
+              closeModal={closeModal} // Pass the closeModal function
+            />
+          )}
         </div>
       </ReactModal>
     </Fragment>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { controlAcSettings, fetchTemperatureData } from "../../acApi";
+import { controlAcSettings, fetchTemperatureData, controlAllAcsInStore  } from "../../acApi";
 import "./AcRemote.css";
 
-function AcRemote({ acId, storeId }) {
+function AcRemote({ acId, storeId, closeModal }) {
   const [temperature, setTemperature] = useState();
   const [power, setPower] = useState();
   const [mode, setMode] = useState();
@@ -85,12 +85,20 @@ function AcRemote({ acId, storeId }) {
         ac_mode: mode.toLowerCase(),
         fan_speed: speed.toLowerCase(),
       };
-
+  
       // Call the API using the function from acApi.js
       const response = await controlAcSettings(payload);
-
+  
       if (response.success) {
         setPopupMessage("AC Command Sent Successfully!");
+        setTimeout(() => {
+          setPopupMessage(""); // Clear the popup message
+          setShowPopup(false); // Hide the popup
+          // Close the modal after the popup is shown
+          if (typeof closeModal === "function") {
+            closeModal();
+          }
+        }, 1000); // Show the popup for 2 seconds
       } else {
         setPopupMessage("Failed to Send Command.");
       }
@@ -98,36 +106,60 @@ function AcRemote({ acId, storeId }) {
       console.error("Error applying AC settings:", error);
       setPopupMessage("Error occurred while applying settings.");
     }
-
+  
     setShowPopup(true);
-
-    // Hide the popup after 2 seconds
+  
+    // Automatically hide the popup after 2 seconds
     setTimeout(() => {
       setShowPopup(false);
     }, 2000);
   };
+  
 
   const handleApplyAllClick = () => {
     // Show the confirmation popup when "Apply for all" is clicked
     setShowConfirmationPopup(true);
   };
 
-  const handleConfirmationResponse = (response) => {
+  const handleConfirmationResponse = async (response) => {
     if (response === "Save changes") {
       // Handle the "Save changes" response (apply the settings to all ACs)
-      setShowConfirmationPopup(false);
-      setPopupMessage("Settings applied!");
-      setShowPopup(true);
-
-      // Hide the popup after 1 second
+      try {
+        // Prepare the request payload
+        const payload = {
+          store_id: parseInt(storeId),
+          off_on: power.toLowerCase(),
+          temperature: `${temperature}`,
+          ac_mode: mode.toLowerCase(),
+          fan_speed: speed.toLowerCase(),
+        };
+  
+        // Call the API using the controlAllAcsInStore function
+        const response = await controlAllAcsInStore(payload);
+  
+        if (response.success) {
+          setPopupMessage("Settings applied to all ACs successfully!");
+        } else {
+          setPopupMessage("Failed to apply settings to all ACs.");
+        }
+      } catch (error) {
+        console.error("Error applying settings to all ACs:", error);
+        setPopupMessage("Error occurred while applying settings to all ACs.");
+      }
+  
+      setShowConfirmationPopup(false); // Hide the confirmation popup
+      setShowPopup(true); // Show the success or error popup
+  
+      // Hide the popup after 2.5 seconds
       setTimeout(() => {
         setShowPopup(false);
-      }, 2500); // 1 second delay
+      }, 2500);
     } else {
       // Handle the "Cancel" response (do nothing and close the confirmation popup)
       setShowConfirmationPopup(false);
     }
   };
+  
 
   const getModeEmoji = () => {
     switch (mode) {
@@ -168,7 +200,7 @@ function AcRemote({ acId, storeId }) {
 
       {/* Confirmation Popup for "Apply for all" button */}
       {showConfirmationPopup && (
-        <div className="confirmation-popup">
+        <div className="confirmation-popup" >
           <p>Are you sure you want to apply this setting for all AC's?</p>
           <div className="confirmation-buttons">
             <button
