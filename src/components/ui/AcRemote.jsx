@@ -139,8 +139,24 @@ function AcRemote({ acId, storeId, closeModal }) {
   
         if (response.success) {
           setPopupMessage("Settings applied to all ACs successfully!");
+          setTimeout(() => {
+            setPopupMessage(""); // Clear the popup message
+            setShowPopup(false); // Hide the popup
+            // Close the modal after the popup is shown
+            if (typeof closeModal === "function") {
+              closeModal();
+            }
+          }, 1000); // Show the popup for 2 seconds
         } else {
           setPopupMessage("Failed to apply settings to all ACs.");
+          setTimeout(() => {
+            setPopupMessage(""); // Clear the popup message
+            setShowPopup(false); // Hide the popup
+            // Close the modal after the popup is shown
+            if (typeof closeModal === "function") {
+              closeModal();
+            }
+          }, 1000); // Show the popup for 2 seconds
         }
       } catch (error) {
         console.error("Error applying settings to all ACs:", error);
