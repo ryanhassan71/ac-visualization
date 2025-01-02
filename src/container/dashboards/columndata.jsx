@@ -129,47 +129,14 @@ export class Columnwithlabels extends Component {
         plotOptions: {
           bar: {
             borderRadius: 10,
-            dataLabels: {
-              position: "top", // Display data labels on top of bars
-            },
           },
         },
         dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return val; // Only show the value, without "kWh"
-          },
-          offsetY: -20,
-          style: {
-            fontSize: "12px",
-            colors: ["#8c9097"],
-          },
+          enabled: false, // Disable the direct labels over the bars
         },
         colors: ["#845adf"],
         xaxis: {
           categories: [],
-          position: "top",
-          axisBorder: {
-            show: false,
-          },
-          axisTicks: {
-            show: false,
-          },
-          crosshairs: {
-            fill: {
-              type: "gradient",
-              gradient: {
-                colorFrom: "#D8E3F0",
-                colorTo: "#BED1E6",
-                stops: [0, 100],
-                opacityFrom: 0.4,
-                opacityTo: 0.5,
-              },
-            },
-          },
-          tooltip: {
-            enabled: true,
-          },
           labels: {
             show: true,
             style: {
@@ -192,6 +159,12 @@ export class Columnwithlabels extends Component {
               fontWeight: 600,
               cssClass: "apexcharts-yaxis-label",
             },
+          },
+        },
+        tooltip: {
+          enabled: true, // Enable tooltips on hover
+          y: {
+            formatter: (val) => `${val} kWh`, // Format the tooltip value with "kWh"
           },
         },
       },
@@ -231,6 +204,7 @@ export class Columnwithlabels extends Component {
     );
   }
 }
+
 
 
 

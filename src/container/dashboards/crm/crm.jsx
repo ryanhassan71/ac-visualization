@@ -25,6 +25,7 @@ import ReactModal from "react-modal";
 import AcRemote from "../../../components/ui/AcRemote";
 import "./Crm.css";
 import MonthlyPowerChart from "../../../components/ui/MonthlyPowerChart";
+import { CARBON_EMISSION_CONSTANT } from "../../../config";
 
 const Crm = () => {
   const { storeId, powerId } = useParams();
@@ -135,17 +136,23 @@ const Crm = () => {
       ? Math.round((latest7DaysConsumption / totalMonthlyConsumption) * 100)
       : 100; // Default to 100% if it's the beginning of the month
 
-  const totalOff = acSensors.filter((sensor) =>
+  // Filter ACs that are online
+  const onlineAcs = acSensors.filter(
+    (sensor) => sensor?.sensors[0]?.status === true
+  );
+
+  // Calculate the count of ACs that are "Off" among the online ones
+  const totalOff = onlineAcs.filter((sensor) =>
     sensor?.sensors[0]?.ac_state?.toLowerCase().includes("off")
   ).length;
-  const totalOn = acSensors.length - totalOff;
 
-  const totalOnline = acSensors.filter(
-    (sensor) => sensor?.sensors[0]?.status === true
-  ).length;
-  const totalOffline = acSensors.filter(
-    (sensor) => sensor?.sensors[0]?.status === false
-  ).length;
+  // Calculate the count of ACs that are "On" among the online ones
+  const totalOn = onlineAcs.length - totalOff;
+
+  // Calculate the total online and offline ACs
+  const totalOnline = onlineAcs.length;
+  const totalOffline = acSensors.length - totalOnline;
+
   return (
     <Fragment>
       <div className="md:flex items-center justify-between  page-header-breadcrumb">
@@ -181,8 +188,8 @@ const Crm = () => {
             <div className="box-body !p-0 !m-0">
               <div className="grid grid-cols-10 gap-x-0 ">
                 {/* Total Devices */}
-                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start py-4 px-1">
+                <div className="col-span-10 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-2">
                     <div className="me-4 leading-none">
                       <span
                         className="avatar avatar-md !rounded-full shadow-sm"
@@ -203,8 +210,8 @@ const Crm = () => {
                 </div>
 
                 {/* Total ACs ON */}
-                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start py-4 px-1">
+                <div className="col-span-10 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-2">
                     <div className="me-4 leading-none">
                       <span className="avatar avatar-md !rounded-full !bg-success shadow-sm">
                         <AcIcon />
@@ -222,8 +229,8 @@ const Crm = () => {
                 </div>
 
                 {/* Total ACs OFF */}
-                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start py-4 px-1">
+                <div className="col-span-10 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-2">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-gray-500 shadow-sm">
                         <AcIcon />
@@ -241,8 +248,8 @@ const Crm = () => {
                 </div>
 
                 {/* Total ACs Online */}
-                <div className="col-span-5 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
-                  <div className="flex flex-wrap items-start py-4 px-1">
+                <div className="col-span-10 lg:col-span-2 border-e border-dashed dark:border-defaultborder/10">
+                  <div className="flex flex-wrap items-start py-4 px-2">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-success shadow-sm">
                         <i className="ti ti-wifi text-[1.125rem]"></i>
@@ -260,8 +267,8 @@ const Crm = () => {
                 </div>
 
                 {/* Total ACs Offline */}
-                <div className="col-span-5 lg:col-span-2">
-                  <div className="flex flex-wrap items-start py-4 px-1">
+                <div className="col-span-10 lg:col-span-2">
+                  <div className="flex flex-wrap items-start py-4 px-2">
                     <div className="me-3 leading-none">
                       <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
                         <i className="ti ti-wifi-off text-[1.125rem]"></i>
@@ -348,7 +355,7 @@ const Crm = () => {
                                       openModal(sensor.id, sensor.name);
                                     }}
                                   >
-                                    {sensor.name} Remote
+                                    Control {sensor.name}
                                     <i className="ti ti-arrow-narrow-right ms-2 font-semibold inline-block"></i>
                                   </button>
                                 </div>
@@ -577,7 +584,7 @@ const Crm = () => {
                       <div className="lead-source-value ">
                         <span className="block text-[0.875rem] ">Total</span>
                         <span className="block text-[1.5625rem] font-bold">
-                          {Math.round(totalPowerConsumption)} kW/h
+                          {Math.round(totalPowerConsumption)} kWh
                         </span>
                       </div>
                     )}
@@ -651,6 +658,25 @@ const Crm = () => {
                       </h4>
                     </div>
                   )}
+                  <div className="flex items-center mb-[0.8rem]">
+                    <h4 className="font-bold mb-0 text-[1.5rem] p-2">
+                      {totalPowerConsumption
+                        ? (
+                            totalPowerConsumption * CARBON_EMISSION_CONSTANT
+                          ).toFixed(0)
+                        : 0}{" "}
+                    </h4>
+                    <div className="">
+                      <span className="py-[0.18rem]  rounded-sm text-success !font-medium !text-[0.8rem] bg-success/10">
+                        <i className="ri-cloud-line align-middle "></i> kg
+                        CO<sub>2</sub>
+                      </span>
+
+                      <span className="text-[#8c9097] dark:text-white/50 text-[0.6rem] ms-1">
+                        Carbon Emission last 7 days
+                      </span>
+                    </div>
+                  </div>
 
                   {monthlyData && energyData && (
                     <ul className="list-none mb-0 pt-2 crm-deals-status p-2">

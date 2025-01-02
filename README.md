@@ -44,6 +44,44 @@ This project is a React-based implementation of a dynamic notification system an
 - Dark/light mode toggle.
 - Cart management functionality with dynamic item updates.
 
+## Main Section
+
+### Carbon Emissions Integration
+
+The `Crm` component calculates carbon emissions based on electricity consumption using the formula:
+
+**Carbon Emissions (kg CO2) = Electricity Consumption (kWh) × Emission Factor (kg CO2/kWh)**
+
+- The `Emission Factor` is set as `0.56719` kg CO2/kWh and is stored in `config.js`
+- This calculation is displayed in the Power Consumption Summary section of the CRM dashboard.
+- Implementation:
+
+```javascript
+<div className="flex items-center mb-[0.8rem]">
+  <h4 className="font-bold mb-0 text-[1.5rem] p-2">
+    {totalPowerConsumption
+      ? (
+          totalPowerConsumption * CARBON_EMISSION_CONSTANT
+        ).toFixed(0)
+      : 0}{" "}
+  </h4>
+  <div className="">
+    <span className="py-[0.18rem]  rounded-sm text-success !font-medium !text-[0.8rem] bg-success/10">
+      <i className="ri-cloud-line align-middle "></i> kg
+      CO<sub>2</sub>
+    </span>
+
+    <span className="text-[#8c9097] dark:text-white/50 text-[0.6rem] ms-1">
+      Carbon Emission last 7 days
+    </span>
+  </div>
+</div>
+```
+
+- The calculated value is dynamically rendered in the CRM component to provide users with insights into their environmental impact.
+
+---
+
 ## Project Structure
 
 ```

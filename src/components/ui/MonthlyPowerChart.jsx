@@ -5,8 +5,14 @@ const MonthlyPowerChart = ({ monthlyData }) => {
   // Function to process monthly data and split into weeks
   const processMonthlyData = (energyData, timeData) => {
     const weeks = [[], [], [], []]; // Initialize 4 weeks
-    const weekLabels = ["Week 1", "Week 2", "Week 3", "Week 4"];
+    const weekLabels = []; // To hold labels dynamically
     let totalWeeks = 0;
+
+    // Determine the current month based on timeData
+    const currentMonth = timeData.length > 0 ? new Date(timeData[0]).toLocaleString("default", { month: "short" }) : "";
+
+    // Generate week labels dynamically with the month's name
+    weekLabels.push(`${currentMonth} 1-7`, `${currentMonth} 8-14`, `${currentMonth} 15-21`, `${currentMonth} 22-`);
 
     // Divide energy data into weeks based on the time range
     timeData.forEach((date, index) => {
@@ -65,8 +71,6 @@ const MonthlyPowerChart = ({ monthlyData }) => {
       },
     },
   };
-  
-  
 
   const chartData = {
     labels: labels,
@@ -83,10 +87,9 @@ const MonthlyPowerChart = ({ monthlyData }) => {
 
   return (
     <Fragment>
-      <div className="grid grid-cols-12  mt-0 pt-0">
+      <div className="grid grid-cols-12 mt-0 pt-0">
         <div className="xl:col-span-12 col-span-12">
           <div className="box custom-box">
-
             <div className="box-body">
               {data.length > 0 ? (
                 <Chartjsbar option={options} data={chartData} />
@@ -100,5 +103,6 @@ const MonthlyPowerChart = ({ monthlyData }) => {
     </Fragment>
   );
 };
+
 
 export default MonthlyPowerChart;
