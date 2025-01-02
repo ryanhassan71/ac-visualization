@@ -63,7 +63,7 @@ The `Crm` component calculates carbon emissions based on electricity consumption
       ? (
           totalPowerConsumption * CARBON_EMISSION_CONSTANT
         ).toFixed(0)
-      : 0}{" "}
+      : 0} {" "}
   </h4>
   <div className="">
     <span className="py-[0.18rem]  rounded-sm text-success !font-medium !text-[0.8rem] bg-success/10">
@@ -80,7 +80,41 @@ The `Crm` component calculates carbon emissions based on electricity consumption
 
 - The calculated value is dynamically rendered in the CRM component to provide users with insights into their environmental impact.
 
----
+### Icon Display Logic
+
+The `Crm` component dynamically updates the AC status icons based on their state:
+
+1. **Offline ACs**:
+   - Icon: A Wi-Fi signal with a line across it.
+   - Background: Red.
+
+2. **Online and Off ACs**:
+   - Icon: An AC icon.
+   - Background: Grey.
+
+3. **Online and Running ACs**:
+   - Icon: An AC icon.
+   - Background: Green.
+
+- Implementation Example:
+
+```javascript
+<span
+  className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
+    sensor.sensors[0].status
+      ? sensor.sensors[0].ac_state.toLowerCase().includes("off")
+        ? "bg-gray-500"
+        : "bg-success"
+      : "bg-danger"
+  }`}
+>
+  {sensor.sensors[0].status ? <AcIcon /> : <i className="ti ti-wifi-off"></i>}
+</span>
+```
+
+- The logic ensures that users can quickly identify the status of each AC device through intuitive icons and background colors.
+
+--
 
 ## Project Structure
 

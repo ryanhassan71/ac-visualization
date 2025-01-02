@@ -306,14 +306,22 @@ const Crm = () => {
                         <div className="box-body">
                           <div className="flex items-top justify-between">
                             <div>
-                              <span
-                                className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
-                                  sensor.sensors[0].status
-                                    ? "bg-success"
-                                    : "bg-danger"
-                                }`}
-                              >
-                                <AcIcon />
+                            <span
+  className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
+    sensor.sensors[0].status
+      ? sensor.sensors[0].ac_state?.toLowerCase().includes("off")
+        ? "bg-gray-500" // Grey background for online and off state
+        : "bg-success" // Green background for online and on state
+      : "bg-danger" // Red background for offline
+  }`}
+>
+{sensor.sensors[0].status ? (
+    <AcIcon /> // AC icon for online
+  ) : (
+    <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
+    <i className="ti ti-wifi-off text-[1.125rem]"></i>
+  </span>
+  )}
                               </span>
                             </div>
                             <div className="flex-grow ms-4">
