@@ -6,6 +6,7 @@ import {
   fetchEnergyGraphData,
   TEMPERATURE_DATA_INTERVAL,
   fetchStoreList,
+  fetchWeatherData,
 } from "../../../acApi";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
@@ -27,6 +28,25 @@ import "./Crm.css";
 import MonthlyPowerChart from "../../../components/ui/MonthlyPowerChart";
 import { CARBON_EMISSION_CONSTANT } from "../../../config";
 
+const weatherIconMap = {
+  "Clear sky": "ri-sun-line",
+  "Mainly clear": "ri-sun-line",
+  Rain: "ri-rainy-line",
+  "Rain showers": "ri-rainy-line",
+  "Patchy rain possible": "ri-cloud-drizzle-line",
+  Drizzle: "ri-cloud-drizzle-line",
+  "Partly cloudy": "ri-cloudy-line",
+  Overcast: "ri-cloud-line",
+  "Overcast clouds": "ri-cloud-line",
+  "Broken clouds": "ri-cloud-line",
+  "Scattered clouds": "ri-cloud-line",
+  Windy: "ri-windy-line",
+  Thunderstorm: "ri-thunderstorms-line",
+  Fog: "ri-foggy-line",
+  Mist: "ri-mist-line",
+  Default: "ri-cloud-line",
+};
+
 const Crm = () => {
   const { storeId, powerId } = useParams();
   const { getStoreData, setStoreData } = useCrm();
@@ -41,6 +61,7 @@ const Crm = () => {
   const [selectedAcId, setSelectedAcId] = useState(null);
   const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
   const [storeInfo, setStoreInfo] = useState(null);
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,8 +82,18 @@ const Crm = () => {
       }
     };
 
+    const fetchWeatherInfo = async () => {
+      try {
+        const data = await fetchWeatherData();
+        setWeather(data);
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
+    };
+
     fetchData();
     fetchDataForStoreList();
+    fetchWeatherInfo();
     const interval = setInterval(fetchData, TEMPERATURE_DATA_INTERVAL);
 
     // Cleanup the interval on component unmount
@@ -153,6 +184,10 @@ const Crm = () => {
   const totalOnline = onlineAcs.length;
   const totalOffline = acSensors.length - totalOnline;
 
+  const getWeatherIcon = (description) => {
+    return weatherIconMap[description] || weatherIconMap.Default;
+  };
+
   return (
     <Fragment>
       <div className="md:flex items-center justify-between  page-header-breadcrumb">
@@ -165,12 +200,54 @@ const Crm = () => {
         </div>
 
         {/* Weather Data Box on the Right */}
-        <div className="box w-full md:w-auto">
-          <div className="box-body flex flex-col items-center justify-center p-6 ">
-            <p className="text-center text-[0.75rem] text-gray-500 dark:text-gray-400 ">
-              Weather data will be available soon. Stay tuned for updates!
-            </p>
-          </div>
+        <div className="box w-full md:w-auto md:!mb-1">
+        {weather ? (
+  <div className="box-body flex flex-col justify-between !p-2">
+    {/* Top Row: Weather Icon and City */}
+    <div className="flex items-center justify-between w-full space-x-4">
+      {/* Weather Icon */}
+      <i
+        className={`${
+          getWeatherIcon(weather.weather_description)
+        } text-[2rem] text-blue-500 dark:text-blue-400`}
+      ></i>
+      {/* City Name */}
+      <div className="flex items-center">
+        <i className="ri-map-pin-line text-gray-700 dark:text-gray-300 text-[1.2rem] mr-1"></i>
+        <p className="text-[0.8rem] font-semibold text-gray-700 dark:text-gray-300">
+          {weather.weather_city}
+        </p>
+      </div>
+    </div>
+
+    {/* Bottom Row: Temperature, Humidity, and Description */}
+    <div className="flex flex-col items-start">
+      {/* Temperature and Humidity */}
+      <div className="flex items-center text-[0.9rem] font-medium text-gray-800 dark:text-gray-200">
+        <span>{weather.weather_temperature}</span>
+        <span className="mx-2">|</span>
+        <i className="ri-water-drop-line text-blue-400 text-[1.2rem] mr-1"></i>
+        <span>{weather.weather_humidity}</span>
+      </div>
+
+      {/* Weather Description */}
+      <p className="text-[0.75rem] text-gray-600 dark:text-gray-400 mt-1">
+        {weather.weather_description} <span className="ml-5">Humidity</span>
+      </p>
+    </div>
+  </div>
+) : (
+  <div className="box-body flex flex-col items-center justify-center p-6">
+    <p className="text-center text-[0.75rem] text-gray-500 dark:text-gray-400">
+      Loading weather data...
+    </p>
+  </div>
+)}
+
+
+
+
+
         </div>
       </div>
 

@@ -35,9 +35,21 @@ import SimpleBar from "simplebar-react";
 import { fetchRecentAcAlerts, AC_NOTIF_INTERVAL } from "../../../acApi";
 
 const Header = ({ local_varaiable, ThemeChanger }) => {
-  //Fullscvreen
+  const [currentDateTime, setCurrentDateTime] = useState("");
+
+  const updateCurrentDateTime = () => {
+    const now = new Date();
+    const optionsDate = {  month: "long", day: "numeric" };
+    const optionsTime = { hour: "2-digit", minute: "2-digit", hour12: true };
+    const formattedDate = now.toLocaleDateString("en-US", optionsDate);
+    const formattedTime = now.toLocaleTimeString("en-US", optionsTime);
+    setCurrentDateTime(`${formattedDate}, ${formattedTime}`);
+  };
+
+
   const [fullScreen, setFullScreen] = useState(false);
   const navigate = useNavigate(); // Hook to navigate
+
 
   // Function to handle navigation when bell icon is clicked
   // Function to navigate to the notifications page with state
@@ -68,6 +80,12 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
   }, []);
 
   //
+
+  useEffect(() => {
+    updateCurrentDateTime();
+    const interval = setInterval(updateCurrentDateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -413,6 +431,11 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                 >
                   <span></span>
                 </Link>
+                              {/* Current Date & Time */}
+              <div className="flex items-center md:text-sm text-[0.6rem] font-medium text-gray-700 dark:text-gray-300">
+                <i className="ri-time-line text-lg mr-1"></i>
+                {currentDateTime}
+              </div>
               </div>
             </div>
 
