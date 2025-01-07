@@ -42,8 +42,8 @@ function AcRemote({ acId, storeId, closeModal }) {
           setPower(
             sensorData.ac_remote_state?.toLowerCase() === "on" ? "ON" : "OFF"
           );
-          setMode(sensorData.ac_remote_mode || "Cool");
-          setSpeed(sensorData.ac_remote_fan_speed || "Auto");
+          setMode(sensorData.ac_remote_mode || "cool");
+          setSpeed(sensorData.ac_remote_fan_speed || "auto");
         }
       } catch (error) {
         console.error("Error fetching AC data:", error);
@@ -64,7 +64,7 @@ function AcRemote({ acId, storeId, closeModal }) {
   };
 
   const handleModeChange = () => {
-    const modes = ["cool", "heat", "auto", "fan"];
+    const modes = ["cool",  "fan"];
     const nextMode = modes[(modes.indexOf(mode) + 1) % modes.length];
     setMode(nextMode);
   };

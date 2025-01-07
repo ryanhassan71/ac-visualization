@@ -62,6 +62,7 @@ const Crm = () => {
   const [selectedAcName, setSelectedAcName] = useState(""); // State to store the selected AC name
   const [storeInfo, setStoreInfo] = useState(null);
   const [weather, setWeather] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -188,70 +189,140 @@ const Crm = () => {
     return weatherIconMap[description] || weatherIconMap.Default;
   };
 
+  // Update state based on screen width
+  useEffect(() => {
+    const updateView = () => {
+      setIsMobile(window.innerWidth <= 768); // Define mobile as screen width <= 768px
+    };
+
+    updateView(); // Initial check
+    window.addEventListener("resize", updateView); // Update on resize
+
+    return () => window.removeEventListener("resize", updateView); // Cleanup
+  }, []);
+
   return (
     <Fragment>
       <div className="md:flex items-center justify-between  page-header-breadcrumb">
         {/* Outlet Name on the Left */}
+        {!isMobile && (
+          <div>
+            <p className="font-semibold text-[1.4rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0">
+              AC Controls and Monitoring Dashboard - {storeInfo?.store_name} (
+              {storeInfo?.outlet_code})
+            </p>
+          </div>
+        )}
+
         <div>
-          <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0">
-            AC Controls and Monitoring Dashboard - {storeInfo?.store_name} (
-            {storeInfo?.outlet_code})
-          </p>
+          <div
+            className="box-body flex items-center justify-between gap-x-4 rounded-lg shadow-lg my-2 !p-1"
+            style={{
+              position: window.innerWidth <= 1000 ? "fixed" : "", // Fixed for mobile, sticky for desktop
+              top: "50px", // Sticks to the top
+              background: "linear-gradient(to right, #6dd5fa, #2980b9)", // Gradient background
+              color: "white", // White text for contrast
+              zIndex: 10, // Ensures it stays on top of other elements
+              width: window.innerWidth <= 768 ? "90%" : "auto", // Full width on mobile
+            }}
+          >
+            {/* Location with Pin */}
+            <div className="flex items-center ">
+              <div
+                className="flex items-center justify-center w-10 h-10 rounded-full "
+                style={{
+                  background:
+                    "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)", // Pin gradient
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)", // Subtle shadow
+                }}
+              >
+                <i className="ri-map-pin-line text-white text-[1.5rem]"></i>
+              </div>
+              <div className="ml-3 text-center">
+                <p className="text-[1rem] font-semibold">
+                  {weather?.weather_city}
+                </p>
+              </div>
+            </div>
+
+            {/* Weather Icon and Description */}
+            <div className="text-center">
+              <div
+                className="flex items-center justify-center h-12 w-12 rounded-full mx-auto p-0"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)", // Icon gradient
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)", // Subtle shadow
+                }}
+              >
+                <i
+                  className={`${getWeatherIcon(
+                    weather?.weather_description
+                  )} text-[1.5rem] text-yellow-300`}
+                ></i>
+              </div>
+              <p className="text-[0.8rem] mt-2">
+                {weather?.weather_description}
+              </p>
+            </div>
+
+            {/* Temperature */}
+            <div className="text-center">
+              <p className="text-[1.2rem] font-bold">
+                <i
+                  className="ri-thermometer-line text-[1rem] text-yellow-300 mr-2"
+                  style={{
+                    background: "linear-gradient(to bottom, #ff9a9e, #fad0c4)",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                  }}
+                ></i>
+                {weather?.weather_temperature}
+              </p>
+              <p className="text-[0.8rem]">Air Temp</p>
+            </div>
+
+            {/* Humidity */}
+            <div className="text-center">
+              <p className="text-[1.2rem] font-bold">
+                <i
+                  className="ri-drop-line text-[1rem] text-blue-300 mr-2"
+                  style={{
+                    background: "linear-gradient(to bottom, #89f7fe, #66a6ff)",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                  }}
+                ></i>
+                {weather?.weather_humidity}
+              </p>
+              <p className="text-[0.8rem]">Humidity</p>
+            </div>
+          </div>
+          {isMobile && (
+            <div
+              style={{
+                position: window.innerWidth <= 1000 ? "fixed" : "", // Fixed for mobile, sticky for desktop
+                top: "135px", // Sticks to the top
+                zIndex: 10, // Ensures it stays on top of other elements
+                textAlign: "center", // Centers the text
+                background: "linear-gradient(to right, #6dd5fa, #2980b9)", // Matches the weather card gradient
+                color: "white", // Explicitly sets text color to white
+                padding: "10px", // Adds some padding for better appearance
+
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)", // Adds subtle shadow
+                width: "90%",
+              }}
+            >
+              <p className="font-semibold text-[.6rem] text-white !mb-0 mt-0">
+                AC Controls and Monitoring Dashboard - {storeInfo?.store_name} (
+                {storeInfo?.outlet_code})
+              </p>
+            </div>
+          )}
         </div>
-
-        {/* Weather Data Box on the Right */}
-        <div className="box w-full md:w-auto md:!mb-1">
-        {weather ? (
-  <div className="box-body flex flex-col justify-between !p-2">
-    {/* Top Row: Weather Icon and City */}
-    <div className="flex items-center justify-between w-full space-x-4">
-      {/* Weather Icon */}
-      <i
-        className={`${
-          getWeatherIcon(weather.weather_description)
-        } text-[2rem] text-blue-500 dark:text-blue-400`}
-      ></i>
-      {/* City Name */}
-      <div className="flex items-center">
-        <i className="ri-map-pin-line text-gray-700 dark:text-gray-300 text-[1.2rem] mr-1"></i>
-        <p className="text-[0.8rem] font-semibold text-gray-700 dark:text-gray-300">
-          {weather.weather_city}
-        </p>
       </div>
-    </div>
-
-    {/* Bottom Row: Temperature, Humidity, and Description */}
-    <div className="flex flex-col items-start">
-      {/* Temperature and Humidity */}
-      <div className="flex items-center text-[0.9rem] font-medium text-gray-800 dark:text-gray-200">
-        <span>{weather.weather_temperature}</span>
-        <span className="mx-2">|</span>
-        <i className="ri-water-drop-line text-blue-400 text-[1.2rem] mr-1"></i>
-        <span>{weather.weather_humidity}</span>
-      </div>
-
-      {/* Weather Description */}
-      <p className="text-[0.75rem] text-gray-600 dark:text-gray-400 mt-1">
-        {weather.weather_description} <span className="ml-5">Humidity</span>
-      </p>
-    </div>
-  </div>
-) : (
-  <div className="box-body flex flex-col items-center justify-center p-6">
-    <p className="text-center text-[0.75rem] text-gray-500 dark:text-gray-400">
-      Loading weather data...
-    </p>
-  </div>
-)}
-
-
-
-
-
-        </div>
-      </div>
-
-      <div className="grid grid-cols-12 gap-0">
+      {isMobile && <div className="mb-6">.</div>}
+      <div className="grid grid-cols-12 gap-0 !mt-0 !sm:mt-14">
         <div className="col-span-12">
           <div
             className="box"
@@ -383,22 +454,24 @@ const Crm = () => {
                         <div className="box-body">
                           <div className="flex items-top justify-between">
                             <div>
-                            <span
-  className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
-    sensor.sensors[0].status
-      ? sensor.sensors[0].ac_state?.toLowerCase().includes("off")
-        ? "bg-gray-500" // Grey background for online and off state
-        : "bg-success" // Green background for online and on state
-      : "bg-danger" // Red background for offline
-  }`}
->
-{sensor.sensors[0].status ? (
-    <AcIcon /> // AC icon for online
-  ) : (
-    <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
-    <i className="ti ti-wifi-off text-[1.125rem]"></i>
-  </span>
-  )}
+                              <span
+                                className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
+                                  sensor.sensors[0].status
+                                    ? sensor.sensors[0].ac_state
+                                        ?.toLowerCase()
+                                        .includes("off")
+                                      ? "bg-gray-500" // Grey background for online and off state
+                                      : "bg-success" // Green background for online and on state
+                                    : "bg-danger" // Red background for offline
+                                }`}
+                              >
+                                {sensor.sensors[0].status ? (
+                                  <AcIcon /> // AC icon for online
+                                ) : (
+                                  <span className="avatar avatar-md !rounded-full bg-danger shadow-sm">
+                                    <i className="ti ti-wifi-off text-[1.125rem]"></i>
+                                  </span>
+                                )}
                               </span>
                             </div>
                             <div className="flex-grow ms-4">
@@ -753,8 +826,8 @@ const Crm = () => {
                     </h4>
                     <div className="">
                       <span className="py-[0.18rem]  rounded-sm text-success !font-medium !text-[0.8rem] bg-success/10">
-                        <i className="ri-cloud-line align-middle "></i> kg
-                        CO<sub>2</sub>
+                        <i className="ri-cloud-line align-middle "></i> kg CO
+                        <sub>2</sub>
                       </span>
 
                       <span className="text-[#8c9097] dark:text-white/50 text-[0.6rem] ms-1">
@@ -774,8 +847,8 @@ const Crm = () => {
                                   parseFloat(
                                     energyData.data[0].energy_data.slice(-1)[0]
                                   )
-                                )} kW/h`
-                              : "0 kW/h"}
+                                )} kWh`
+                              : "0 kWh"}
                           </div>
                         </div>
                       </li>
@@ -784,8 +857,8 @@ const Crm = () => {
                           <div>Last 7 days</div>
                           <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
                             {totalPowerConsumption !== undefined
-                              ? `${Math.round(totalPowerConsumption)} kW/h`
-                              : "0 kW/h"}
+                              ? `${Math.round(totalPowerConsumption)} kWh`
+                              : "0 kWh"}
                           </div>
                         </div>
                       </li>
@@ -794,8 +867,8 @@ const Crm = () => {
                           <div>This Month</div>
                           <div className="text-[0.75rem] text-[#8c9097] dark:text-white/50">
                             {totalMonthlyConsumption !== undefined
-                              ? `${Math.round(totalMonthlyConsumption)} kW/h`
-                              : "0 kW/h"}
+                              ? `${Math.round(totalMonthlyConsumption)} kWh`
+                              : "0 kWh"}
                           </div>
                         </div>
                       </li>
