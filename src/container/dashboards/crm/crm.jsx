@@ -222,7 +222,7 @@ const Crm = () => {
               top: "50px", // Sticks to the top
               background: "linear-gradient(to right, #6dd5fa, #2980b9)", // Gradient background
               color: "white", // White text for contrast
-              zIndex: 10, // Ensures it stays on top of other elements
+              zIndex: 1, // Ensures it stays on top of other elements
               width: window.innerWidth <= MOBILE_WIDTH ? "90%" : "auto", // Full width on mobile
             }}
           >
@@ -303,7 +303,7 @@ const Crm = () => {
               style={{
                 position: window.innerWidth <= 1000 ? "fixed" : "", // Fixed for mobile, sticky for desktop
                 top: "135px", // Sticks to the top
-                zIndex: 10, // Ensures it stays on top of other elements
+                zIndex: 1, // Ensures it stays on top of other elements
                 textAlign: "center", // Centers the text
                 background: "linear-gradient(to right, #6dd5fa, #2980b9)", // Matches the weather card gradient
                 color: "white", // Explicitly sets text color to white
