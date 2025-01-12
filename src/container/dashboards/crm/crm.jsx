@@ -26,7 +26,7 @@ import ReactModal from "react-modal";
 import AcRemote from "../../../components/ui/AcRemote";
 import "./Crm.css";
 import MonthlyPowerChart from "../../../components/ui/MonthlyPowerChart";
-import { CARBON_EMISSION_CONSTANT } from "../../../config";
+import { CARBON_EMISSION_CONSTANT, MOBILE_WIDTH } from "../../../config";
 
 const weatherIconMap = {
   "Clear sky": "ri-sun-line",
@@ -192,7 +192,7 @@ const Crm = () => {
   // Update state based on screen width
   useEffect(() => {
     const updateView = () => {
-      setIsMobile(window.innerWidth <= 768); // Define mobile as screen width <= 768px
+      setIsMobile(window.innerWidth <= MOBILE_WIDTH); // Define mobile as screen width <= 768px
     };
 
     updateView(); // Initial check
@@ -223,7 +223,7 @@ const Crm = () => {
               background: "linear-gradient(to right, #6dd5fa, #2980b9)", // Gradient background
               color: "white", // White text for contrast
               zIndex: 10, // Ensures it stays on top of other elements
-              width: window.innerWidth <= 768 ? "90%" : "auto", // Full width on mobile
+              width: window.innerWidth <= MOBILE_WIDTH ? "90%" : "auto", // Full width on mobile
             }}
           >
             {/* Location with Pin */}
@@ -321,7 +321,7 @@ const Crm = () => {
           )}
         </div>
       </div>
-      {isMobile && <div className="mb-6">.</div>}
+      {isMobile && <div className="mb-20">.</div>}
       <div className="grid grid-cols-12 gap-0 !mt-0 !sm:mt-14">
         <div className="col-span-12">
           <div
