@@ -391,33 +391,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
             <div className="header-content-left">
               <div className="header-element">
                 <div className="horizontal-logo">
-                  <a
-                    href={`${import.meta.env.BASE_URL}dashboards/crm/`}
-                    className="header-logo"
-                  >
-                    <img
-                      src={desktoplogo}
-                      alt="logo"
-                      className="desktop-logo"
-                    />
-                    <img src={togglelogo} alt="logo" className="toggle-logo" />
-                    <img
-                      src={desktopdark}
-                      alt="logo"
-                      className="desktop-dark"
-                    />
-                    <img src={toggledark} alt="logo" className="toggle-dark" />
-                    <img
-                      src={desktopwhite}
-                      alt="logo"
-                      className="desktop-white"
-                    />
-                    <img
-                      src={togglewhite}
-                      alt="logo"
-                      className="toggle-white"
-                    />
-                  </a>
+
                 </div>
               </div>
               <div

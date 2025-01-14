@@ -12,7 +12,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="transition-colors hover:text-blue-500 font-bold"
 >
-                <span className="font-semibold text-primary underline">Datasoft Manufacturing & Assembly.</span>
+                <span className="font-semibold text-primary underline">DMA</span>
             </a> All
             rights
             reserved

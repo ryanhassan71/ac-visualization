@@ -515,6 +515,17 @@ export class Negativecolumn extends Component {
           chart: {
             type: "bar",
             height: 320,
+            toolbar: {
+              tools: {
+                download: true, // Enable download button
+                selection: true, // Enable selection tool
+                zoom: true, // Enable zoom tool
+                zoomin: true, // Enable zoom-in button
+                zoomout: true, // Enable zoom-out button
+                pan: true, // Enable pan functionality
+                reset: true, // Enable reset button
+              },
+            },
             events: {
               mounted: (chart) => {
                 chart.windowResizeHandler();
