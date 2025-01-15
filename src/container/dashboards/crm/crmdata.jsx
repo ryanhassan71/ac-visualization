@@ -380,117 +380,118 @@ export class Revenueanalytics extends Component {
   constructor(props) {
     super(props);
 
+    // Store data in a dictionary
+    const storeData = {
+      D062: {
+        2024: [
+          { x: "Jan", y: 39120 },
+          { x: "Feb", y: 44100 },
+          { x: "Mar", y: 50760 },
+          { x: "Apr", y: 68220 },
+          { x: "May", y: 70500 },
+          { x: "Jun", y: 81060 },
+          { x: "Jul", y: 63600 },
+          { x: "Aug", y: 64740 },
+          { x: "Sep", y: 71220 },
+          { x: "Oct", y: 71700 },
+          { x: "Nov", y: 68520 },
+          { x: "Dec", y: 68520 },
+        ],
+        2023: [
+          { x: "Jan", y: 34320 },
+          { x: "Feb", y: 41280 },
+          { x: "Mar", y: 44280 },
+          { x: "Apr", y: 54120 },
+          { x: "May", y: 54480 },
+          { x: "Jun", y: 59340 },
+          { x: "Jul", y: 65640 },
+          { x: "Aug", y: 66240 },
+          { x: "Sep", y: 76560 },
+          { x: "Oct", y: 65580 },
+          { x: "Nov", y: 53280 },
+          { x: "Dec", y: 42600 },
+        ],
+        2025: [
+          { x: "Jan", y: props.currentMonth }, // Add January 2025 data
+          { x: "Feb", y: 0 },
+          { x: "Mar", y: 0},
+          { x: "Apr", y: 0 },
+          { x: "May", y: 0 },
+          { x: "Jun", y: 0 },
+          { x: "Jul", y: 0 },
+          { x: "Aug", y: 0 },
+          { x: "Sep", y: 0 },
+          { x: "Oct", y: 0 },
+          { x: "Nov", y: 0 },
+          { x: "Dec", y: 0 },
+        ],
+      },
+      D076: {
+        2024: [
+          { x: "Jan", y: 34359 },
+          { x: "Feb", y: 35912 },
+          { x: "Mar", y: 34965 },
+          { x: "Apr", y: 49230 },
+          { x: "May", y: 46485 },
+          { x: "Jun", y: 56409 },
+          { x: "Jul", y: 50568 },
+          { x: "Aug", y: 51459 },
+          { x: "Sep", y: 56112 },
+          { x: "Oct", y: 50420 },
+          { x: "Nov", y: 47918 },
+          { x: "Dec", y: 47918 },
+        ],
+        2023: [
+          { x: "Jan", y: 34755 },
+          { x: "Feb", y: 35784 },
+          { x: "Mar", y: 43843 },
+          { x: "Apr", y: 47153 },
+          { x: "May", y: 45074 },
+          { x: "Jun", y: 42436 },
+          { x: "Jul", y: 52697 },
+          { x: "Aug", y: 56382 },
+          { x: "Sep", y: 47877 },
+          { x: "Oct", y: 50627 },
+          { x: "Nov", y: 42248 },
+          { x: "Dec", y: 37253 },
+        ],
+        2025: [
+          { x: "Jan", y: props.currentMonth }, // Add January 2025 data
+          { x: "Feb", y: 0 },
+          { x: "Mar", y: 0},
+          { x: "Apr", y: 0 },
+          { x: "May", y: 0 },
+          { x: "Jun", y: 0 },
+          { x: "Jul", y: 0 },
+          { x: "Aug", y: 0 },
+          { x: "Sep", y: 0 },
+          { x: "Oct", y: 0 },
+          { x: "Nov", y: 0 },
+          { x: "Dec", y: 0 },
+        ],
+      },
+    };
+
+    // Determine the store based on the prop (default to D062 if not provided)
+    const outletCode = props.outletCode;
+
     this.state = {
       series: [
         {
           type: "line",
+          name: "2025",
+          data: storeData[outletCode]?.[2025] || [],
+        },
+        {
+          type: "line",
           name: "2024",
-          data: [
-            {
-              x: "Jan",
-              y: 100,
-            },
-            {
-              x: "Feb",
-              y: 210,
-            },
-            {
-              x: "Mar",
-              y: 180,
-            },
-            {
-              x: "Apr",
-              y: 454,
-            },
-            {
-              x: "May",
-              y: 230,
-            },
-            {
-              x: "Jun",
-              y: 320,
-            },
-            {
-              x: "Jul",
-              y: 656,
-            },
-            {
-              x: "Aug",
-              y: 830,
-            },
-            {
-              x: "Sep",
-              y: 350,
-            },
-            {
-              x: "Oct",
-              y: 350,
-            },
-            {
-              x: "Nov",
-              y: 210,
-            },
-            {
-              x: "Dec",
-              y: 410,
-            },
-          ],
+          data: storeData[outletCode]?.[2024] || [],
         },
         {
           type: "line",
           name: "2023",
-          data: [
-            {
-              x: "Jan",
-              y: 180,
-            },
-            {
-              x: "Feb",
-              y: 620,
-            },
-            {
-              x: "Mar",
-              y: 476,
-            },
-            {
-              x: "Apr",
-              y: 220,
-            },
-            {
-              x: "May",
-              y: 520,
-            },
-            {
-              x: "Jun",
-              y: 780,
-            },
-            {
-              x: "Jul",
-              y: 435,
-            },
-            {
-              x: "Aug",
-              y: 515,
-            },
-            {
-              x: "Sep",
-              y: 738,
-            },
-            {
-              x: "Oct",
-              y: 454,
-            },
-            {
-              x: "Nov",
-              y: 525,
-            },
-            {
-              x: "Dec",
-              y: 230,
-            },
-          ],
+          data: storeData[outletCode]?.[2023] || [],
         },
-
       ],
       options: {
         chart: {
@@ -500,7 +501,6 @@ export class Revenueanalytics extends Component {
           },
           dropShadow: {
             enabled: true,
-            enabledOnSeries: undefined,
             top: 8,
             left: 0,
             blur: 3,
@@ -508,18 +508,21 @@ export class Revenueanalytics extends Component {
             opacity: 0.1,
           },
           toolbar: {
-            show: false,
-          },
-          events: {
-            mounted: (chart) => {
-              chart.windowResizeHandler();
+            tools: {
+              download: true, // Enable download button
+              selection: true, // Enable selection tool
+              zoom: true, // Enable zoom tool
+              zoomin: true, // Enable zoom-in button
+              zoomout: true, // Enable zoom-out button
+              pan: true, // Enable pan functionality
+              reset: true, // Enable reset button
             },
           },
         },
         colors: [
-          "rgb(132, 90, 223)",
-          "rgba(35, 183, 229, 0.85)",
-          "rgba(119, 119, 142, 0.05)",
+          "rgb(255, 99, 132)", // Color for 2025
+          "rgb(132, 90, 223)", // Color for 2024
+          "rgba(35, 183, 229, 0.85)", // Color for 2023
         ],
         dataLabels: {
           enabled: false,
@@ -530,8 +533,7 @@ export class Revenueanalytics extends Component {
         },
         stroke: {
           curve: "smooth",
-          width: [2, 2, 0],
-          dashArray: [0, 5, 0],
+          width: [2, 2, 2],
         },
         xaxis: {
           axisTicks: {
@@ -541,7 +543,7 @@ export class Revenueanalytics extends Component {
         yaxis: {
           labels: {
             formatter: function (value) {
-              return  value + " kWh" ;
+              return value + " kWh";
             },
           },
         },
@@ -549,24 +551,14 @@ export class Revenueanalytics extends Component {
           y: [
             {
               formatter: function (e) {
-                return void 0 !== e ?  e.toFixed(0) + " kWh" : e;
-              },
-            },
-            {
-              formatter: function (e) {
-                return void 0 !== e ?  e.toFixed(0) + " kWh" : e;
-              },
-            },
-            {
-              formatter: function (e) {
-                return void 0 !== e ? e.toFixed(0) : e;
+                return e ? e.toFixed(0) + " kWh" : e;
               },
             },
           ],
         },
         legend: {
           show: true,
-          customLegendItems: ["2024", "2023",],
+          customLegendItems: ["2025", "2024", "2023"],
           inverseOrder: true,
         },
         title: {
@@ -600,6 +592,10 @@ export class Revenueanalytics extends Component {
     );
   }
 }
+
+
+
+
 //
 //ProfitEarned
 export class Profitearned extends Component {

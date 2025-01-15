@@ -590,7 +590,8 @@ const Crm = () => {
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
                     <div className="box-header !gap-0 !m-0 justify-between">
-                      <div className="box-title">Power Analytics</div>
+                      <div className="box-title">{storeInfo?.store_name} (
+                        {storeInfo?.outlet_code}) Power Analytics</div>
                       <div className="hs-dropdown ti-dropdown">
                         <Link
                           to="#"
@@ -633,7 +634,14 @@ const Crm = () => {
                     </div>
                     <div className="box-body !py-5">
                       <div id="crm-revenue-analytics">
-                        <Revenueanalytics />
+                      {storeInfo && totalMonthlyConsumption !=0 && (
+  <Revenueanalytics
+    key={storeInfo.outlet_code} // Add a unique key to force re-render
+    outletCode={storeInfo?.outlet_code}
+    currentMonth={Math.round(totalMonthlyConsumption)}
+  />
+)}
+
                       </div>
                     </div>
                   </div>

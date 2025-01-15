@@ -3,6 +3,7 @@ import { Fragment, useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // Import useParams
 import Pageheader from "../../../components/common/pageheader/pageheader";
 import { Columnwithlabels, Distributed, Negativecolumn } from "../columndata";
+import { Revenueanalytics } from "../crm/crmdata";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Power.css";
@@ -21,7 +22,15 @@ function Power() {
   const [dailyPowerData, setDailyPowerData] = useState(null);
   const [monthlyPowerData, setMonthlyPowerData] = useState(null);
   const [storeInfo, setStoreInfo] = useState(null);
+  const [currentTotal, setCurrentTotal] = useState(0); // Add state for total
   const { powerId } = useParams();
+
+  useEffect(() => {
+    // Calculate the total whenever monthlyPowerData changes
+
+      setCurrentTotal(0);
+ 
+  }, [powerId]);
 
   useEffect(() => {
     // Set the initial title based on the current month and year
@@ -189,6 +198,28 @@ function Power() {
     );
   };
 
+  useEffect(() => {
+    // Calculate the total whenever monthlyPowerData changes
+    if (monthlyPowerData) {
+      const total = Math.round(
+        monthlyPowerData.data[0].energy_data.reduce(
+          (acc, value) => acc + parseFloat(value),
+          0
+        )
+      );
+      setCurrentTotal(total);
+    } else {
+      setCurrentTotal(0);
+    }
+  }, [monthlyPowerData]);
+
+
+
+
+
+
+
+
   return (
     <Fragment>
       <Pageheader
@@ -202,63 +233,61 @@ function Power() {
       />
 
       <div className="grid grid-cols-12 gap-x-6">
-      <div className="col-span-12">
-  <div className="box custom-box">
-    {/* Responsive flexbox container */}
-    <div className="box-header flex flex-wrap md:flex-nowrap items-center">
-      {/* Title (Left for larger screens, first row for mobile) */}
-      <div className="flex-1 text-left mb-2 md:mb-0 hidden md:block">
-  <div className="box-title">{title}</div>
-</div>
+        <div className="col-span-12">
+          <div className="box custom-box">
+            {/* Responsive flexbox container */}
+            <div className="box-header flex flex-wrap md:flex-nowrap items-center">
+              {/* Title (Left for larger screens, first row for mobile) */}
+              <div className="flex-1 text-left mb-2 md:mb-0 hidden md:block">
+                <div className="box-title">{title}</div>
+              </div>
 
+              {/* Date picker (Center for larger screens, second row for mobile) */}
+              <div className="flex-1 text-center mb-2 md:mb-0 md:!ml-36">
+                <div className="form-group">
+                  <div className="input-group !flex-nowrap justify-center">
+                    <div className="input-group-text text-[#8c9097] dark:text-white/50">
+                      <i className="ri-calendar-line"></i>
+                    </div>
+                    <DatePicker
+                      placeholderText="Choose month and year"
+                      className="ti-form-input focus:z-10"
+                      showIcon
+                      selected={startDate}
+                      onChange={handleDateChange} // Use the handler
+                      dateFormat="MM/yyyy" // Display format
+                      showMonthYearPicker // Only month and year selection
+                      popperClassName="high-z-index-datepicker" // Apply custom class for z-index
+                    />
+                  </div>
+                </div>
+              </div>
 
-      {/* Date picker (Center for larger screens, second row for mobile) */}
-      <div className="flex-1 text-center mb-2 md:mb-0 md:!ml-36">
-        <div className="form-group">
-          <div className="input-group !flex-nowrap justify-center">
-            <div className="input-group-text text-[#8c9097] dark:text-white/50">
-              <i className="ri-calendar-line"></i>
+              {/* Export button (Right for larger screens, third row for mobile) */}
+              <div className="flex-1 text-right">
+                <button
+                  type="button"
+                  className="ti-btn ti-btn-outline-secondary btn-wave !font-medium !ms-0  !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0 !text-[.6rem]"
+                  onClick={() =>
+                    exportToExcel(
+                      monthlyPowerData?.data[0]?.energy_data,
+                      monthlyPowerData?.data[0]?.time,
+                      "MonthlyPowerData"
+                    )
+                  }
+                >
+                  <i className="ri-upload-cloud-line inline-block"></i>Export
+                </button>
+              </div>
             </div>
-            <DatePicker
-              placeholderText="Choose month and year"
-              className="ti-form-input focus:z-10"
-              showIcon
-              selected={startDate}
-              onChange={handleDateChange} // Use the handler
-              dateFormat="MM/yyyy" // Display format
-              showMonthYearPicker // Only month and year selection
-              popperClassName="high-z-index-datepicker" // Apply custom class for z-index
-            />
+
+            <div className="box-body">
+              <div id="column-negative">
+                <Negativecolumn data={monthlyPowerData?.data[0]} />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Export button (Right for larger screens, third row for mobile) */}
-      <div className="flex-1 text-right">
-        <button
-          type="button"
-          className="ti-btn ti-btn-outline-secondary btn-wave !font-medium !ms-0  !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0 !text-[.6rem]"
-          onClick={() =>
-            exportToExcel(
-              monthlyPowerData?.data[0]?.energy_data,
-              monthlyPowerData?.data[0]?.time,
-              "MonthlyPowerData"
-            )
-          }
-        >
-          <i className="ri-upload-cloud-line inline-block"></i>Export
-        </button>
-      </div>
-    </div>
-
-    <div className="box-body">
-      <div id="column-negative">
-        <Negativecolumn data={monthlyPowerData?.data[0]} />
-      </div>
-    </div>
-  </div>
-</div>
-
 
         {/* Add two charts side by side */}
         <div className="col-span-12 xl:col-span-4">
@@ -314,6 +343,23 @@ function Power() {
               <div id="column-datalabels">
                 <Columnwithlabels data={dailyPowerData?.data[0]} />
               </div>
+            </div>
+          </div>
+        </div>
+        {/* Add the Revenueanalytics chart */}
+        <div className="col-span-12">
+          <div className="box">
+            <div className="box-header">
+              {storeInfo?.store_name} {storeInfo?.outlet_code} Power Analytics
+            </div>
+            <div className="box-body">
+              {storeInfo && monthlyPowerData && currentTotal > 0 && (
+                <Revenueanalytics
+                  key={`${powerId}`} // Add a unique key to force re-render
+                  outletCode={storeInfo?.outlet_code}
+                  currentMonth={currentTotal}
+                />
+              )}
             </div>
           </div>
         </div>
