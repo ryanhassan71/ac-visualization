@@ -174,8 +174,8 @@ const Crm = () => {
   );
 
   // Calculate the count of ACs that are "Off" among the online ones
-  const totalOff = onlineAcs.filter((sensor) =>
-    sensor?.sensors[0]?.ac_state?.toLowerCase().includes("off")
+  const totalOff = onlineAcs.filter(
+    (sensor) => sensor?.sensors[0]?.state?.toUpperCase() === "OFF"
   ).length;
 
   // Calculate the count of ACs that are "On" among the online ones
@@ -457,9 +457,7 @@ const Crm = () => {
                               <span
                                 className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
                                   sensor.sensors[0].status
-                                    ? sensor.sensors[0].ac_state
-                                        ?.toLowerCase()
-                                        .includes("off")
+                                    ? sensor.sensors[0]?.state?.toUpperCase() === "OFF"
                                       ? "bg-gray-500" // Grey background for online and off state
                                       : "bg-success" // Green background for online and on state
                                     : "bg-danger" // Red background for offline
@@ -481,7 +479,7 @@ const Crm = () => {
                                     {sensor.name}
                                   </p>
                                   <h4
-                                    className="font-semibold text-[1.25rem] !mb-2"
+                                    className="font-semibold text-[1rem] !mb-2"
                                     style={{
                                       color:
                                         sensor?.sensors[0]?.state_color ||
@@ -590,8 +588,10 @@ const Crm = () => {
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
                     <div className="box-header !gap-0 !m-0 justify-between">
-                      <div className="box-title">{storeInfo?.store_name} (
-                        {storeInfo?.outlet_code}) Power Analytics</div>
+                      <div className="box-title">
+                        {storeInfo?.store_name} ({storeInfo?.outlet_code}) Power
+                        Analytics
+                      </div>
                       <div className="hs-dropdown ti-dropdown">
                         <Link
                           to="#"
@@ -634,14 +634,13 @@ const Crm = () => {
                     </div>
                     <div className="box-body !py-5">
                       <div id="crm-revenue-analytics">
-                      {storeInfo && totalMonthlyConsumption !=0 && (
-  <Revenueanalytics
-    key={storeInfo.outlet_code} // Add a unique key to force re-render
-    outletCode={storeInfo?.outlet_code}
-    currentMonth={Math.round(totalMonthlyConsumption)}
-  />
-)}
-
+                        {storeInfo && totalMonthlyConsumption != 0 && (
+                          <Revenueanalytics
+                            key={storeInfo.outlet_code} // Add a unique key to force re-render
+                            outletCode={storeInfo?.outlet_code}
+                            currentMonth={Math.round(totalMonthlyConsumption)}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
