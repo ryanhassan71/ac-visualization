@@ -457,7 +457,8 @@ const Crm = () => {
                               <span
                                 className={`!text-[0.8rem] !w-[2.5rem] !h-[2.5rem] !leading-[2.5rem] !rounded-full inline-flex items-center justify-center ${
                                   sensor.sensors[0].status
-                                    ? sensor.sensors[0]?.state?.toUpperCase() === "OFF"
+                                    ? sensor.sensors[0]?.state?.toUpperCase() ===
+                                      "OFF"
                                       ? "bg-gray-500" // Grey background for online and off state
                                       : "bg-success" // Green background for online and on state
                                     : "bg-danger" // Red background for offline
@@ -479,11 +480,18 @@ const Crm = () => {
                                     {sensor.name}
                                   </p>
                                   <h4
-                                    className="font-semibold text-[1rem] !mb-2"
+                                    className="font-semibold !mb-2 text-[1rem] break-words whitespace-normal w-[100px] text-left"
                                     style={{
                                       color:
                                         sensor?.sensors[0]?.state_color ||
                                         "inherit",
+                                      wordBreak: "break-word",
+                                      whiteSpace: "normal",
+                                      overflowWrap: "break-word",
+                                      maxWidth: "100px",
+                                      textAlign: "left", // Ensures left alignment
+                                      marginLeft: "0", // Removes any left margin
+                                      marginRight: "0", // Removes any right margin
                                     }}
                                   >
                                     {sensor?.sensors[0]?.ac_state || "N/A"}
