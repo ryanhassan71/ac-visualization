@@ -48,6 +48,7 @@ const weatherIconMap = {
 };
 
 const Crm = () => {
+  
   const { storeId, powerId } = useParams();
   const { getStoreData, setStoreData } = useCrm();
 

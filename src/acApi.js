@@ -17,25 +17,37 @@ export const convertToMilliseconds = (value, unit) => {
   return value * unitToMilliseconds[unit];
 };
 
-let token = null; // Global variable to store the token
+
 
 // Function to login and get the token
-const loginAndGetToken = async () => {
-  if (token) {
-    return token; // Return the token if it already exists
-  }
+export const loginAndGetToken = async (email, password) => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/login/email/`, {
-      email_or_phone: 'admin@gmail.com',
-      password: 'ron123!@#',
+      email_or_phone: email,
+      password: password,
     });
 
     if (response.data && response.data.success) {
-      token = response.data.token;
-      return token;
+
+      
+      const { token, refresh_token, data: userData } = response.data;
+
+      // Combine first & last name
+      const name = `${userData.first_name} ${userData.last_name}`;
+
+      // Build your login dictionary
+      const loginDictionary = {
+        token,
+        refreshToken: refresh_token, // if you want to store refresh token too
+        name, // "DMA OPS"
+        // … store any other fields (user_id, phone, etc.) as needed
+      };
+
+      // Save it in localStorage as a single JSON object
+      localStorage.setItem('appAuthData', JSON.stringify(loginDictionary));
+      return loginDictionary; // Return if needed
     } else {
-      console.error('Failed to log in and retrieve token:', response.data);
-      throw new Error('Failed to log in');
+      throw new Error('Login failed. Check your credentials.');
     }
   } catch (error) {
     console.error('Error during login:', error);
@@ -43,27 +55,44 @@ const loginAndGetToken = async () => {
   }
 };
 
+
 // Create an Axios instance with base URL
 const apiClient = axios.create({
   baseURL: BASE_URL,
 });
 
-// Add a request interceptor to handle token dynamically
 apiClient.interceptors.request.use(
-  async (config) => {
-    if (!token) {
-      try {
-        token = await loginAndGetToken(); // Fetch the latest token if not available
-      } catch (error) {
-        console.error('Error retrieving token:', error);
+  (config) => {
+    // Read the stored dictionary from localStorage
+    const storedAuthData = localStorage.getItem('appAuthData');
+    if (storedAuthData) {
+      const parsedAuthData = JSON.parse(storedAuthData);
+
+      // If a token exists, attach it to Authorization header
+      if (parsedAuthData.token) {
+        config.headers['Authorization'] = `Bearer ${parsedAuthData.token}`;
       }
-    }
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`; // Set the Authorization header
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle 401 errors
+apiClient.interceptors.response.use(
+  
+  (response) => response,
+
+  (error) => {
+   
+    if (error.response && error.response.status === 401) {
+    
+      localStorage.removeItem('appAuthData');
+      window.location.reload();
+    }
+
     return Promise.reject(error);
   }
 );

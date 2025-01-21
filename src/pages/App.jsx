@@ -1,5 +1,5 @@
-
 import { Fragment, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Loader from '../components/common/loader/loader';
 import Footer from '../components/common/footer/footer';
 import Sidebar from '../components/common/sidebar/sidebar';
@@ -13,7 +13,9 @@ import Tabtotop from '../components/common/tabtotop/tabtotop';
 
 
 function App() {
+  
   const [MyclassName, setMyClass] = useState("");
+  const navigate = useNavigate();
 
   // const Bodyclickk = () => {
   //   if (localStorage.getItem("ynexverticalstyles") == "icontext") {
@@ -33,6 +35,20 @@ function App() {
     import("preline");
 
   }, []);
+
+  useEffect(() => {
+    // 2) Check for token in localStorage
+
+    const storedAuthData = localStorage.getItem('appAuthData');
+    
+    // If nothing is stored, or if it's invalid JSON, redirect to login
+    if (!storedAuthData) {
+      navigate(`/auth/login/`);
+      return; 
+    }
+    
+
+  }, [navigate]);
   return (
     <Fragment>
       <Loader/>

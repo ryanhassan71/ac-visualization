@@ -98,7 +98,7 @@ const Notifications = () => {
                               notif.notification_color === "green" ? "online" : "offline"
                             } me-4 avatar-rounded bg-primary !text-white`}
                           >
-                            {notif.sensor}
+                            {notif.sensor} 
                           </div>
                           <div className="flex-grow">
                             <div className="sm:flex items-center">
@@ -115,7 +115,7 @@ const Notifications = () => {
                                   </span>
                                 </p>
                               </div>
-                              <div className="ms-auto">
+                              <div className="ms-auto mt-5 md:mt-0">
                                 <span className="ltr:float-right rtl:float-left badge bg-light text-[#8c9097] dark:text-white/50 whitespace-nowrap !text-[.875rem]">
                                   {notif.store} {notif.outlet_code}
                                 </span>

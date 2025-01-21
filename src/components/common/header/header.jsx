@@ -35,21 +35,36 @@ import SimpleBar from "simplebar-react";
 import { fetchRecentAcAlerts, AC_NOTIF_INTERVAL } from "../../../acApi";
 
 const Header = ({ local_varaiable, ThemeChanger }) => {
+  const [username, setUsername] = useState("");
+
+  // Example function to read 'name' from localStorage
+  const loadUserFromLocalStorage = () => {
+    const storedAuthData = localStorage.getItem("appAuthData");
+    if (storedAuthData) {
+      const parsedAuthData = JSON.parse(storedAuthData);
+      // If you stored "name" in your login dictionary, use it here:
+      if (parsedAuthData.name) {
+        setUsername(parsedAuthData.name);
+      }
+    }
+  };
+  useEffect(() => {
+    loadUserFromLocalStorage();
+    // other initialization logic
+  }, []);
   const [currentDateTime, setCurrentDateTime] = useState("");
 
   const updateCurrentDateTime = () => {
     const now = new Date();
-    const optionsDate = {  month: "long", day: "numeric" };
+    const optionsDate = { month: "long", day: "numeric" };
     const optionsTime = { hour: "2-digit", minute: "2-digit", hour12: true };
     const formattedDate = now.toLocaleDateString("en-US", optionsDate);
     const formattedTime = now.toLocaleTimeString("en-US", optionsTime);
     setCurrentDateTime(`${formattedDate}, ${formattedTime}`);
   };
 
-
   const [fullScreen, setFullScreen] = useState(false);
   const navigate = useNavigate(); // Hook to navigate
-
 
   // Function to handle navigation when bell icon is clicked
   // Function to navigate to the notifications page with state
@@ -88,7 +103,6 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
   }, []);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
 
   const cartProduct = [
     {
@@ -140,7 +154,6 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
   ];
   const [cartItems, setCartItems] = useState([...cartProduct]);
   const [cartItemCount, setCartItemCount] = useState(cartProduct.length);
-
 
   const initialNotifications = [
     {
@@ -196,8 +209,6 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
   ];
 
   const [notifications, setNotifications] = useState([...initialNotifications]);
-
-
 
   function menuClose() {
     const theme = store.getState();
@@ -383,6 +394,16 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
       localStorage.removeItem("ynexHeader");
     }
   };
+
+  // Simple helper to get two initials from a full name
+  function getInitials(name) {
+    if (!name) return "U"; // fallback
+    const parts = name.trim().split(" ");
+    const first = parts[0]?.[0]?.toUpperCase() || "";
+    const second = parts.length > 1 ? parts[1]?.[0]?.toUpperCase() : "";
+    return first + second; // e.g. "DMA OPS" -> "DO"
+  }
+
   return (
     <Fragment>
       <header className="app-header">
@@ -390,9 +411,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
           <div className="main-header-container ps-[0.725rem] pe-[1rem] ">
             <div className="header-content-left">
               <div className="header-element">
-                <div className="horizontal-logo">
-
-                </div>
+                <div className="horizontal-logo"></div>
               </div>
               <div
                 className="header-element md:px-[0.325rem] !items-center"
@@ -405,16 +424,17 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                 >
                   <span></span>
                 </Link>
-                              {/* Current Date & Time */}
-              <div className="flex items-center md:text-sm text-[0.6rem] font-medium text-gray-700 dark:text-gray-300">
-                <i className="ri-time-line text-lg mr-1"></i>
-                {currentDateTime}
-              </div>
+                {/* Current Date & Time */}
+                <div className="flex items-center md:text-sm text-[0.6rem] font-medium text-gray-700 dark:text-gray-300">
+                  <i className="ri-time-line text-lg mr-1"></i>
+                  {currentDateTime}
+                </div>
               </div>
             </div>
 
             <div className="header-content-right">
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2 header-search">
+              {/** SEARCH BUTTON */}
+              {/* <div className="header-element py-[1rem] md:px-[0.65rem] px-2 header-search">
                 <button
                   aria-label="button"
                   type="button"
@@ -423,17 +443,15 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                 >
                   <i className="bx bx-search-alt-2 header-link-icon"></i>
                 </button>
-              </div>
+              </div> */}
 
-              <div
-                className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2"
-                onClick={() => ToggleDark()}
-              >
+              <div className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2 ">
                 <Link
                   aria-label="anchor"
-                  className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10 "
                   to="#"
                   data-hs-theme-click-value="dark"
+                  onClick={() => ToggleDark()}
                 >
                   <i className="bx bx-moon header-link-icon"></i>
                 </Link>
@@ -443,234 +461,58 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
              rounded-full font-medium text-defaulttextcolor  transition-all text-xs dark:bg-bodybg dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   to="#"
                   data-hs-theme-click-value="light"
+                  onClick={() => ToggleDark()}
                 >
                   <i className="bx bx-sun header-link-icon"></i>
                 </Link>
-              </div>
-
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2  !hidden md:!block [--placement:bottom-right] rtl:[--placement:bottom-left]">
-                <button
-                  id="dropdown-notification"
-                  type="button"
-                  className="relative !p-0 !border-0 flex-shrink-0 !rounded-full !shadow-none align-middle text-xs"
-                  onClick={handleNotificationsClick}
-                >
-                  <i className="bx bx-bell header-link-icon text-[1.125rem]"></i>
-                </button>
-
-                <div
-                  className=" !-mt-3 !p-0  bg-white !w-[22rem] border-0 border-defaultborder hidden !m-0"
-                  aria-labelledby="dropdown-notification"
-                >
-                  <div className="ti-dropdown-header !m-0 !p-4 !bg-transparent flex justify-between items-center">
-                    <p className="mb-0 text-[1.0625rem] text-defaulttextcolor font-semibold dark:text-[#8c9097] dark:text-white/50">
-                      Notifications
-                    </p>
-                    <span
-                      className="text-[0.75em] py-[0.25rem/2] px-[0.45rem] font-[600] rounded-sm bg-secondary/10 text-secondary"
-                      id="notifiation-data"
-                    >{`${notifications.length} Unread`}</span>
-                  </div>
-                  <div className="dropdown-divider"></div>
-
-                  <div
-                    className={`p-4 empty-header-item1 border-t mt-2 ${
-                      notifications.length === 0 ? "hidden" : ""
-                    }`}
-                  ></div>
-                  <div
-                    className={`p-[3rem] empty-item1 ${
-                      notifications.length === 0 ? "" : "hidden"
-                    }`}
+                <div className="header-element py-[1rem] md:px-[0.65rem] px-2  !block [--placement:bottom-right] rtl:[--placement:bottom-left] md:ml-4">
+                  <button
+                    id="dropdown-notification"
+                    type="button"
+                    className="relative !p-0 !border-0 flex-shrink-0 !rounded-full !shadow-none align-middle text-xs !ml-2"
+                    onClick={handleNotificationsClick}
                   >
-                    <div className="text-center">
-                      <span className="!h-[4rem]  !w-[4rem] avatar !leading-[4rem] !rounded-full !bg-secondary/10 !text-secondary">
-                        <i className="ri-notification-off-line text-[2rem]  "></i>
-                      </span>
-                      <h6 className="font-semibold mt-3 text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50 text-[1rem]">
-                        No New Notifications
-                      </h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">
-                <button
-                  aria-label="button"
-                  id="dropdown-apps"
-                  type="button"
-                  className="hs-dropdown-toggle ti-dropdown-toggle !p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
-                >
-                  <i className="bx bx-grid-alt header-link-icon text-[1.125rem]"></i>
-                </button>
+                    <i className="bx bx-bell header-link-icon text-[1.125rem]"></i>
+                  </button>
 
-                <div
-                  className="main-header-dropdown !-mt-3 hs-dropdown-menu ti-dropdown-menu !w-[22rem] border-0 border-defaultborder   hidden"
-                  aria-labelledby="dropdown-apps"
-                >
-                  <div className="p-4">
-                    <div className="flex items-center justify-between">
-                      <p className="mb-0 text-defaulttextcolor text-[1.0625rem] dark:text-[#8c9097] dark:text-white/50 font-semibold">
-                        Related Apps
+                  <div
+                    className=" !-mt-3 !p-0  bg-white !w-[22rem] border-0 border-defaultborder hidden !m-0"
+                    aria-labelledby="dropdown-notification "
+                  >
+                    <div className="ti-dropdown-header !m-0 !p-4 !bg-transparent flex justify-between items-center ">
+                      <p className="mb-0 text-[1.0625rem] text-defaulttextcolor font-semibold dark:text-[#8c9097] dark:text-white/50">
+                        Notifications
                       </p>
+                      <span
+                        className="text-[0.75em] py-[0.25rem/2] px-[0.45rem] font-[600] rounded-sm bg-secondary/10 text-secondary"
+                        id="notifiation-data"
+                      >{`${notifications.length} Unread`}</span>
                     </div>
-                  </div>
-                  <div className="dropdown-divider mb-0"></div>
-                  <div
-                    className="ti-dropdown-divider divide-y divide-gray-200 dark:divide-white/10 main-header-shortcuts p-2"
-                    id="header-shortcut-scroll"
-                  >
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <div>
-                            <img
-                              src={figma}
-                              alt="figma"
-                              className="!h-[1.75rem] !w-[1.75rem] text-2xl avatar text-primary flex justify-center items-center mx-auto"
-                            />
-                            <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                              Figma
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={powerpoint}
-                            alt="miscrosoft"
-                            className="leading-[1.75] text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Power Point
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={word}
-                            alt="miscrodoftword"
-                            className="leading-none
-                       text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            MS Word
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={calender}
-                            alt="calander"
-                            className="leading-none text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Calendar
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={sketch}
-                            alt="apps"
-                            className="leading-none text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Sketch
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={googledocs}
-                            alt="docs"
-                            className="leading-none text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Docs
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={google}
-                            alt="google"
-                            className="leading-none text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Google
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={translate}
-                            alt="translate"
-                            className="leading-none text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Translate
-                          </div>
-                        </a>
-                      </div>
-                      <div className="">
-                        <a
-                          href="#"
-                          className="p-4 items-center related-app block text-center rounded-sm hover:bg-gray-50 dark:hover:bg-black/20"
-                        >
-                          <img
-                            src={googlesheets}
-                            alt="sheets"
-                            className="leading-none text-2xl !h-[1.75rem] !w-[1.75rem] align-middle flex justify-center mx-auto"
-                          />
-                          <div className="text-[0.75rem] text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50">
-                            Sheets
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4 first:pt-0 border-t">
-                    <a
-                      className="w-full ti-btn ti-btn-primary-full p-2 !m-0"
-                      href="#"
+                    <div className="dropdown-divider"></div>
+
+                    <div
+                      className={`p-4 empty-header-item1 border-t mt-2 ${
+                        notifications.length === 0 ? "hidden" : ""
+                      }`}
+                    ></div>
+                    <div
+                      className={`p-[3rem] empty-item1 ${
+                        notifications.length === 0 ? "" : "hidden"
+                      }`}
                     >
-                      View All
-                    </a>
+                      <div className="text-center">
+                        <span className="!h-[4rem]  !w-[4rem] avatar !leading-[4rem] !rounded-full !bg-secondary/10 !text-secondary">
+                          <i className="ri-notification-off-line text-[2rem]  "></i>
+                        </span>
+                        <h6 className="font-semibold mt-3 text-defaulttextcolor dark:text-[#8c9097] dark:text-white/50 text-[1rem]">
+                          No New Notifications
+                        </h6>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
               <div className="header-element header-fullscreen py-[1rem] md:px-[0.65rem] px-2">
                 <Link
                   to="#"
@@ -685,23 +527,22 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                   )}
                 </Link>
               </div>
-              <div className="header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left]">
+              <div className="header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] ">
                 <button
                   id="dropdown-profile"
                   type="button"
                   className="hs-dropdown-toggle ti-dropdown-toggle !gap-2 !p-0 flex-shrink-0 sm:me-2 me-0 !rounded-full !shadow-none text-xs align-middle !border-0 !shadow-transparent "
                 >
-                  <img
-                    className="inline-block rounded-full "
-                    src={face9}
-                    width="32"
-                    height="32"
-                    alt="Image Description"
-                  />
+                  <div
+                    className={`avatar avatar-md online
+                             avatar-rounded bg-orange !text-white`}
+                  >
+                    {getInitials(username)}
+                  </div>
                 </button>
                 <div className="md:block hidden dropdown-profile cursor-pointer">
                   <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
-                    User-1
+                    {username || "User"}
                   </p>
                   <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] "></span>
                 </div>
@@ -712,65 +553,8 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                   <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
                     <li>
                       <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                        to="#"
-                      >
-                        <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Profile
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                        to="#"
-                      >
-                        <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Inbox{" "}
-                        <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
-                          25
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0 !p-[0.65rem] !inline-flex"
-                        to="#"
-                      >
-                        <i className="ti ti-clipboard-check text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Task Manager
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0 !p-[0.65rem] !inline-flex"
-                        to="#"
-                      >
-                        <i className="ti ti-adjustments-horizontal text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Settings
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0 !p-[0.65rem] !inline-flex"
-                        to="#"
-                      >
-                        <i className="ti ti-wallet text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Bal: $7,12,950
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
                         className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                        to="#"
-                      >
-                        <i className="ti ti-headset text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Support
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                        to="#"
+                        to="/auth/login/"
                       >
                         <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
                         Log Out
@@ -779,16 +563,7 @@ const Header = ({ local_varaiable, ThemeChanger }) => {
                   </ul>
                 </div>
               </div>
-              <div className="header-element md:px-[0.48rem]">
-                <button
-                  aria-label="button"
-                  type="button"
-                  className="hs-dropdown-toggle switcher-icon inline-flex flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium  align-middle transition-all text-xs dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
-                  data-hs-overlay="#hs-overlay-switcher"
-                >
-                  <i className="bx bx-cog header-link-icon animate-spin-slow"></i>
-                </button>
-              </div>
+
             </div>
           </div>
         </nav>

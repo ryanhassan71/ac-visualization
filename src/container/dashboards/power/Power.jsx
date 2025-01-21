@@ -16,6 +16,7 @@ import {
 import * as XLSX from "xlsx-js-style";
 
 function Power() {
+  
   const [startDate, setStartDate] = useState(new Date());
   const [title, setTitle] = useState("");
   const [weeklyPowerData, setWeeklyPowerData] = useState(null);
