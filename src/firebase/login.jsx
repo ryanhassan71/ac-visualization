@@ -195,15 +195,14 @@ const Login = ({ ThemeChanger }) => {
     !bg-gradient-to-r
     !from-[#020739]
     !to-[#050a3b]
-    hover:opacity-90
-    focus:outline-none
-    focus:ring-2
-    focus:ring-offset-2"
+"
                         onClick={Login1}
                       >
                         {isLoading ? (
                           // Replace the "Sign In" text with a spinner
-                          <i className="ri-loader-4-line animate-spin text-xl"></i>
+                          <div className="ti-spinner !h-[21px]" role="status">
+                          <span className="sr-only">Loading...</span>
+                      </div>
                         ) : (
                           "Sign In"
                         )}

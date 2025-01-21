@@ -14,9 +14,10 @@ import {
   fetchMonthlyEnergyData,
 } from "../../../acApi";
 import * as XLSX from "xlsx-js-style";
+import { Link } from "react-router-dom";
+import store from "../../../redux/store";
 
 function Power() {
-  
   const [startDate, setStartDate] = useState(new Date());
   const [title, setTitle] = useState("");
   const [weeklyPowerData, setWeeklyPowerData] = useState(null);
@@ -24,15 +25,29 @@ function Power() {
   const [monthlyPowerData, setMonthlyPowerData] = useState(null);
   const [storeInfo, setStoreInfo] = useState(null);
   const [currentTotal, setCurrentTotal] = useState(0); // Add state for total
-  const { powerId } = useParams();
+  const { storeId, powerId } = useParams();
+  // Compare selected month/year to current
+  const selectedMonth = startDate.getMonth();
+  const selectedYear = startDate.getFullYear();
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const isCurrentMonth =
+    selectedMonth === currentMonth && selectedYear === currentYear;
+
+    const selectedMonthName = startDate.toLocaleString("default", {
+      month: "short",
+    });
+  const monthlyLabel = isCurrentMonth
+    ? "This Month (as of today)"
+    : `${selectedMonthName} ${selectedYear}`;
 
   useEffect(() => {
     // Calculate the total whenever monthlyPowerData changes
 
-      setCurrentTotal(0);
- 
+    setCurrentTotal(0);
   }, [powerId]);
-
+  
   useEffect(() => {
     // Set the initial title based on the current month and year
     const currentMonth = startDate.toLocaleString("default", { month: "long" });
@@ -214,13 +229,6 @@ function Power() {
     }
   }, [monthlyPowerData]);
 
-
-
-
-
-
-
-
   return (
     <Fragment>
       <Pageheader
@@ -229,8 +237,10 @@ function Power() {
             ? `${storeInfo.store_name} (${storeInfo.outlet_code})`
             : "Power"
         }
-        activepage="Apex Charts"
-        mainpage="Apex Column Charts"
+        activepage="Main"
+        mainpage="Power"
+        storeId={storeId}    // <-- pass storeId
+        powerId={powerId}    // <-- pass powerId
       />
 
       <div className="grid grid-cols-12 gap-x-6">
@@ -343,6 +353,163 @@ function Power() {
             <div className="box-body">
               <div id="column-datalabels">
                 <Columnwithlabels data={dailyPowerData?.data[0]} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-span-12">
+          <div className="grid grid-cols-12 gap-x-6">
+            <div className="xl:col-span-12 col-span-12">
+              <div className="box">
+                <div className="box-header justify-between">
+                  <div className="box-title">Power Consumption Summary</div>
+                  {/* <div className="hs-dropdown ti-dropdown">
+                    <Link
+                      to="#"
+                      className="text-[0.75rem] px-2 font-normal text-[#8c9097] dark:text-white/50"
+                      aria-expanded="false"
+                    >
+                      View All
+                      <i className="ri-arrow-down-s-line align-middle ms-1 inline-block"></i>
+                    </Link>
+                    <ul
+                      className="hs-dropdown-menu ti-dropdown-menu hidden"
+                      role="menu"
+                    >
+                      <li>
+                        <Link
+                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
+                          to="#"
+                        >
+                          Today
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
+                          to="#"
+                        >
+                          This Week
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
+                          to="#"
+                        >
+                          Last Week
+                        </Link>
+                      </li>
+                    </ul>
+                  </div> */}
+                </div>
+                <div className="box-body ">
+                  <div
+                    className="
+      sm:grid
+      sm:grid-cols-12
+      sm:justify-items-center
+      
+      
+      sm:gap-0
+      gap-y-3
+      lg:ps-[3rem]
+    "
+                  >
+                    {/* 1) Today */}
+                    <div
+                      className="
+        xl:col-span-4
+        lg:col-span-4
+        md:col-span-4
+        sm:col-span-12
+        sm:text-center
+        md:text-left
+        mb-3
+      "
+                    >
+                      <div className="mb-1 earning first-half md:ms-4">
+                        Today
+                      </div>
+                      <div className="mb-0">
+                        <span className="mt-1 text-[1rem] font-semibold me-2">
+                          {weeklyPowerData?.data?.[0]?.energy_data
+                            ? Math.round(
+                                parseFloat(
+                                  weeklyPowerData?.data?.[0]?.energy_data[
+                                    weeklyPowerData?.data?.[0]?.energy_data
+                                      .length - 1
+                                  ]
+                                )
+                              )
+                            : 0}{" "}
+                          kWh
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 2) Last 7 days */}
+                    <div
+                      className="
+        xl:col-span-4
+        lg:col-span-4
+        md:col-span-4
+        sm:col-span-12
+        sm:text-center
+        md:text-left
+        mt-3
+      "
+                    >
+                      <div className="mb-1 earning top-gross md:ms-4">
+                        Last 7 days
+                      </div>
+                      <div className="mb-0">
+                        <span className="mt-1 text-[1rem] font-semibold me-2">
+                          {weeklyPowerData?.data?.[0]?.energy_data
+                            ? Math.round(
+                                weeklyPowerData.data[0].energy_data.reduce(
+                                  (acc, val) => acc + parseFloat(val),
+                                  0
+                                )
+                              )
+                            : 0}{" "}
+                          kWh
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 3) Month Label */}
+                    <div
+                      className="
+        xl:col-span-4
+        lg:col-span-4
+        md:col-span-4
+        sm:col-span-12
+        sm:text-center
+        md:text-left
+        mt-3
+      "
+                    >
+                      <div className="mb-1 earning second-half md:ms-3">
+                        {monthlyLabel}
+                      </div>
+                      <div className="mb-0">
+                        <span className="mt-1 text-[1rem] font-semibold me-2">
+                          {monthlyPowerData?.data?.[0]?.energy_data
+                            ? Math.round(
+                                monthlyPowerData.data[0].energy_data.reduce(
+                                  (acc, val) => acc + parseFloat(val),
+                                  0
+                                )
+                              )
+                            : 0}{" "}
+                          kWh
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

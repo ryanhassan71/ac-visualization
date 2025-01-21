@@ -10,7 +10,7 @@ export default function Pageheader(props) {
                     </div>
                     <ol className="flex items-center whitespace-nowrap min-w-0">
                         <li className="text-[0.813rem] ps-[0.5rem]">
-                          <Link className="flex items-center text-primary hover:text-primary dark:text-primary truncate" to="#">
+                          <Link className="flex items-center text-primary hover:text-primary dark:text-primary truncate" to={`/${props.storeId}/${props.powerId}/main`}>
                           {props.activepage}
                             <i className="ti ti-chevrons-right flex-shrink-0 text-[#8c9097] dark:text-white/50 px-[0.5rem] overflow-visible rtl:rotate-180"></i>
                           </Link>
