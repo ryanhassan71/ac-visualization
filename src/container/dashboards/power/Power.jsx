@@ -12,6 +12,7 @@ import {
   DAILY_POWER_DATA_INTERVAL,
   fetchStoreList,
   fetchMonthlyEnergyData,
+  fetchPowerParameters,
 } from "../../../acApi";
 import * as XLSX from "xlsx-js-style";
 import { Link } from "react-router-dom";
@@ -25,6 +26,7 @@ function Power() {
   const [monthlyPowerData, setMonthlyPowerData] = useState(null);
   const [storeInfo, setStoreInfo] = useState(null);
   const [currentTotal, setCurrentTotal] = useState(0); // Add state for total
+  const [powerParams, setPowerParams] = useState(null);
   const { storeId, powerId } = useParams();
   // Compare selected month/year to current
   const selectedMonth = startDate.getMonth();
@@ -35,9 +37,9 @@ function Power() {
   const isCurrentMonth =
     selectedMonth === currentMonth && selectedYear === currentYear;
 
-    const selectedMonthName = startDate.toLocaleString("default", {
-      month: "short",
-    });
+  const selectedMonthName = startDate.toLocaleString("default", {
+    month: "short",
+  });
   const monthlyLabel = isCurrentMonth
     ? "This Month (as of today)"
     : `${selectedMonthName} ${selectedYear}`;
@@ -47,7 +49,7 @@ function Power() {
 
     setCurrentTotal(0);
   }, [powerId]);
-  
+
   useEffect(() => {
     // Set the initial title based on the current month and year
     const currentMonth = startDate.toLocaleString("default", { month: "long" });
@@ -102,6 +104,21 @@ function Power() {
 
     fetchData();
   }, [powerId]);
+
+  useEffect(() => {
+    // Call fetchPowerParameters when storeId is available
+    if (storeId) {
+      const getPowerParams = async () => {
+        try {
+          const response = await fetchPowerParameters(storeId);
+          setPowerParams(response);
+        } catch (error) {
+          console.error("Error fetching power parameters:", error);
+        }
+      };
+      getPowerParams();
+    }
+  }, [storeId]);
 
   const handleDateChange = async (date) => {
     setStartDate(date);
@@ -229,6 +246,48 @@ function Power() {
     }
   }, [monthlyPowerData]);
 
+  // Short helper to safely parse and round values
+  const toRoundedInt = (val) =>
+    val ? Math.round(parseFloat(val)) : 0;
+
+  // If data is available, prepare the numeric values:
+  const powerParamsData = powerParams?.data?.[0];
+  const vAB = powerParamsData ? toRoundedInt(powerParamsData.vAB) : 0;
+  const vBC = powerParamsData ? toRoundedInt(powerParamsData.vBC) : 0;
+  const vCA = powerParamsData ? toRoundedInt(powerParamsData.vCA) : 0;
+
+  // Voltage average => round((vAB + vBC + vCA) / 3)
+  const voltageAvg = powerParamsData
+    ? Math.round((parseFloat(powerParamsData.vAB || 0)
+                + parseFloat(powerParamsData.vBC || 0)
+                + parseFloat(powerParamsData.vCA || 0)) / 3)
+    : 0;
+
+  // AN / BN / CN
+  const vAN = powerParamsData ? toRoundedInt(powerParamsData.vA) : 0;
+  const vBN = powerParamsData ? toRoundedInt(powerParamsData.vB) : 0;
+  const vCN = powerParamsData ? toRoundedInt(powerParamsData.vC) : 0;
+
+  // Currents A/B/C
+  const iA = powerParamsData ? toRoundedInt(powerParamsData.iA) : 0;
+  const iB = powerParamsData ? toRoundedInt(powerParamsData.iB) : 0;
+  const iC = powerParamsData ? toRoundedInt(powerParamsData.iC) : 0;
+
+  // Current average
+  const currentAvg = powerParamsData
+    ? Math.round(
+        (parseFloat(powerParamsData.iA || 0)
+       + parseFloat(powerParamsData.iB || 0)
+       + parseFloat(powerParamsData.iC || 0)) / 3
+      )
+    : 0;
+
+  // Active Power, Frequency, Power Factor
+  const activePower = powerParamsData ? toRoundedInt(powerParamsData.active_power) : 0;
+  const frequency = powerParamsData ? toRoundedInt(powerParamsData.frequency) : 0;
+  // Power factor is not rounded
+  const powerFactor = powerParamsData?.power_factor || "--";
+
   return (
     <Fragment>
       <Pageheader
@@ -239,8 +298,8 @@ function Power() {
         }
         activepage="Main"
         mainpage="Power"
-        storeId={storeId}    // <-- pass storeId
-        powerId={powerId}    // <-- pass powerId
+        storeId={storeId} // <-- pass storeId
+        powerId={powerId} // <-- pass powerId
       />
 
       <div className="grid grid-cols-12 gap-x-6">
@@ -358,76 +417,40 @@ function Power() {
           </div>
         </div>
 
+        {/* Parent: Takes full width */}
         <div className="col-span-12">
+          {/* Child grid for these two boxes */}
           <div className="grid grid-cols-12 gap-x-6">
-            <div className="xl:col-span-12 col-span-12">
+            {/* -------------------------------------------
+        1) POWER CONSUMPTION SUMMARY
+    -------------------------------------------- */}
+            <div className="md:col-span-6 col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">Power Consumption Summary</div>
-                  {/* <div className="hs-dropdown ti-dropdown">
-                    <Link
-                      to="#"
-                      className="text-[0.75rem] px-2 font-normal text-[#8c9097] dark:text-white/50"
-                      aria-expanded="false"
-                    >
-                      View All
-                      <i className="ri-arrow-down-s-line align-middle ms-1 inline-block"></i>
-                    </Link>
-                    <ul
-                      className="hs-dropdown-menu ti-dropdown-menu hidden"
-                      role="menu"
-                    >
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Today
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          This Week
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                          to="#"
-                        >
-                          Last Week
-                        </Link>
-                      </li>
-                    </ul>
-                  </div> */}
                 </div>
-                <div className="box-body ">
+                <div className="box-body">
                   <div
                     className="
-      sm:grid
-      sm:grid-cols-12
-      sm:justify-items-center
-      
-      
-      sm:gap-0
-      gap-y-3
-      lg:ps-[3rem]
-    "
+              sm:grid
+              sm:grid-cols-12
+              sm:justify-items-center
+              sm:gap-0
+              gap-y-3
+              lg:ps-[3rem]
+            "
                   >
-                    {/* 1) Today */}
+                    {/* Today */}
                     <div
                       className="
-        xl:col-span-4
-        lg:col-span-4
-        md:col-span-4
-        sm:col-span-12
-        sm:text-center
-        md:text-left
-        mb-3
-      "
+                xl:col-span-4
+                lg:col-span-4
+                md:col-span-4
+                sm:col-span-12
+                sm:text-center
+                md:text-left
+                mb-3
+              "
                     >
                       <div className="mb-1 earning first-half md:ms-4">
                         Today
@@ -449,17 +472,17 @@ function Power() {
                       </div>
                     </div>
 
-                    {/* 2) Last 7 days */}
+                    {/* Last 7 Days */}
                     <div
                       className="
-        xl:col-span-4
-        lg:col-span-4
-        md:col-span-4
-        sm:col-span-12
-        sm:text-center
-        md:text-left
-        mt-3
-      "
+                xl:col-span-4
+                lg:col-span-4
+                md:col-span-4
+                sm:col-span-12
+                sm:text-center
+                md:text-left
+                mt-3
+              "
                     >
                       <div className="mb-1 earning top-gross md:ms-4">
                         Last 7 days
@@ -479,17 +502,17 @@ function Power() {
                       </div>
                     </div>
 
-                    {/* 3) Month Label */}
+                    {/* Month Label */}
                     <div
                       className="
-        xl:col-span-4
-        lg:col-span-4
-        md:col-span-4
-        sm:col-span-12
-        sm:text-center
-        md:text-left
-        mt-3
-      "
+                xl:col-span-4
+                lg:col-span-4
+                md:col-span-4
+                sm:col-span-12
+                sm:text-center
+                md:text-left
+                mt-3
+              "
                     >
                       <div className="mb-1 earning second-half md:ms-3">
                         {monthlyLabel}
@@ -512,8 +535,171 @@ function Power() {
                 </div>
               </div>
             </div>
+            {/* END: Power Consumption Summary */}
+
+            {/* -------------------------------------------
+        2) VISITORS BY COUNTRIES
+    -------------------------------------------- */}
+            <div className="md:col-span-6 col-span-12">
+              <div className="box overflow-hidden">
+                <div className="box-header justify-between">
+                  <div className="box-title">Power Parameters</div>
+                </div>
+                <div className="box-body !p-0">
+                  <div className="grid grid-cols-12 gap-x-4">
+                    <div className=" xl:col-span-6 col-span-12 sales-visitors-countries">
+                      <div className="mt-2">
+                        <ul className="list-none p-6 my-auto">
+                          {/* Group 1: AB, BC, CA, Avg */}
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Voltage - AB
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                            {vAB} V
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Voltage - BC
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {vBC} V
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Voltage - CA
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {vCA} V
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Voltage - Avg
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {voltageAvg} V
+                            </span>
+                          </li>
+
+                          {/* Group 2: AN, BN, CN */}
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-danger"></i>
+                              Voltage - AN
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {vAN} V
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-danger"></i>
+                              Voltage - BN
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {vBN} V
+                            </span>
+                          </li>
+                          <li className="mb-0">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-danger"></i>
+                              Voltage - CN
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {vCN} V
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    {/* Add additional columns if needed */}
+                    <div className=" xl:col-span-6 col-span-12 sales-visitors-countries">
+                      <div className="mt-2">
+                        <ul className="list-none p-6 my-auto">
+                          {/* First four share same color */}
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Current - A
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {iA} A
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Current - B
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {iB} A
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Current - C
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {iC} A
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-primary"></i>
+                              Current - Avg
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {currentAvg} A
+                            </span>
+                          </li>
+
+                          {/* Each of the following items has a unique color */}
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-lime-600"></i>
+                              Active Power
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {activePower} W
+                            </span>
+                          </li>
+                          <li className="mb-4">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-red"></i>
+                              Frequency
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {frequency} Hz
+                            </span>
+                          </li>
+                          <li className="mb-0">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-orange"></i>
+                              Power Factor
+                            </span>
+                            <span className="font-semibold ltr:float-right rtl:float-left">
+                              {powerFactor}
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* END: Visitors By Countries */}
           </div>
         </div>
+
         {/* Add the Revenueanalytics chart */}
         <div className="col-span-12">
           <div className="box">

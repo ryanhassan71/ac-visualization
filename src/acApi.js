@@ -274,4 +274,22 @@ export const fetchWeatherData = async () => {
 
 export const AC_NOTIF_INTERVAL = convertToMilliseconds('60', 'seconds')
 // Exporting the client as well if needed for other API calls
+
+
+// Function to fetch power parameters (energy data) for a given store
+export const fetchPowerParameters = async (storeId) => {
+  try {
+    const response = await apiClient.get(`/energy/energy-data-latest/?store_id=${storeId}`);
+    if (response.data && response.data.success) {
+      return response.data; // or return response.data.<someField> if the API response is nested
+    } else {
+      console.error('Unexpected data format or API error:', response.data);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching power parameters:', error);
+    return null;
+  }
+};
+
 export default apiClient;
