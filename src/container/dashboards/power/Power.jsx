@@ -680,15 +680,24 @@ function Power() {
                               {frequency} Hz
                             </span>
                           </li>
-                          <li className="mb-0">
-                            <span className="text-[0.75rem]">
-                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-orange"></i>
-                              Power Factor
-                            </span>
-                            <span className="font-semibold ltr:float-right rtl:float-left">
-                              {powerFactor}
-                            </span>
-                          </li>
+{/* Power Factor Row */}
+<li className="mb-0">
+  <span className="text-[0.75rem]">
+    <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-orange"></i>
+    Power Factor
+  </span>
+  <span className={`font-semibold ltr:float-right rtl:float-left ${!isNaN(parseFloat(powerFactor)) && parseFloat(powerFactor) <= 0.8 ? "text-red text-[1rem]" : ""}`}>
+        {/* Show danger icon if powerFactor <= 0.8 */}
+        {!isNaN(parseFloat(powerFactor)) && parseFloat(powerFactor) <= 0.8 && (
+          <i className="hs-tooltip-toggle fe fe-alert-triangle mr-2" title="Low Power Factor"></i>
+
+    
+    )}
+    {powerFactor}
+
+  </span>
+</li>
+
                         </ul>
                       </div>
                     </div>
