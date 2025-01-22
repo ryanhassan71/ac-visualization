@@ -247,8 +247,7 @@ function Power() {
   }, [monthlyPowerData]);
 
   // Short helper to safely parse and round values
-  const toRoundedInt = (val) =>
-    val ? Math.round(parseFloat(val)) : 0;
+  const toRoundedInt = (val) => (val ? Math.round(parseFloat(val)) : 0);
 
   // If data is available, prepare the numeric values:
   const powerParamsData = powerParams?.data?.[0];
@@ -258,9 +257,12 @@ function Power() {
 
   // Voltage average => round((vAB + vBC + vCA) / 3)
   const voltageAvg = powerParamsData
-    ? Math.round((parseFloat(powerParamsData.vAB || 0)
-                + parseFloat(powerParamsData.vBC || 0)
-                + parseFloat(powerParamsData.vCA || 0)) / 3)
+    ? Math.round(
+        (parseFloat(powerParamsData.vAB || 0) +
+          parseFloat(powerParamsData.vBC || 0) +
+          parseFloat(powerParamsData.vCA || 0)) /
+          3
+      )
     : 0;
 
   // AN / BN / CN
@@ -276,15 +278,20 @@ function Power() {
   // Current average
   const currentAvg = powerParamsData
     ? Math.round(
-        (parseFloat(powerParamsData.iA || 0)
-       + parseFloat(powerParamsData.iB || 0)
-       + parseFloat(powerParamsData.iC || 0)) / 3
+        (parseFloat(powerParamsData.iA || 0) +
+          parseFloat(powerParamsData.iB || 0) +
+          parseFloat(powerParamsData.iC || 0)) /
+          3
       )
     : 0;
 
   // Active Power, Frequency, Power Factor
-  const activePower = powerParamsData ? toRoundedInt(powerParamsData.active_power) : 0;
-  const frequency = powerParamsData ? toRoundedInt(powerParamsData.frequency) : 0;
+  const activePower = powerParamsData
+    ? powerParamsData.active_power
+    : 0;
+  const frequency = powerParamsData
+    ? toRoundedInt(powerParamsData.frequency)
+    : 0;
   // Power factor is not rounded
   const powerFactor = powerParamsData?.power_factor || "--";
 
@@ -557,7 +564,7 @@ function Power() {
                               Voltage - AB
                             </span>
                             <span className="font-semibold ltr:float-right rtl:float-left">
-                            {vAB} V
+                              {vAB} V
                             </span>
                           </li>
                           <li className="mb-4">
@@ -668,7 +675,7 @@ function Power() {
                               Active Power
                             </span>
                             <span className="font-semibold ltr:float-right rtl:float-left">
-                              {activePower} W
+                              {activePower} kW
                             </span>
                           </li>
                           <li className="mb-4">
@@ -680,24 +687,31 @@ function Power() {
                               {frequency} Hz
                             </span>
                           </li>
-{/* Power Factor Row */}
-<li className="mb-0">
-  <span className="text-[0.75rem]">
-    <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-orange"></i>
-    Power Factor
-  </span>
-  <span className={`font-semibold ltr:float-right rtl:float-left ${!isNaN(parseFloat(powerFactor)) && parseFloat(powerFactor) <= 0.8 ? "text-red text-[1rem]" : ""}`}>
-        {/* Show danger icon if powerFactor <= 0.8 */}
-        {!isNaN(parseFloat(powerFactor)) && parseFloat(powerFactor) <= 0.8 && (
-          <i className="hs-tooltip-toggle fe fe-alert-triangle mr-2" title="Low Power Factor"></i>
-
-    
-    )}
-    {powerFactor}
-
-  </span>
-</li>
-
+                          {/* Power Factor Row */}
+                          <li className="mb-0">
+                            <span className="text-[0.75rem]">
+                              <i className="ri-checkbox-blank-circle-fill align-middle me-2 inline-block text-orange"></i>
+                              Power Factor
+                            </span>
+                            <span
+                              className={`font-semibold ltr:float-right rtl:float-left ${
+                                !isNaN(parseFloat(powerFactor)) &&
+                                parseFloat(powerFactor) <= 0.8
+                                  ? "text-red text-[1rem]"
+                                  : ""
+                              }`}
+                            >
+                              {/* Show danger icon if powerFactor <= 0.8 */}
+                              {!isNaN(parseFloat(powerFactor)) &&
+                                parseFloat(powerFactor) <= 0.8 && (
+                                  <i
+                                    className="hs-tooltip-toggle fe fe-alert-triangle mr-2"
+                                    title="Low Power Factor"
+                                  ></i>
+                                )}
+                              {powerFactor}
+                            </span>
+                          </li>
                         </ul>
                       </div>
                     </div>
