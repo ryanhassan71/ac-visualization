@@ -450,7 +450,7 @@ function Power() {
               sm:justify-items-center
               sm:gap-0
               gap-y-3
-              lg:ps-[3rem]
+         
             "
                   >
                     {/* Today */}
