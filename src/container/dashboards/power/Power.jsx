@@ -403,7 +403,7 @@ function Power() {
         </div>
 
         <div className="col-span-12 xl:col-span-8">
-          <div className="box custom-box">
+          <div className="box custom-box md:h-[475px]">
             <div className="box-header flex justify-between items-center">
               <div className="box-title   !text-[.8rem]">
                 Power Consumption Today
