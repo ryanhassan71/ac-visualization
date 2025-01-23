@@ -251,46 +251,45 @@ function Power() {
 
   // If data is available, prepare the numeric values:
   const powerParamsData = powerParams?.data?.[0];
-  const vAB = powerParamsData ? toRoundedInt(powerParamsData.vAB) : 0;
-  const vBC = powerParamsData ? toRoundedInt(powerParamsData.vBC) : 0;
-  const vCA = powerParamsData ? toRoundedInt(powerParamsData.vCA) : 0;
+  const vAB = powerParamsData ? powerParamsData.vAB : 0;
+  const vBC = powerParamsData ? powerParamsData.vBC : 0;
+  const vCA = powerParamsData ? powerParamsData.vCA : 0;
 
   // Voltage average => round((vAB + vBC + vCA) / 3)
   const voltageAvg = powerParamsData
-    ? Math.round(
-        (parseFloat(powerParamsData.vAB || 0) +
-          parseFloat(powerParamsData.vBC || 0) +
-          parseFloat(powerParamsData.vCA || 0)) /
-          3
-      )
+    ? ((parseFloat(powerParamsData.vAB || 0)
+                + parseFloat(powerParamsData.vBC || 0)
+                + parseFloat(powerParamsData.vCA || 0)) / 3).toFixed(2)
     : 0;
 
   // AN / BN / CN
-  const vAN = powerParamsData ? toRoundedInt(powerParamsData.vA) : 0;
-  const vBN = powerParamsData ? toRoundedInt(powerParamsData.vB) : 0;
-  const vCN = powerParamsData ? toRoundedInt(powerParamsData.vC) : 0;
+  const vAN = powerParamsData ? powerParamsData.vA : 0;
+  const vBN = powerParamsData ? powerParamsData.vB : 0;
+  const vCN = powerParamsData ? powerParamsData.vC : 0;
 
   // Currents A/B/C
-  const iA = powerParamsData ? toRoundedInt(powerParamsData.iA) : 0;
-  const iB = powerParamsData ? toRoundedInt(powerParamsData.iB) : 0;
-  const iC = powerParamsData ? toRoundedInt(powerParamsData.iC) : 0;
+  const iA = powerParamsData ? powerParamsData.iA : 0;
+  const iB = powerParamsData ? powerParamsData.iB : 0;
+  const iC = powerParamsData ? powerParamsData.iC : 0;
 
   // Current average
   const currentAvg = powerParamsData
-    ? Math.round(
-        (parseFloat(powerParamsData.iA || 0) +
-          parseFloat(powerParamsData.iB || 0) +
-          parseFloat(powerParamsData.iC || 0)) /
-          3
-      )
-    : 0;
+  ? (
+      (
+        parseFloat(powerParamsData.iA || 0) +
+        parseFloat(powerParamsData.iB || 0) +
+        parseFloat(powerParamsData.iC || 0)
+      ) / 3
+    ).toFixed(2)
+  : "0.00";
+
 
   // Active Power, Frequency, Power Factor
   const activePower = powerParamsData
     ? powerParamsData.active_power
     : 0;
   const frequency = powerParamsData
-    ? toRoundedInt(powerParamsData.frequency)
+    ? powerParamsData.frequency
     : 0;
   // Power factor is not rounded
   const powerFactor = powerParamsData?.power_factor || "--";
@@ -390,7 +389,14 @@ function Power() {
 
             <div className="box-body">
               <div id="columns-distributed">
-                <Distributed data={weeklyPowerData?.data[0]} />
+                <Distributed data={weeklyPowerData?.data?.[0]
+    ? {
+        ...weeklyPowerData.data[0],
+        energy_data: weeklyPowerData.data[0].energy_data.map((val) =>
+          Math.round(parseFloat(val))
+        ),
+      }
+    : null} />
               </div>
             </div>
           </div>
