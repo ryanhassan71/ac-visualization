@@ -4,11 +4,9 @@ import { ThemeChanger } from "../redux/action";
 import { Link, useNavigate } from "react-router-dom";
 import desktoplogo from "../assets/images/brand-logos/dma-logo-gif.gif";
 import desktopdarklogo from "../assets/images/brand-logos/desktop-dark.png";
-import react from "../assets/images/brand-logos/2.png";
-import firebase from "../assets/images/brand-logos/1.png";
 import { loginAndGetToken } from "../acApi";
 import { LocalStorageBackup } from "../components/common/switcher/switcherdata/switcherdata";
-import { auth } from "./firebaseapi";
+
 
 const Login = ({ ThemeChanger }) => {
   localStorage.clear();

@@ -10,8 +10,8 @@ import Power from "./container/dashboards/power/Power.jsx";
 import Notifications from "./container/notifications/Notifications.jsx";
 import { CrmProvider } from "./container/dashboards/crm/CrmContext"; // Import CrmProvider
 import ReactModal from "react-modal";
-import Auth from "./firebase/auth.jsx";
-import Login from "./firebase/login.jsx";
+import Auth from "./auth/auth.jsx";
+import Login from "./auth/login.jsx";
 
 ReactModal.setAppElement("#root");
 

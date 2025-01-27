@@ -17,7 +17,7 @@ theme: {
   screens: {
     lg: "992px",
     md: "768px",
-    sm: "375px",
+    sm: "350px",
     xl: "1200px",
     xxl: "1400px",
     xxxl: "1800px",

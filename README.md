@@ -2,6 +2,10 @@
 
 This project is a React-based implementation of a dynamic notification system and a header component. The header includes functionalities like notification bell navigation, full-screen toggle, and user profile management. Notifications are fetched dynamically and displayed in a responsive dropdown.
 
+## Login
+
+The project includes a login system that allows users to authenticate before accessing notifications and other protected features.
+
 ## Features
 
 ### Notifications
@@ -303,4 +307,10 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 ## Contact
 
 For any questions or support, please reach out to [your email/contact information].
+
+
+
+
+
+
 

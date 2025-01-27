@@ -437,132 +437,22 @@ function Power() {
             {/* -------------------------------------------
         1) POWER CONSUMPTION SUMMARY
     -------------------------------------------- */}
-            <div className="md:col-span-6 col-span-12">
-              <div className="box">
-                <div className="box-header justify-between">
-                  <div className="box-title">Power Consumption Summary</div>
-                </div>
-                <div className="box-body">
-                  <div
-                    className="
-              sm:grid
-              sm:grid-cols-12
-              sm:justify-items-center
-              sm:gap-0
-              gap-y-3
-         
-            "
-                  >
-                    {/* Today */}
-                    <div
-                      className="
-                xl:col-span-4
-                lg:col-span-4
-                md:col-span-4
-                sm:col-span-12
-                sm:text-center
-                md:text-left
-                mb-3
-              "
-                    >
-                      <div className="mb-1 earning first-half md:ms-4">
-                        Today
-                      </div>
-                      <div className="mb-0">
-                        <span className="mt-1 text-[1rem] font-semibold me-2">
-                          {weeklyPowerData?.data?.[0]?.energy_data
-                            ? Math.round(
-                                parseFloat(
-                                  weeklyPowerData?.data?.[0]?.energy_data[
-                                    weeklyPowerData?.data?.[0]?.energy_data
-                                      .length - 1
-                                  ]
-                                )
-                              )
-                            : 0}{" "}
-                          kWh
-                        </span>
-                      </div>
-                    </div>
 
-                    {/* Last 7 Days */}
-                    <div
-                      className="
-                xl:col-span-4
-                lg:col-span-4
-                md:col-span-4
-                sm:col-span-12
-                sm:text-center
-                md:text-left
-                mt-3
-              "
-                    >
-                      <div className="mb-1 earning top-gross md:ms-4">
-                        Last 7 days
-                      </div>
-                      <div className="mb-0">
-                        <span className="mt-1 text-[1rem] font-semibold me-2">
-                          {weeklyPowerData?.data?.[0]?.energy_data
-                            ? Math.round(
-                                weeklyPowerData.data[0].energy_data.reduce(
-                                  (acc, val) => acc + parseFloat(val),
-                                  0
-                                )
-                              )
-                            : 0}{" "}
-                          kWh
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Month Label */}
-                    <div
-                      className="
-                xl:col-span-4
-                lg:col-span-4
-                md:col-span-4
-                sm:col-span-12
-                sm:text-center
-                md:text-left
-                mt-3
-              "
-                    >
-                      <div className="mb-1 earning second-half md:ms-3">
-                        {monthlyLabel}
-                      </div>
-                      <div className="mb-0">
-                        <span className="mt-1 text-[1rem] font-semibold me-2">
-                          {monthlyPowerData?.data?.[0]?.energy_data
-                            ? Math.round(
-                                monthlyPowerData.data[0].energy_data.reduce(
-                                  (acc, val) => acc + parseFloat(val),
-                                  0
-                                )
-                              )
-                            : 0}{" "}
-                          kWh
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             {/* END: Power Consumption Summary */}
 
             {/* -------------------------------------------
         2) VISITORS BY COUNTRIES
     -------------------------------------------- */}
-            <div className="md:col-span-6 col-span-12">
+            <div className="md:col-span-4 col-span-12">
               <div className="box overflow-hidden">
                 <div className="box-header justify-between">
                   <div className="box-title">Power Parameters</div>
                 </div>
                 <div className="box-body !p-0">
                   <div className="grid grid-cols-12 gap-x-4">
-                    <div className=" xl:col-span-6 col-span-12 sales-visitors-countries">
+                    <div className=" xxl:col-span-6 col-span-12 sales-visitors-countries">
                       <div className="mt-2">
-                        <ul className="list-none p-6 my-auto">
+                        <ul className="list-none p-2 my-auto">
                           {/* Group 1: AB, BC, CA, Avg */}
                           <li className="mb-4">
                             <span className="text-[0.75rem]">
@@ -633,9 +523,9 @@ function Power() {
                       </div>
                     </div>
                     {/* Add additional columns if needed */}
-                    <div className=" xl:col-span-6 col-span-12 sales-visitors-countries">
+                    <div className=" xxl:col-span-6 col-span-12 sales-visitors-countries">
                       <div className="mt-2">
-                        <ul className="list-none p-6 my-auto">
+                        <ul className="list-none p-2 my-auto">
                           {/* First four share same color */}
                           <li className="mb-4">
                             <span className="text-[0.75rem]">
@@ -719,6 +609,119 @@ function Power() {
                             </span>
                           </li>
                         </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="md:col-span-8 col-span-12">
+              <div className="box">
+                <div className="box-header justify-between">
+                  <div className="box-title">Power Consumption Summary</div>
+                </div>
+                <div className="box-body">
+                  <div
+                    className="
+              sm:grid
+              sm:grid-cols-12
+              sm:justify-items-center
+              sm:gap-0
+              gap-y-3
+         
+            "
+                  >
+                    {/* Today */}
+                    <div
+                      className="
+                xl:col-span-4
+                lg:col-span-4
+                md:col-span-4
+                sm:col-span-12
+                sm:text-center
+                md:text-left
+                mb-3
+                mt-3
+              "
+                    >
+                      <div className="mb-1 earning first-half md:ms-4">
+                        Today
+                      </div>
+                      <div className="mb-0">
+                        <span className="mt-1 text-[1rem] font-semibold me-2">
+                          {weeklyPowerData?.data?.[0]?.energy_data
+                            ? Math.round(
+                                parseFloat(
+                                  weeklyPowerData?.data?.[0]?.energy_data[
+                                    weeklyPowerData?.data?.[0]?.energy_data
+                                      .length - 1
+                                  ]
+                                )
+                              )
+                            : 0}{" "}
+                          kWh
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Last 7 Days */}
+                    <div
+                      className="
+                xl:col-span-4
+                lg:col-span-4
+                md:col-span-4
+                sm:col-span-12
+                sm:text-center
+                md:text-left
+                mt-3
+                mb-3
+              "
+                    >
+                      <div className="mb-1 earning top-gross md:ms-4">
+                        Last 7 days
+                      </div>
+                      <div className="mb-0">
+                        <span className="mt-1 text-[1rem] font-semibold me-2">
+                          {weeklyPowerData?.data?.[0]?.energy_data
+                            ? Math.round(
+                                weeklyPowerData.data[0].energy_data.reduce(
+                                  (acc, val) => acc + parseFloat(val),
+                                  0
+                                )
+                              )
+                            : 0}{" "}
+                          kWh
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Month Label */}
+                    <div
+                      className="
+                xl:col-span-4
+                lg:col-span-4
+                md:col-span-4
+                sm:col-span-12
+                sm:text-center
+                md:text-left
+                mt-3
+              "
+                    >
+                      <div className="mb-1 earning second-half md:ms-3">
+                        {monthlyLabel}
+                      </div>
+                      <div className="mb-0">
+                        <span className="mt-1 text-[1rem] font-semibold me-2">
+                          {monthlyPowerData?.data?.[0]?.energy_data
+                            ? Math.round(
+                                monthlyPowerData.data[0].energy_data.reduce(
+                                  (acc, val) => acc + parseFloat(val),
+                                  0
+                                )
+                              )
+                            : 0}{" "}
+                          kWh
+                        </span>
                       </div>
                     </div>
                   </div>

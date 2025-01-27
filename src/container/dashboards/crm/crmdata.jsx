@@ -92,7 +92,7 @@ export class Totalcustomers extends Component {
             
           </p>
           <p
-    className="text-[#8c9097] dark:text-white/50 text-[0.6875rem] text-right m-0 "
+    className="text-[#8c9097] dark:text-white/50 text-[0.6rem] text-right m-0 "
     style={{
       textAlign: "right",
       marginBottom: 0,
