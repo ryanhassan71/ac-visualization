@@ -48,7 +48,7 @@ function App() {
     }
     
 
-  }, [navigate]);
+  }, []);
   return (
     <Fragment>
       <Loader/>
