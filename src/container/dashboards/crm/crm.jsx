@@ -904,6 +904,16 @@ const Crm = () => {
         contentLabel="AC Controls"
         className="modal-content"
         overlayClassName="modal-overlay"
+        style={{
+          overlay: {
+            zIndex: 999999,
+           
+          },
+          content: {
+            zIndex: 1000000,
+
+          },
+        }}
       >
         <div className="modal-header">
           <h4>{selectedAcName}</h4>

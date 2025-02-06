@@ -232,7 +232,7 @@
 /* Confirmation Popup for Mobile */
 @media (max-width: 768px) {
   .confirmation-popup {
-    top: 70%; /* Position near the bottom for mobile */
+    top: 75%; /* Position near the bottom for mobile */
   }
 
   .popup {
