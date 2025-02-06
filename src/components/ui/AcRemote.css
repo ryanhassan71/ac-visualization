@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   background: #171634; /* Dark navy-blue background */
   font-family: "Poppins", sans-serif;
   color: #ffffff;
@@ -12,7 +12,7 @@
 /* AC Control Card */
 .ac-control {
   width: 320px;
-  
+
   background: #cfd1db; /* Slightly lighter navy-blue card background */
   border-radius: 20px;
   padding-right: 30px;
@@ -21,7 +21,6 @@
   text-align: center;
   box-shadow: 0 8px 20px rgba(5, 5, 5, 0.4);
   transition: transform 0.3s, background-color 0.3s;
-   
 }
 .ac-control.on {
   background: #2f3a52; /* Slightly vibrant for ON state */
@@ -71,8 +70,6 @@
 .info-row {
   display: flex;
   justify-content: space-between;
-  
-  
 }
 
 /* Buttons for Mode and Speed */
@@ -86,7 +83,6 @@
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-  
 }
 
 .mode-btn:hover,
@@ -104,8 +100,8 @@
 }
 
 .power-control label {
-  display: flex;               /* Use flexbox to align items */
-  align-items: center;         /* Aligns the text and radio button vertically */
+  display: flex; /* Use flexbox to align items */
+  align-items: center; /* Aligns the text and radio button vertically */
   font-size: 18px;
   font-weight: bold;
   color: #ffffff;
@@ -117,9 +113,6 @@
   margin-right: 5px;
   accent-color: #21d4fd;
 }
-
-
-
 
 /* Green ON button when selected */
 .power-control .green {
@@ -195,9 +188,9 @@
   padding: 15px 20px;
   border-radius: 30px; /* More rounded corners for an oval-like shape */
   font-size: 18px;
-  font-weight: normal ;
+  font-weight: normal;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-  
+
   animation: fadeInOut 3s ease-in-out;
 }
 
@@ -234,13 +227,17 @@
   margin-top: 30px;
   max-width: 80%;
   width: 300px;
-  
 }
 
 /* Confirmation Popup for Mobile */
 @media (max-width: 768px) {
   .confirmation-popup {
     top: 70%; /* Position near the bottom for mobile */
+  }
+
+  .popup {
+    top: 70% !important;
+    z-index: 1000;
   }
 }
 
@@ -298,12 +295,10 @@
   transform: scale(1.05); /* Slight zoom effect */
 }
 
-
 .header {
   background-color: #141336;
-  color : white;
+  color: white;
   text-align: center;
-  
+
   margin-bottom: -70px;
-  
 }
