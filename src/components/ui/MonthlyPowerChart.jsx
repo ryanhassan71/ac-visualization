@@ -4,38 +4,48 @@ import { Chartjsbar } from "./chartjsdata";
 const MonthlyPowerChart = ({ monthlyData }) => {
   // Function to process monthly data and split into weeks
   const processMonthlyData = (energyData, timeData) => {
-    const weeks = [[], [], [], []]; // Initialize 4 weeks
-    const weekLabels = []; // To hold labels dynamically
-    let totalWeeks = 0;
+    // We'll track four arrays: one for each week's worth of data
+    const weeks = [[], [], [], []];
 
-    // Determine the current month based on timeData
-    const currentMonth = timeData.length > 0 ? new Date(timeData[0]).toLocaleString("default", { month: "short" }) : "";
+    // Figure out the month name from the first timestamp (if present)
+    const currentMonth = timeData.length > 0
+      ? new Date(timeData[0]).toLocaleString("default", { month: "short" })
+      : "";
 
-    // Generate week labels dynamically with the month's name
-    weekLabels.push(`${currentMonth} 1-7`, `${currentMonth} 8-14`, `${currentMonth} 15-21`, `${currentMonth} 22-`);
+    // Always define four labels
+    const weekLabels = [
+      `${currentMonth} 1-7`,
+      `${currentMonth} 8-14`,
+      `${currentMonth} 15-21`,
+      `${currentMonth} 22-31`
+    ];
 
-    // Divide energy data into weeks based on the time range
+    // Loop through each timestamp and bucket its energy value into the right week
     timeData.forEach((date, index) => {
       const day = new Date(date).getDate();
+      const energyVal = parseFloat(energyData[index]);
 
-      if (day >= 1 && day <= 7) weeks[0].push(parseFloat(energyData[index]));
-      else if (day >= 8 && day <= 14) weeks[1].push(parseFloat(energyData[index]));
-      else if (day >= 15 && day <= 21) weeks[2].push(parseFloat(energyData[index]));
-      else weeks[3].push(parseFloat(energyData[index]));
+      if (day >= 1 && day <= 7) {
+        weeks[0].push(energyVal);
+      } else if (day >= 8 && day <= 14) {
+        weeks[1].push(energyVal);
+      } else if (day >= 15 && day <= 21) {
+        weeks[2].push(energyVal);
+      } else {
+        weeks[3].push(energyVal);
+      }
     });
 
-    // Calculate the total weeks passed based on data availability
-    totalWeeks = weeks.filter((week) => week.length > 0).length;
-
-    // Sum up weekly data for display
+    // Compute sum of each week's data
+    // If a week had no data, the sum is 0
     const weeklySums = weeks.map((week) =>
       week.length > 0 ? week.reduce((acc, val) => acc + val, 0) : 0
     );
 
-    // Return only the relevant weeks and labels
+    // Return four labels + the four sums
     return {
-      labels: weekLabels.slice(0, totalWeeks),
-      data: weeklySums.slice(0, totalWeeks),
+      labels: weekLabels,
+      data: weeklySums
     };
   };
 
@@ -60,7 +70,7 @@ const MonthlyPowerChart = ({ monthlyData }) => {
         callbacks: {
           label: function (tooltipItem) {
             const value = tooltipItem.raw;
-            return ` ${Math.round(value)} kW/h`; // Round the value and append units
+            return ` ${Math.round(value)} kW/h`; // Round and append units
           },
         },
       },
@@ -79,8 +89,11 @@ const MonthlyPowerChart = ({ monthlyData }) => {
         label: "Weekly Power Consumption (kW/h)",
         data: data,
         backgroundColor: "rgba(91, 44, 111, 0.7)", // Dark Purple with opacity
-        borderColor: "rgb(91, 44, 111)", // Solid Dark Purple
+        borderColor: "rgb(91, 44, 111)",           // Solid Dark Purple
         borderWidth: 1,
+        // Optionally tweak bar width to make single bars look larger
+        // barPercentage: 0.9,
+        // categoryPercentage: 0.9
       },
     ],
   };
@@ -91,7 +104,7 @@ const MonthlyPowerChart = ({ monthlyData }) => {
         <div className="xl:col-span-12 col-span-12">
           <div className="box custom-box">
             <div className="box-body">
-              {data.length > 0 ? (
+              {data.some((val) => val !== 0) ? (
                 <Chartjsbar option={options} data={chartData} />
               ) : (
                 <p>No data available for this month</p>
@@ -103,6 +116,5 @@ const MonthlyPowerChart = ({ monthlyData }) => {
     </Fragment>
   );
 };
-
 
 export default MonthlyPowerChart;
