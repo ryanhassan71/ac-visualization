@@ -4,50 +4,65 @@ import { Chartjsbar } from "./chartjsdata";
 const MonthlyPowerChart = ({ monthlyData }) => {
   // Function to process monthly data and split into weeks
   const processMonthlyData = (energyData, timeData) => {
-    // We'll track four arrays: one for each week's worth of data
+    // If there's no data, just return empty results
+    if (!timeData.length) {
+      return {
+        labels: [],
+        data: []
+      };
+    }
+  
+    // Identify the first date to find which month and year we are in
+    const firstDate = new Date(timeData[0]);
+    const currentMonth = firstDate.toLocaleString("default", { month: "short" });
+    const currentYear = firstDate.getFullYear();
+  
+    // Use a Date trick to get the total days in the current month
+    // new Date(year, monthIndex + 1, 0) will result in the last day
+    // of the specified month
+    const daysInMonth = new Date(currentYear, firstDate.getMonth() + 1, 0).getDate();
+  
+    // Prepare four arrays to hold the values for each "week-like" segment
     const weeks = [[], [], [], []];
-
-    // Figure out the month name from the first timestamp (if present)
-    const currentMonth = timeData.length > 0
-      ? new Date(timeData[0]).toLocaleString("default", { month: "short" })
-      : "";
-
-    // Always define four labels
+  
+    // Define the week labels dynamically
     const weekLabels = [
       `${currentMonth} 1-7`,
       `${currentMonth} 8-14`,
       `${currentMonth} 15-21`,
-      `${currentMonth} 22-31`
+      // The final range ends at daysInMonth rather than 31
+      `${currentMonth} 22-${daysInMonth}`
     ];
-
-    // Loop through each timestamp and bucket its energy value into the right week
-    timeData.forEach((date, index) => {
-      const day = new Date(date).getDate();
-      const energyVal = parseFloat(energyData[index]);
-
+  
+    // Loop through each timestamp and bucket its energy value into the correct segment
+    timeData.forEach((dateString, index) => {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const energyVal = parseFloat(energyData[index]) || 0;
+  
       if (day >= 1 && day <= 7) {
         weeks[0].push(energyVal);
       } else if (day >= 8 && day <= 14) {
         weeks[1].push(energyVal);
       } else if (day >= 15 && day <= 21) {
         weeks[2].push(energyVal);
-      } else {
+      } else if (day >= 22 && day <= daysInMonth) {
         weeks[3].push(energyVal);
       }
     });
-
-    // Compute sum of each week's data
-    // If a week had no data, the sum is 0
-    const weeklySums = weeks.map((week) =>
-      week.length > 0 ? week.reduce((acc, val) => acc + val, 0) : 0
+  
+    // Sum up each bucket, defaulting to 0 if empty
+    const weeklySums = weeks.map((bucket) =>
+      bucket.length ? bucket.reduce((acc, val) => acc + val, 0) : 0
     );
-
-    // Return four labels + the four sums
+  
+    // Return labels and sums
     return {
       labels: weekLabels,
       data: weeklySums
     };
   };
+  
 
   // Extract energy data and time from monthlyData
   const energyData = monthlyData?.energy_data || [];
