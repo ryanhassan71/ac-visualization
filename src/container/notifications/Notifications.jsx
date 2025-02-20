@@ -104,11 +104,11 @@ const Notifications = () => {
                             <div className="sm:flex items-center">
                               <div className="sm:mt-0 mt-2">
                                 <p className="mb-0 md:text-[.875rem] text-[.7rem] font-semibold">
-                                  {formatCreatedAt(notif.created_at)}
+                                  {formatCreatedAt(notif.created_at)} 
                                 </p>
                                 <p className="mt-2 text-[#8c9097] dark:text-white/50 text-[1rem]">
                                   <span className={getNotificationClass(notif.notification_color)}>
-                                    {notif.message}
+                                    {notif.message} 
                                   </span>
                                   <span className={getNotificationClass(notif.notification_color)}>
                                     {notif.temperature_value} °C
@@ -117,7 +117,7 @@ const Notifications = () => {
                               </div>
                               <div className="ms-auto mt-5 md:mt-0">
                                 <span className="ltr:float-right rtl:float-left badge bg-light text-[#8c9097] dark:text-white/50 whitespace-nowrap !text-[.875rem]">
-                                  {notif.store} {notif.outlet_code}
+                                {notif.sensor} @ {notif.store} {notif.outlet_code}
                                 </span>
                               </div>
                             </div>
