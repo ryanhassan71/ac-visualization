@@ -48,7 +48,6 @@ const weatherIconMap = {
 };
 
 const Crm = () => {
-  
   const { storeId, powerId } = useParams();
   const { getStoreData, setStoreData } = useCrm();
 
@@ -907,11 +906,9 @@ const Crm = () => {
         style={{
           overlay: {
             zIndex: 999999,
-           
           },
           content: {
             zIndex: 1000000,
-
           },
         }}
       >

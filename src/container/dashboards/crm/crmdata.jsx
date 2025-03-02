@@ -413,8 +413,8 @@ export class Revenueanalytics extends Component {
         ],
         2025: [
           { x: "Jan", y: 47187 }, 
-          { x: "Feb", y: props.currentMonth },
-          { x: "Mar", y: 0},
+          { x: "Feb", y: 49584},
+          { x: "Mar", y: props.currentMonth},
           { x: "Apr", y: 0 },
           { x: "May", y: 0 },
           { x: "Jun", y: 0 },
@@ -457,8 +457,8 @@ export class Revenueanalytics extends Component {
         ],
         2025: [
           { x: "Jan", y: 15479 },
-          { x: "Feb", y: props.currentMonth },
-          { x: "Mar", y: 0},
+          { x: "Feb", y: 19041 },
+          { x: "Mar", y: props.currentMonth},
           { x: "Apr", y: 0 },
           { x: "May", y: 0 },
           { x: "Jun", y: 0 },
