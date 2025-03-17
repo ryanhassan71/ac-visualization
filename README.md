@@ -1,6 +1,6 @@
-# Project Name: React Notification and Header Component
+# AC Power/Temp Control Dashboard
 
-This project is a React-based implementation of a dynamic notification system and a header component. The header includes functionalities like notification bell navigation, full-screen toggle, and user profile management. Notifications are fetched dynamically and displayed in a responsive dropdown.
+This project is a React-based AC Dashboard designed to monitor and control air conditioners across two Shwapno outlets, one of Bangladesh’s leading supermarket chains. By tracking monthly, weekly, and daily power consumption, the dashboard provides actionable insights that help optimize energy usage and reduce operational costs. The system includes functionalities like notification bell navigation, full-screen toggle, and user profile management. Notifications are dynamically fetched and displayed in a responsive dropdown to keep users updated on AC performance and alerts.
 
 ![Project Image](/public/project-image.png)
 
