@@ -2,16 +2,18 @@
 
 This project is a React-based implementation of a dynamic notification system and a header component. The header includes functionalities like notification bell navigation, full-screen toggle, and user profile management. Notifications are fetched dynamically and displayed in a responsive dropdown.
 
+![Project Image](/project-image.png)
+
 ## Login
 
 The project includes a login system that allows users to authenticate before accessing notifications and other protected features.
 
-- The login page code is located in `src/auth/login.jsx`, with `auth.jsx` serving as the layout component.&#x20;
+- The login page code is located in `src/auth/login.jsx`, with `auth.jsx` serving as the layout component.
 - The login function is implemented in `acApi.js`.
 - Upon successful login, the login data is stored in a dictionary called `appAuthData` in `localStorage`. It contains the authentication token and the user's name.
-- In the `App` component, if `appAuthData` is detected in `localStorage`, the user remains on the app page; otherwise, they are redirected to the login page. Additionally, a useEffect with an empty dependency array checks for the presence of appAuthData in localStorage. If it is not found, the user is redirected to the login page.  
+- In the `App` component, if `appAuthData` is detected in `localStorage`, the user remains on the app page; otherwise, they are redirected to the login page. Additionally, a `useEffect` with an empty dependency array checks for the presence of `appAuthData` in `localStorage`. If it is not found, the user is redirected to the login page.
 - There is a logout button in `Header.jsx`. It redirects to the login page and clears `localStorage`, ensuring that the user cannot access the website again without logging in.
-- In `acApi.js`, there is an interceptor that monitors responses. If a response has a status of `401`, `localStorage` is cleared, and the window is refreshed, causing the `App` component to reload. Additionally, a `useEffect` with an empty dependency array checks for the presence of `appAuthData` in `localStorage`. If it is not found, the user is redirected to the login page.  
+- In `acApi.js`, there is an interceptor that monitors responses. If a response has a status of `401`, `localStorage` is cleared, and the window is refreshed, causing the `App` component to reload. Additionally, a `useEffect` with an empty dependency array checks for the presence of `appAuthData` in `localStorage`. If it is not found, the user is redirected to the login page.
 
 ### Features
 
@@ -31,22 +33,22 @@ The project includes a login system that allows users to authenticate before acc
 const handleLogin = async (event) => {
   event.preventDefault();
   try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
     } else {
       setError(data.message);
     }
   } catch (error) {
-    console.error('Login failed', error);
+    console.error("Login failed", error);
   }
 };
 ```
@@ -60,8 +62,8 @@ const handleLogin = async (event) => {
 
 ```javascript
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  navigate('/login');
+  localStorage.removeItem("token");
+  navigate("/login");
 };
 ```
 
@@ -81,13 +83,15 @@ const handleLogout = () => {
 ```
 
 - Redirects to a notifications page when the bell icon is clicked.
-  - In `Header.jsx` located in `components/common`, the function responsible for this redirection is:
-    ```javascript
-    const handleNotificationsClick = () => {
-      navigate("/notifications"); // Pass notifications2
-    };
-    ```
-  - This function is triggered when you click the notification bell button, and it is the only way to navigate to the notifications page.
+- In `Header.jsx` located in `components/common`, the function responsible for this redirection is:
+
+```javascript
+const handleNotificationsClick = () => {
+  navigate("/notifications");
+};
+```
+
+- This function is triggered when you click the notification bell button, and it is the only way to navigate to the notifications page.
 - Dynamically fetches recent notifications using the `fetchRecentAcAlerts` function defined in `acApi.js`.
   - This function calls the endpoint `/temperature/alerts/recent/ac/` to retrieve the latest notifications.
   - The frequency of fetching is controlled by the `AC_NOTIF_INTERVAL` variable.
@@ -132,5 +136,3 @@ const handleLogout = () => {
    ```
    http://localhost:5173
    ```
-
-
