@@ -2,7 +2,7 @@
 
 This project is a React-based implementation of a dynamic notification system and a header component. The header includes functionalities like notification bell navigation, full-screen toggle, and user profile management. Notifications are fetched dynamically and displayed in a responsive dropdown.
 
-![Project Image](/project-image.png)
+![Project Image](/public/project-image.png)
 
 ## Login
 
