@@ -513,17 +513,18 @@ export class Revenueanalytics extends Component {
     const selectedAnnotationMonth = "Dec";
     this.state = {
       series: [
-        {
-          type: "line",
-          name: "Jul 23 - Jun 24",
-          data: lineOneData,
-          color: "#845ADF", // example color
-        },
+
         {
           type: "line",
           name: "Jul 24 - Jun 25",
           data: lineTwoData,
           color: "rgba(35, 183, 229, 0.85)",
+        },
+        {
+          type: "line",
+          name: "Jul 23 - Jun 24",
+          data: lineOneData,
+          color: "#845ADF", // example color
         },
       ],
       options: {
