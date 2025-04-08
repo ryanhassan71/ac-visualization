@@ -75,73 +75,65 @@ export class Totalcustomers extends Component {
   render() {
     const { acSensorData, time } = this.props;
     return (
-      <div style={{}  }>
+      <div style={{}}>
         {acSensorData && (
           <>
-    <p
-    className="text-[#8c9097] dark:text-white/50 text-[0.6875rem] text-right m-0"
-    style={{
-      textAlign: "right",
-      marginBottom: 0,
-      whiteSpace: "nowrap", // Prevent wrapping
-      textOverflow: "ellipsis", // Add ellipsis for overflow
-      
-    }}
-  >
-            {acSensorData.place || "N/A"}
-            
-          </p>
-          <p
-    className="text-[#8c9097] dark:text-white/50 text-[0.6rem] text-right m-0 "
-    style={{
-      textAlign: "right",
-      marginBottom: 0,
-      whiteSpace: "nowrap", // Prevent wrapping
-      textOverflow: "ellipsis", // Add ellipsis for overflow
-      
-    }}
-  >
-            {time || "N/A"}
-            
-          </p>
+            <p
+              className="text-[#8c9097] dark:text-white/50 text-[0.6875rem] text-right m-0"
+              style={{
+                textAlign: "right",
+                marginBottom: 0,
+                whiteSpace: "nowrap", // Prevent wrapping
+                textOverflow: "ellipsis", // Add ellipsis for overflow
+              }}
+            >
+              {acSensorData.place || "N/A"}
+            </p>
+            <p
+              className="text-[#8c9097] dark:text-white/50 text-[0.6rem] text-right m-0 "
+              style={{
+                textAlign: "right",
+                marginBottom: 0,
+                whiteSpace: "nowrap", // Prevent wrapping
+                textOverflow: "ellipsis", // Add ellipsis for overflow
+              }}
+            >
+              {time || "N/A"}
+            </p>
           </>
-          
-
-
         )}
 
-<div
-  style={{
-    display: "flex", // Flex container for horizontal layout
-    justifyContent: "right", // Center content horizontally
-    // Center content vertically
-    marginTop: "10px",
-    height: "30px", // Set a specific height for the box
-     // Ensure the box spans the full width
-  }}
->
-  <span
-    style={{
-      fontSize: "1", // Text size
-      fontWeight: "bold", // Bold text
-      color: "green", // Text color
-      marginRight: "10px", // Add spacing between the two spans
-    }}
-  >
-    {Math.round(acSensorData.power)} kWh
-
-  </span>
-  <span
-    style={{
-      fontSize: "1", // Text size
-      fontWeight: "bold", // Bold text
-      color: "green", // Text color
-    }}
-  >
-    {acSensorData.ac_remote_temp ? acSensorData.ac_remote_temp : "25"} °C
-  </span>
-</div>
-
+        <div
+          style={{
+            display: "flex", // Flex container for horizontal layout
+            justifyContent: "right", // Center content horizontally
+            // Center content vertically
+            marginTop: "10px",
+            height: "30px", // Set a specific height for the box
+            // Ensure the box spans the full width
+          }}
+        >
+          <span
+            style={{
+              fontSize: "1", // Text size
+              fontWeight: "bold", // Bold text
+              color: "green", // Text color
+              marginRight: "10px", // Add spacing between the two spans
+            }}
+          >
+            {Math.round(acSensorData.power)} kWh
+          </span>
+          <span
+            style={{
+              fontSize: "1", // Text size
+              fontWeight: "bold", // Bold text
+              color: "green", // Text color
+            }}
+          >
+            {acSensorData.ac_remote_temp ? acSensorData.ac_remote_temp : "25"}{" "}
+            °C
+          </span>
+        </div>
       </div>
     );
   }
@@ -376,11 +368,12 @@ export class Totaldeals extends Component {
   }
 }
 // revenueanalytics
+
 export class Revenueanalytics extends Component {
   constructor(props) {
     super(props);
 
-    // Store data in a dictionary
+    // Your existing data, unchanged
     const storeData = {
       D062: {
         2024: [
@@ -412,10 +405,10 @@ export class Revenueanalytics extends Component {
           { x: "Dec", y: 42600 },
         ],
         2025: [
-          { x: "Jan", y: 47187 }, 
-          { x: "Feb", y: 49584},
-          { x: "Mar", y: props.currentMonth},
-          { x: "Apr", y: 0 },
+          { x: "Jan", y: 47187 },
+          { x: "Feb", y: 49584 },
+          { x: "Mar", y: 58357 },
+          { x: "Apr", y: props.currentMonth },
           { x: "May", y: 0 },
           { x: "Jun", y: 0 },
           { x: "Jul", y: 0 },
@@ -458,8 +451,8 @@ export class Revenueanalytics extends Component {
         2025: [
           { x: "Jan", y: 15479 },
           { x: "Feb", y: 19041 },
-          { x: "Mar", y: props.currentMonth},
-          { x: "Apr", y: 0 },
+          { x: "Mar", y: 5890 },
+          { x: "Apr", y: props.currentMonth },
           { x: "May", y: 0 },
           { x: "Jun", y: 0 },
           { x: "Jul", y: 0 },
@@ -472,33 +465,71 @@ export class Revenueanalytics extends Component {
       },
     };
 
-    // Determine the store based on the prop (default to D062 if not provided)
-    const outletCode = props.outletCode;
+    const outletCode = props.outletCode || "D062";
 
+    // Helper to pick certain months
+    const filterMonths = (yearData, allowedMonths) =>
+      (yearData || []).filter((entry) => allowedMonths.includes(entry.x));
+
+    // Build lineOneData (Jul23->Dec23 + Jan24->Jun24)
+    const jul23ToDec23 = filterMonths(storeData[outletCode]["2023"], [
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ]);
+    const jan24ToJun24 = filterMonths(storeData[outletCode]["2024"], [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+    ]);
+    const lineOneData = [...jul23ToDec23, ...jan24ToJun24];
+
+    // Build lineTwoData (Jul24->Dec24 + Jan25->Jun25)
+    const jul24ToDec24 = filterMonths(storeData[outletCode]["2024"], [
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ]);
+    const jan25ToJun25 = filterMonths(storeData[outletCode]["2025"], [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+    ]);
+    const lineTwoData = [...jul24ToDec24, ...jan25ToJun25];
+    const decObj = lineTwoData.find((pt) => pt.x === "Dec");
+    const decValue = decObj ? decObj.y : 0; // fallback if not found
+    const selectedAnnotationMonth = "Dec";
     this.state = {
       series: [
         {
           type: "line",
-          name: "2025",
-          data: storeData[outletCode]?.[2025] || [],
+          name: "Jul 23 - Jun 24",
+          data: lineOneData,
+          color: "#845ADF", // example color
         },
         {
           type: "line",
-          name: "2024",
-          data: storeData[outletCode]?.[2024] || [],
-        },
-        {
-          type: "line",
-          name: "2023",
-          data: storeData[outletCode]?.[2023] || [],
+          name: "Jul 24 - Jun 25",
+          data: lineTwoData,
+          color: "rgba(35, 183, 229, 0.85)",
         },
       ],
       options: {
         chart: {
           height: 350,
-          animations: {
-            speed: 500,
-          },
+          animations: { speed: 500 },
           dropShadow: {
             enabled: true,
             top: 8,
@@ -509,60 +540,47 @@ export class Revenueanalytics extends Component {
           },
           toolbar: {
             tools: {
-              download: true, // Enable download button
-              selection: true, // Enable selection tool
-              zoom: true, // Enable zoom tool
-              zoomin: true, // Enable zoom-in button
-              zoomout: true, // Enable zoom-out button
-              pan: true, // Enable pan functionality
-              reset: true, // Enable reset button
+              download: true,
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true,
             },
           },
         },
-        colors: [
-          "rgb(255, 99, 132)", // Color for 2025
-          "rgb(132, 90, 223)", // Color for 2024
-          "rgba(35, 183, 229, 0.85)", // Color for 2023
-        ],
         dataLabels: {
           enabled: false,
+        },
+        stroke: {
+          curve: "smooth",
+          width: [2, 2],
+        },
+        xaxis: {
+          type: "category",
+          axisTicks: { show: false },
+        },
+        yaxis: {
+          labels: {
+            formatter: (value) => value + " kWh",
+          },
         },
         grid: {
           borderColor: "#f1f1f1",
           strokeDashArray: 3,
         },
-        stroke: {
-          curve: "smooth",
-          width: [2, 2, 2],
-        },
-        xaxis: {
-          axisTicks: {
-            show: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            formatter: function (value) {
-              return value + " kWh";
-            },
-          },
-        },
         tooltip: {
-          y: [
-            {
-              formatter: function (e) {
-                return e ? e.toFixed(0) + " kWh" : e;
-              },
-            },
-          ],
+          y: {
+            formatter: (val) => val + " kWh",
+          },
         },
         legend: {
           show: true,
-          customLegendItems: ["2025", "2024", "2023"],
           inverseOrder: true,
         },
         title: {
-          text: "Yearly comparison",
+          text: "Yearly Comparison",
           align: "left",
           style: {
             fontSize: ".8125rem",
@@ -571,9 +589,29 @@ export class Revenueanalytics extends Component {
           },
         },
         markers: {
-          hover: {
-            sizeOffset: 5,
-          },
+          hover: { sizeOffset: 5 },
+        },
+
+        // =========================================
+        // Add an annotation to Dec 2024, "AC Control"
+        // We'll assume "Dec" is a valid data x-value
+        // in the second line (seriesIndex: 1).
+        // =========================================
+        annotations: {
+          xaxis: [
+            {
+              x: selectedAnnotationMonth,
+              borderColor: "#FF4560",
+              label: {
+                style: {
+                  color: "#fff",
+                  background: "#FF4560",
+                },
+                orientation: "vertical",
+                text: "Automation Start",
+              },
+            },
+          ],
         },
       },
     };
@@ -592,9 +630,6 @@ export class Revenueanalytics extends Component {
     );
   }
 }
-
-
-
 
 //
 //ProfitEarned
