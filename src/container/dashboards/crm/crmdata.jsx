@@ -465,7 +465,19 @@ export class Revenueanalytics extends Component {
       },
     };
 
+    // Figure out which store we have
     const outletCode = props.outletCode || "D062";
+
+    // Decide annotation month: Dec for D062, Sep for D076, etc.
+    let selectedAnnotationMonth;
+    if (outletCode === "D062") {
+      selectedAnnotationMonth = "Dec";
+    } else if (outletCode === "D076") {
+      selectedAnnotationMonth = "Sep";
+    } else {
+      // fallback or other codes
+      selectedAnnotationMonth = "Dec";
+    }
 
     // Helper to pick certain months
     const filterMonths = (yearData, allowedMonths) =>
@@ -508,9 +520,8 @@ export class Revenueanalytics extends Component {
       "Jun",
     ]);
     const lineTwoData = [...jul24ToDec24, ...jan25ToJun25];
-    const decObj = lineTwoData.find((pt) => pt.x === "Dec");
-    const decValue = decObj ? decObj.y : 0; // fallback if not found
-    const selectedAnnotationMonth = "Dec";
+
+    
     this.state = {
       series: [
 
