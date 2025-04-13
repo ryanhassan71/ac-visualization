@@ -13,6 +13,7 @@ import {
   fetchStoreList,
   fetchMonthlyEnergyData,
   fetchPowerParameters,
+  fetchYearlyEnergyData,
 } from "../../../acApi";
 import * as XLSX from "xlsx-js-style";
 import { Link } from "react-router-dom";
@@ -27,13 +28,19 @@ function Power() {
   const [storeInfo, setStoreInfo] = useState(null);
   const [currentTotal, setCurrentTotal] = useState(0); // Add state for total
   const [powerParams, setPowerParams] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [yearlyUsageData, setYearlyUsageData] = useState([]);
   const { storeId, powerId } = useParams();
   // Compare selected month/year to current
   const selectedMonth = startDate.getMonth();
-  const selectedYear = startDate.getFullYear();
+  // Use the state variable instead of redefining
+  // const selectedYear = startDate.getFullYear();
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
+  // This await statement needs to be moved inside an async function
+  // const response = await fetchYearlyEnergyData(powerId, selectedYear);
+
   const isCurrentMonth =
     selectedMonth === currentMonth && selectedYear === currentYear;
 
@@ -294,6 +301,36 @@ function Power() {
   // Power factor is not rounded
   const powerFactor = powerParamsData?.power_factor || "--";
 
+  const handleYearChange = async (year) => {
+    setSelectedYear(year);
+
+    try {
+      const res = await fetchYearlyEnergyData(powerId, year);
+
+      if (res?.data?.[0]?.energy_data?.length === 12) {
+        const monthlyTotals = res.data[0].energy_data.map((val, index) => ({
+          label: new Date(0, index).toLocaleString("default", { month: "short" }),
+          value: Math.round(parseFloat(val) || 0),
+        }));
+        setYearlyUsageData(monthlyTotals);
+      } else {
+        console.warn("Invalid data format returned for yearly");
+        setYearlyUsageData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching yearly usage data:", error);
+      setYearlyUsageData([]);
+    }
+  };
+
+  // Add this useEffect inside the component
+  useEffect(() => {
+    // Fetch yearly power data based on the selected year
+    if (powerId) {
+      handleYearChange(selectedYear);
+    }
+  }, [powerId]); // Only re-run when powerId changes
+
   return (
     <Fragment>
       <Pageheader
@@ -312,7 +349,7 @@ function Power() {
         <div className="col-span-12">
           <div className="box custom-box">
             {/* Responsive flexbox container */}
-            <div className="box-header flex flex-wrap md:flex-nowrap items-center">
+            <div className="box-header flex-wrap md:flex-nowrap items-center">
               {/* Title (Left for larger screens, first row for mobile) */}
               <div className="flex-1 text-left mb-2 md:mb-0 hidden md:block">
                 <div className="box-title">{title}</div>
@@ -366,43 +403,46 @@ function Power() {
         </div>
 
         {/* Add two charts side by side */}
-        <div className="col-span-12 xl:col-span-4">
-          <div className="box custom-box">
-            <div className="box-header flex justify-between items-center">
-              <div className="box-title   !text-[.8rem]">
-                Last 7 days Power Consumption Data
-              </div>
-              <button
-                type="button"
-                className="ti-btn ti-btn-outline-secondary btn-wave !font-medium    !ms-0  !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0 !text-[.6rem] "
-                onClick={() =>
-                  exportToExcel(
-                    weeklyPowerData?.data[0]?.energy_data,
-                    weeklyPowerData?.data[0]?.time,
-                    "WeeklyPowerData"
-                  )
-                }
-              >
-                <i className="ri-upload-cloud-line inline-block"></i>Export
-              </button>
+        <div className="col-span-12 xl:col-span-5">
+            <div className="box custom-box h-[475px]">
+                <div className="box-header flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <div className="box-title !text-[.9rem] font-semibold text-gray-800 dark:text-gray-200">
+                        Monthly Power Usage in {selectedYear}
+                    </div>
+                    <select
+                        className="ti-form-select !text-[.75rem] !py-[0.5rem] !px-[0.8rem] !rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-primary focus:border-primary transition-colors duration-200"
+                        value={selectedYear}
+                        onChange={(e) => handleYearChange(parseInt(e.target.value))}
+                    >
+                        {Array.from({ length: currentYear - 2023 }, (_, i) => 2024 + i)
+                            .filter(year => year <= currentYear)
+                            .map((year) => (
+                                <option key={year} value={year}>
+                                    {year}
+                                </option>
+                            ))}
+                    </select>
+                </div>
+            
+                <div className="box-body pt-4">
+                    {yearlyUsageData.length > 0 ? (
+                        <Distributed
+                            data={{
+                                time: yearlyUsageData.map((m) => m.label),
+                                energy_data: yearlyUsageData.map((m) => m.value),
+                            }}
+                        />
+                    ) : (
+                        <div className="flex justify-center items-center h-64 text-gray-500 dark:text-gray-400">
+                            No data available for {selectedYear}
+                        </div>
+                    )}
+                </div>
             </div>
-
-            <div className="box-body">
-              <div id="columns-distributed">
-                <Distributed data={weeklyPowerData?.data?.[0]
-    ? {
-        ...weeklyPowerData.data[0],
-        energy_data: weeklyPowerData.data[0].energy_data.map((val) =>
-          Math.round(parseFloat(val))
-        ),
-      }
-    : null} />
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="col-span-12 xl:col-span-8">
+
+        <div className="col-span-12 xl:col-span-7">
           <div className="box custom-box md:h-[475px]">
             <div className="box-header flex justify-between items-center">
               <div className="box-title   !text-[.8rem]">

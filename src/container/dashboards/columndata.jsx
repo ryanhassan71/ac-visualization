@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from "apexcharts";
-// Revenue Statistics
+// Revenue Statisticss
 
 
 
@@ -1073,11 +1073,18 @@ export class Loaded extends Component {
 
 function formatDates(dates) {
     return dates.map((date) => {
-      const parsedDate = new Date(date); // Parse the date
-      return parsedDate.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-      }); // Format to "DD MMM"
+      try {
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+          return date; // Return original value if date is invalid
+        }
+        return parsedDate.toLocaleString('en-US', {
+          month: 'short'
+        });
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return date; // Return original value if parsing fails
+      }
     });
   }
   

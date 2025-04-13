@@ -172,6 +172,25 @@ export const fetchMonthlyEnergyData = async (energyDeviceId, month, year) => {
   }
 };
 
+// Function to fetch yearly energy data
+export const fetchYearlyEnergyData = async (energyDeviceId, year) => {
+  try {
+    const response = await apiClient.get(`/energy/energy-data/${energyDeviceId}/`, {
+      params: { type: 'yearly', year },
+    });
+
+    if (response.data && response.data.success) {
+      return response.data; // Return the data
+    } else {
+      console.error('Unexpected data format or API error:', response.data);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching yearly energy data:', error);
+    return null;
+  }
+};
+
 
 export const DAILY_POWER_DATA_INTERVAL = convertToMilliseconds(1, 'hours')
 // Function to control AC settings
