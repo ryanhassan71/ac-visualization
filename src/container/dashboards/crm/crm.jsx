@@ -642,7 +642,7 @@ const Crm = () => {
                     </div>
                     <div className="box-body !py-5">
                       <div id="crm-revenue-analytics">
-                        {storeInfo && totalMonthlyConsumption != 0 && (
+                        {storeInfo && totalMonthlyConsumption != 0 &&  powerId != 4 && (
                           <Revenueanalytics
                             key={storeInfo.outlet_code} // Add a unique key to force re-render
                             outletCode={storeInfo?.outlet_code}

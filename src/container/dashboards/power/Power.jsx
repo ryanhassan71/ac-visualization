@@ -739,7 +739,7 @@ function Power() {
               {storeInfo?.store_name} {storeInfo?.outlet_code} Power Analytics
             </div>
             <div className="box-body">
-              {storeInfo && monthlyPowerData && currentTotal > 0 && (
+              {storeInfo && monthlyPowerData && currentTotal > 0 && powerId != 4 && (
                 <Revenueanalytics
                   key={`${powerId}`} // Add a unique key to force re-render
                   outletCode={storeInfo?.outlet_code}
